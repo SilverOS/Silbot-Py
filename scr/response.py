@@ -41,7 +41,7 @@ class BotAPIResponse:
         - `None`: if there was an error
         - Object specified in the init: if the request was a success
         """
-        if "result" in self.decoded and (self.expected_object == None or self.expected_object.__class__.__module__ != "silbot.types" or (type(self.decoded["result"]) != dict and type(self.decoded["result"]) != list)):
+        if "result" in self.decoded and (self.expected_object == None or self.expected_object.__module__ != "silbot.types" or (type(self.decoded["result"]) != dict and type(self.decoded["result"]) != list)):
             return self.decoded["result"]
         if self.decoded["ok"]:
             return self.expected_object(self.decoded["result"])
