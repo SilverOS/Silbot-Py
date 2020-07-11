@@ -217,10 +217,10 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `photo` :`(types.InputFile,str)` Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. More info on Sending Files '
         - `caption` :`str` Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the photo caption. See formatting options for more details.
-        - `photo` :`(types.InputFile,str)` Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. More info on Sending Files '
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
 
@@ -249,10 +249,10 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `audio` :`(types.InputFile,str)` Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
         - `caption` :`str` Audio caption, 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the audio caption. See formatting options for more details.
-        - `audio` :`(types.InputFile,str)` Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
         - `duration` :`int` Duration of the audio in seconds
         - `performer` :`str` Performer
         - `title` :`str` Track name
@@ -288,10 +288,10 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `document` :`(types.InputFile,str)` File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
         - `caption` :`str` Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the document caption. See formatting options for more details.
-        - `document` :`(types.InputFile,str)` File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
         - `thumb` :`(types.InputFile,str)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass 'attach://<file_attach_name>' if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files '
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -321,10 +321,10 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `video` :`(types.InputFile,str)` Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More info on Sending Files '
         - `caption` :`str` Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the video caption. See formatting options for more details.
-        - `video` :`(types.InputFile,str)` Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More info on Sending Files '
         - `duration` :`int` Duration of sent video in seconds
         - `width` :`int` Video width
         - `height` :`int` Video height
@@ -362,10 +362,10 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `animation` :`(types.InputFile,str)` Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More info on Sending Files '
         - `caption` :`str` Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the animation caption. See formatting options for more details.
-        - `animation` :`(types.InputFile,str)` Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More info on Sending Files '
         - `duration` :`int` Duration of sent animation in seconds
         - `width` :`int` Animation width
         - `height` :`int` Animation height
@@ -401,10 +401,10 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `voice` :`(types.InputFile,str)` Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
         - `caption` :`str` Voice message caption, 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the voice message caption. See formatting options for more details.
-        - `voice` :`(types.InputFile,str)` Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
         - `duration` :`int` Duration of the voice message in seconds
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -434,8 +434,8 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `video_note` :`(types.InputFile,str)` Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More info on Sending Files '. Sending video notes by a URL is currently unsupported
+        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `duration` :`int` Duration of sent video in seconds
         - `length` :`int` Video width and height, i.e. diameter of the video message
         - `thumb` :`(types.InputFile,str)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass 'attach://<file_attach_name>' if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files '
@@ -490,9 +490,9 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `latitude` :`float` Latitude of the location
         - `longitude` :`float` Longitude of the location
+        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `live_period` :`int` Period in seconds for which the location will be updated (see Live Locations, should be between 60 and 86400.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -519,12 +519,12 @@ class botApi () :
         - - - - -
         **Args**:
 
+        - `latitude` :`float` Latitude of new location
+        - `longitude` :`float` Longitude of new location
         - `chat_id` :`(int,str)` Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `message_id` :`int` Required if inline_message_id is not specified. Identifier of the message to edit
         - `inline_message_id` :`str` Required if chat_id and message_id are not specified. Identifier of the inline message
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for a new inline keyboard.
-        - `latitude` :`float` Latitude of new location
-        - `longitude` :`float` Longitude of new location
 
         **Returns:**
 
@@ -570,11 +570,11 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `latitude` :`float` Latitude of the venue
         - `longitude` :`float` Longitude of the venue
         - `title` :`str` Name of the venue
         - `address` :`str` Address of the venue
+        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `foursquare_id` :`str` Foursquare identifier of the venue
         - `foursquare_type` :`str` Foursquare type of the venue, if known. (For example, 'arts_entertainment/default', 'arts_entertainment/aquarium' or 'food/icecream'.)
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -606,9 +606,9 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove keyboard or to force a reply from the user.
         - `phone_number` :`str` Contact's phone number
         - `first_name` :`str` Contact's first name
+        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove keyboard or to force a reply from the user.
         - `last_name` :`str` Contact's last name
         - `vcard` :`str` Additional data about the contact in the form of a vCard, 0-2048 bytes
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -638,9 +638,9 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `question` :`str` Poll question, 1-255 characters
         - `options` :`list` A JSON-serialized list of answer options, 2-10 strings 1-100 characters each
+        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `is_anonymous` :`bool` True, if the poll needs to be anonymous, defaults to True
         - `type` :`str` Poll type, 'quiz' or 'regular', defaults to 'regular'
         - `allows_multiple_answers` :`bool` True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
@@ -1158,8 +1158,8 @@ class botApi () :
         - - - - -
         **Args**:
 
-        - `text` :`str` Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
         - `callback_query_id` :`str` Unique identifier for the query to be answered
+        - `text` :`str` Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
         - `show_alert` :`bool` If true, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
         - `url` :`str` URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game ' note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
         - `cache_time` :`int` The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
@@ -1215,9 +1215,9 @@ class botApi () :
         - - - - -
         **Args**:
 
+        - `text` :`str` New text of the message, 1-4096 characters after entities parsing
         - `chat_id` :`(int,str)` Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `message_id` :`int` Required if inline_message_id is not specified. Identifier of the message to edit
-        - `text` :`str` New text of the message, 1-4096 characters after entities parsing
         - `inline_message_id` :`str` Required if chat_id and message_id are not specified. Identifier of the inline message
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard.
         - `parse_mode` :`str` Mode for parsing entities in the message text. See formatting options for more details.
@@ -1274,11 +1274,11 @@ class botApi () :
         - - - - -
         **Args**:
 
+        - `media` :`types.InputMedia` A JSON-serialized object for a new media content of the message
         - `chat_id` :`(int,str)` Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `message_id` :`int` Required if inline_message_id is not specified. Identifier of the message to edit
         - `inline_message_id` :`str` Required if chat_id and message_id are not specified. Identifier of the inline message
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for a new inline keyboard.
-        - `media` :`types.InputMedia` A JSON-serialized object for a new media content of the message
 
         **Returns:**
 
@@ -1363,8 +1363,8 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`(int,str)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `sticker` :`(types.InputFile,str)` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files '
+        - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
 
@@ -1569,7 +1569,6 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`int` Unique identifier for the target private chat
-        - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
         - `title` :`str` Product name, 1-32 characters
         - `description` :`str` Product description, 1-255 characters
         - `payload` :`str` Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
@@ -1577,6 +1576,7 @@ class botApi () :
         - `start_parameter` :`str` Unique deep-linking parameter that can be used to generate this invoice when used as a start parameter
         - `currency` :`str` Three-letter ISO 4217 currency code, see more on currencies
         - `prices` :`list` Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
+        - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
         - `provider_data` :`str` JSON-encoded data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
         - `photo_url` :`str` URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
         - `photo_size` :`int` Photo size
@@ -1695,8 +1695,8 @@ class botApi () :
         **Args**:
 
         - `chat_id` :`int` Unique identifier for the target chat
-        - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.
         - `game_short_name` :`str` Short name of the game, serves as the unique identifier for the game. Set up your games via Botfather.
+        - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
 
@@ -1720,11 +1720,11 @@ class botApi () :
         - - - - -
         **Args**:
 
+        - `user_id` :`int` User identifier
+        - `score` :`int` New score, must be non-negative
         - `chat_id` :`int` Required if inline_message_id is not specified. Unique identifier for the target chat
         - `message_id` :`int` Required if inline_message_id is not specified. Identifier of the sent message
-        - `user_id` :`int` User identifier
         - `inline_message_id` :`str` Required if chat_id and message_id are not specified. Identifier of the inline message
-        - `score` :`int` New score, must be non-negative
         - `force` :`bool` Pass True, if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters
         - `disable_edit_message` :`bool` Pass True, if the game message should not be automatically edited to include the current scoreboard
 
@@ -1749,9 +1749,9 @@ class botApi () :
         - - - - -
         **Args**:
 
+        - `user_id` :`int` Target user id
         - `chat_id` :`int` Required if inline_message_id is not specified. Unique identifier for the target chat
         - `message_id` :`int` Required if inline_message_id is not specified. Identifier of the sent message
-        - `user_id` :`int` Target user id
         - `inline_message_id` :`str` Required if chat_id and message_id are not specified. Identifier of the inline message
 
         **Returns:**

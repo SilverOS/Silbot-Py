@@ -1,6 +1,8 @@
 import json
+import silbot
 from silbot import helper
 from silbot import objects
+
 class Update ():
     """This object represents an incoming update.At most one of the optional parameters can be present in any given update.[See on Telegram API](https://core.telegram.org/bots/api#update)
 
@@ -88,7 +90,7 @@ class WebhookInfo ():
                 setattr(self,index,helper.setBvar(value))
 
 
-class User ():
+class User (objects.User):
     """This object represents a Telegram user or bot.[See on Telegram API](https://core.telegram.org/bots/api#user)
 
     - - - - -
@@ -129,7 +131,7 @@ class User ():
                 setattr(self,index,helper.setBvar(value))
 
 
-class Chat ():
+class Chat (objects.Chat):
     """This object represents a chat.[See on Telegram API](https://core.telegram.org/bots/api#chat)
 
     - - - - -
@@ -1056,7 +1058,7 @@ Telegram apps support these buttons as of version 5.7.[See on Telegram API](http
                 setattr(self,index,helper.setBvar(value))
 
 
-class CallbackQuery ():
+class CallbackQuery (objects.CallbackQuery):
     """This object represents an incoming callback query from a callback button in an inline keyboard. If the button that originated the query was attached to a message sent by the bot, the field message will be present. If the button was attached to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.[See on Telegram API](https://core.telegram.org/bots/api#callbackquery)
 
     - - - - -
@@ -3300,4 +3302,3 @@ class GameHighScore ():
                 self.score = value
             else:
                 setattr(self,index,helper.setBvar(value))
-

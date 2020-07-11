@@ -1,7 +1,18 @@
-from silbot import update
-from silbot import botapi
-import json
+"""
+[![PyPI](https://img.shields.io/pypi/v/silbot.svg)](https://pypi.python.org/pypi/silbot)
+[![Telegram Channel](https://img.shields.io/badge/telegram_channel-@silverosp-0d86d7.svg?style=flat)](https://t.me/SilverOSp)
 
+This is a simple framework for [telegram bot API](https://core.telegram.org/bots/api).
+
+- [__Examples__](https://github.com/SilverOS/Silbot-Py/tree/master/examples)
+- [__Github__](https://github.com/SilverOS/Silbot-Py)
+- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.1.0.zip)
+
+"""
+
+from silbot import botapi
+from silbot import update
+import json
 
 def startpool(bot : botapi.botApi,handlefunc):
     """ This is a builtin function to handle updates with getUpdates
@@ -16,7 +27,10 @@ def startpool(bot : botapi.botApi,handlefunc):
     """
     offset = -1
     while True:
-        response = bot.getUpdates(offset)[1]
+        try:
+            response = bot.getUpdates(offset)[1]
+        except Exception:
+            continue
         js = response.decoded
         if js["ok"]:
             if len(js["result"]) > 0:
@@ -26,3 +40,7 @@ def startpool(bot : botapi.botApi,handlefunc):
                     thread.start()
         else :
             continue
+
+
+
+
