@@ -1,7 +1,7 @@
 import silbot
 
 token = "12345:abcdefghi"  # Put bot token here
-bot = silbot.botapi.botApi(token)
+bot = silbot.botapi.BotApi(token)
 
 r, response = bot.getMe()
 print(response.expected_object.__module__)
@@ -12,7 +12,7 @@ else:
     print("Bot @" + r.username + " started")
 
 
-def updateH(update: silbot.types.Update, bot: silbot.botapi.botApi):
+def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
     """
     You should edit this function to set bot commands
     """

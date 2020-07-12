@@ -8,7 +8,7 @@ This is a simple bot that will check if a user is in a channel or is admin of th
 token = "123234234:fdsiojfiosdjf"  # Put bot token here
 channelid = -1001086416281  # Change the channel ID, the but must be admin of the channel
 
-bot = silbot.botapi.botApi(token, "HTML")
+bot = silbot.botapi.BotApi(token, "HTML")
 
 r, response = bot.getMe()
 
@@ -19,7 +19,7 @@ else:
     print("Bot @" + r.username + " started")
 
 
-def updateH(update: silbot.types.Update, bot: silbot.botapi.botApi):
+def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
     if hasattr(update, "message"):
         message = update.message
         chat = message.chat

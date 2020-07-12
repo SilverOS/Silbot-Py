@@ -12,7 +12,7 @@ class update(Thread):
     Elaborates the update in another thread
     """
 
-    def __init__(self, update, bot: botapi.botApi, function):
+    def __init__(self, update, bot: botapi.BotApi, function):
         """
         Sets some var
 
@@ -21,8 +21,8 @@ class update(Thread):
         - bot (`botApi`): the current bot botApi object
         - function (`function`): function to call to elaborate the update
         """
-        self.parsed = types.Update(self.update)
         self.update = update
+        self.parsed = types.Update(self.update)
         self.bot = bot
         self.function = function
         Thread.__init__(self)

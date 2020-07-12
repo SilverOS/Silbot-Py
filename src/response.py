@@ -29,9 +29,17 @@ class BotAPIResponse:
         """Error code given by botAPI, if there is no error it is set to `None`"""
         self.description = None
         """Error description given by botAPI, if there is no error it is set to `None`"""
-        if (self.decoded["ok"] is False) and "result" in self.decoded:
-            self.error_code = self.decoded["error_code"]
-            self.description = self.decoded["description"]
+        self.connection_error = None
+        """bool, True if there was a connection error, False if not"""
+        if (not self.decoded["ok"]) and "result" in self.decoded:
+            if "error_code" in self.decoded:
+                self.error_code = self.decoded["error_code"]
+            if "description" in self.decoded:
+                self.description = self.decoded["description"]
+            if "connection_error" in self.decoded:
+                self.connection_error = self.decoded["connection_error"]
+            else:
+                self.connection_error = False
         else:
             self.expected_object = expected_object
 
