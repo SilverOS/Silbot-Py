@@ -3,16 +3,17 @@
 """
 
 import requests
-import json
-from silbot import types
-from silbot import helper
+from silbot import types, helper
 from silbot.response import BotAPIResponse
 
-class botApi () :
+
+class BotApi:
     """
     Class to send requests to botAPI
     """
-    def __init__(self,token,default_parse_mode : str = None,default_disable_web_preview : bool = None,default_disable_notifications : bool = None):
+
+    def __init__(self, token, default_parse_mode: str = None, default_disable_web_preview: bool = None,
+                 default_disable_notifications: bool = None):
         """Creates a botApi by the given token
 
         Using this class you can easily send requests to botApi and use the response
@@ -26,12 +27,12 @@ class botApi () :
         """
         self.default_parse_mode = default_parse_mode
         self.default_disable_web_preview = default_disable_web_preview
-        self.default_disable_notifications = default_disable_notifications 
+        self.default_disable_notifications = default_disable_notifications
 
         self.token = token
         self.session = requests.Session()
-    
-    def sendRequest(self,method,arguments = {}):
+
+    def sendRequest(self, method, arguments=None):
         """Sends a GET request to botAPI
 
         Using this function you can send custom requests to botAPI
@@ -44,10 +45,13 @@ class botApi () :
         **Returns**
         - `str` botAPI's string response
         """
-        r = self.session.get("https://api.telegram.org/bot" + self.token + "/" + method,params = arguments)
+        if arguments is None:
+            arguments = {}
+        r = self.session.get("https://api.telegram.org/bot" + self.token + "/" + method, params=arguments)
         return r.text
-     
-    def response(self,raw_json,func):
+
+    @staticmethod
+    def response(raw_json, func):
         """Creates a botAPIResponse object for the given JSON
 
         - - - - -
@@ -59,10 +63,10 @@ class botApi () :
         **Returns**
         - `tuple` containing the expected result as object as first argument and the `BotAPIResponse` object as second
         """
-        response = BotAPIResponse(raw_json,func)
-        return response.getObject(),response
+        response = BotAPIResponse(raw_json, func)
+        return response.getObject(), response
 
-    def getUpdates (self,offset : int = None ,limit : int = None ,timeout : int = None ,allowed_updates : list = None):
+    def getUpdates(self, offset: int = None, limit: int = None, timeout: int = None, allowed_updates: list = None):
         """Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned. [See Telegram API](https://core.telegram.org/bots/api#getupdates)
 
         - - - - -
@@ -78,14 +82,15 @@ class botApi () :
         - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
         """
         data = {
-            "offset" : offset,
-            "limit" : limit,
-            "timeout" : timeout,
-            "allowed_updates" : allowed_updates,
+            "offset": offset,
+            "limit": limit,
+            "timeout": timeout,
+            "allowed_updates": allowed_updates,
         }
-        return self.response(self.sendRequest("getUpdates", data),list)
+        return self.response(self.sendRequest("getUpdates", data), list)
 
-    def setWebhook (self,url : str,certificate : types.InputFile = None ,max_connections : int = None ,allowed_updates : list = None):
+    def setWebhook(self, url: str, certificate: types.InputFile = None, max_connections: int = None,
+                   allowed_updates: list = None):
         """Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success.
         If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/<token>. Since nobody else knows your bot's token, you can be pretty sure it's us. [See Telegram API](https://core.telegram.org/bots/api#setwebhook)
 
@@ -102,14 +107,14 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "url" : url,
-            "certificate" : helper.toDict(certificate,True),
-            "max_connections" : max_connections,
-            "allowed_updates" : allowed_updates,
+            "url": url,
+            "certificate": helper.toDict(certificate, True),
+            "max_connections": max_connections,
+            "allowed_updates": allowed_updates,
         }
-        return self.response(self.sendRequest("setWebhook", data),bool)
+        return self.response(self.sendRequest("setWebhook", data), bool)
 
-    def deleteWebhook (self,):
+    def deleteWebhook(self, ):
         """Use this method to remove webhook integration if you decide to switch back to getUpdates. Returns True on success. Requires no parameters. [See Telegram API](https://core.telegram.org/bots/api#deletewebhook)
 
         - - - - -
@@ -122,9 +127,9 @@ class botApi () :
         """
         data = {
         }
-        return self.response(self.sendRequest("deleteWebhook", data),bool)
+        return self.response(self.sendRequest("deleteWebhook", data), bool)
 
-    def getWebhookInfo (self,):
+    def getWebhookInfo(self, ):
         """Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty. [See Telegram API](https://core.telegram.org/bots/api#getwebhookinfo)
 
         - - - - -
@@ -137,9 +142,9 @@ class botApi () :
         """
         data = {
         }
-        return self.response(self.sendRequest("getWebhookInfo", data),types.WebhookInfo)
+        return self.response(self.sendRequest("getWebhookInfo", data), types.WebhookInfo)
 
-    def getMe (self,):
+    def getMe(self, ):
         """A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object. [See Telegram API](https://core.telegram.org/bots/api#getme)
 
         - - - - -
@@ -152,9 +157,12 @@ class botApi () :
         """
         data = {
         }
-        return self.response(self.sendRequest("getMe", data),types.User)
+        return self.response(self.sendRequest("getMe", data), types.User)
 
-    def sendMessage (self,chat_id: (int,str),text : str,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,disable_web_page_preview : bool = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendMessage(self, chat_id: (int, str), text: str, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                    parse_mode: str = None, disable_web_page_preview: bool = None, disable_notification: bool = None,
+                    reply_to_message_id: int = None):
         """Use this method to send text messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmessage)
 
         - - - - -
@@ -172,21 +180,25 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_web_page_preview == None: disable_web_page_preview = self.default_disable_web_preview
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_web_page_preview is None:
+            disable_web_page_preview = self.default_disable_web_preview
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "text" : text,
-            "parse_mode" : parse_mode,
-            "disable_web_page_preview" : disable_web_page_preview,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "text": text,
+            "parse_mode": parse_mode,
+            "disable_web_page_preview": disable_web_page_preview,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendMessage", data),types.Message)
+        return self.response(self.sendRequest("sendMessage", data), types.Message)
 
-    def forwardMessage (self,chat_id: (int,str),message_id : int,from_chat_id: (int,str),disable_notification : bool = None):
+    def forwardMessage(self, chat_id: (int, str), message_id: int, from_chat_id: (int, str),
+                       disable_notification: bool = None):
         """Use this method to forward messages of any kind. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#forwardmessage)
 
         - - - - -
@@ -201,16 +213,19 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "from_chat_id" : from_chat_id,
-            "disable_notification" : disable_notification,
-            "message_id" : message_id,
+            "chat_id": chat_id,
+            "from_chat_id": from_chat_id,
+            "disable_notification": disable_notification,
+            "message_id": message_id,
         }
-        return self.response(self.sendRequest("forwardMessage", data),types.Message)
+        return self.response(self.sendRequest("forwardMessage", data), types.Message)
 
-    def sendPhoto (self,chat_id: (int,str),photo: (types.InputFile,str),caption : str = None ,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendPhoto(self, chat_id: (int, str), photo: (types.InputFile, str), caption: str = None, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                  parse_mode: str = None, disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send photos. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendphoto)
 
         - - - - -
@@ -228,20 +243,26 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "photo" : helper.toDict(photo,True),
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "photo": helper.toDict(photo, True),
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendPhoto", data),types.Message)
+        return self.response(self.sendRequest("sendPhoto", data), types.Message)
 
-    def sendAudio (self,chat_id: (int,str),audio: (types.InputFile,str),caption : str = None ,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,duration : int = None ,performer : str = None ,title : str = None ,thumb: (types.InputFile,str) = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendAudio(self, chat_id: (int, str), audio: (types.InputFile, str), caption: str = None, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                  parse_mode: str = None, duration: int = None, performer: str = None, title: str = None,
+                  thumb: (types.InputFile, str) = None, disable_notification: bool = None,
+                  reply_to_message_id: int = None):
         """Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
         For sending voice messages, use the sendVoice method instead. [See Telegram API](https://core.telegram.org/bots/api#sendaudio)
 
@@ -264,24 +285,29 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "audio" : helper.toDict(audio,True),
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "duration" : duration,
-            "performer" : performer,
-            "title" : title,
-            "thumb" : helper.toDict(thumb,True),
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "audio": helper.toDict(audio, True),
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "duration": duration,
+            "performer": performer,
+            "title": title,
+            "thumb": helper.toDict(thumb, True),
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendAudio", data),types.Message)
+        return self.response(self.sendRequest("sendAudio", data), types.Message)
 
-    def sendDocument (self,chat_id: (int,str),document: (types.InputFile,str),caption : str = None ,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,thumb: (types.InputFile,str) = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendDocument(self, chat_id: (int, str), document: (types.InputFile, str), caption: str = None, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                     parse_mode: str = None, thumb: (types.InputFile, str) = None, disable_notification: bool = None,
+                     reply_to_message_id: int = None):
         """Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#senddocument)
 
         - - - - -
@@ -300,21 +326,27 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "document" : helper.toDict(document,True),
-            "thumb" : helper.toDict(thumb,True),
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "document": helper.toDict(document, True),
+            "thumb": helper.toDict(thumb, True),
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendDocument", data),types.Message)
+        return self.response(self.sendRequest("sendDocument", data), types.Message)
 
-    def sendVideo (self,chat_id: (int,str),video: (types.InputFile,str),caption : str = None ,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,duration : int = None ,width : int = None ,height : int = None ,thumb: (types.InputFile,str) = None ,supports_streaming : bool = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendVideo(self, chat_id: (int, str), video: (types.InputFile, str), caption: str = None, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                  parse_mode: str = None, duration: int = None, width: int = None, height: int = None,
+                  thumb: (types.InputFile, str) = None, supports_streaming: bool = None,
+                  disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvideo)
 
         - - - - -
@@ -337,25 +369,31 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "video" : helper.toDict(video,True),
-            "duration" : duration,
-            "width" : width,
-            "height" : height,
-            "thumb" : helper.toDict(thumb,True),
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "supports_streaming" : supports_streaming,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "video": helper.toDict(video, True),
+            "duration": duration,
+            "width": width,
+            "height": height,
+            "thumb": helper.toDict(thumb, True),
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "supports_streaming": supports_streaming,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendVideo", data),types.Message)
+        return self.response(self.sendRequest("sendVideo", data), types.Message)
 
-    def sendAnimation (self,chat_id: (int,str),animation: (types.InputFile,str),caption : str = None ,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,duration : int = None ,width : int = None ,height : int = None ,thumb: (types.InputFile,str) = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendAnimation(self, chat_id: (int, str), animation: (types.InputFile, str), caption: str = None, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                      parse_mode: str = None, duration: int = None, width: int = None, height: int = None,
+                      thumb: (types.InputFile, str) = None, disable_notification: bool = None,
+                      reply_to_message_id: int = None):
         """Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendanimation)
 
         - - - - -
@@ -377,24 +415,29 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "animation" : helper.toDict(animation,True),
-            "duration" : duration,
-            "width" : width,
-            "height" : height,
-            "thumb" : helper.toDict(thumb,True),
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "animation": helper.toDict(animation, True),
+            "duration": duration,
+            "width": width,
+            "height": height,
+            "thumb": helper.toDict(thumb, True),
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendAnimation", data),types.Message)
+        return self.response(self.sendRequest("sendAnimation", data), types.Message)
 
-    def sendVoice (self,chat_id: (int,str),voice: (types.InputFile,str),caption : str = None ,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,parse_mode : str = None ,duration : int = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendVoice(self, chat_id: (int, str), voice: (types.InputFile, str), caption: str = None, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                  parse_mode: str = None, duration: int = None, disable_notification: bool = None,
+                  reply_to_message_id: int = None):
         """Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvoice)
 
         - - - - -
@@ -413,21 +456,26 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "voice" : helper.toDict(voice,True),
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "duration" : duration,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "voice": helper.toDict(voice, True),
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "duration": duration,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendVoice", data),types.Message)
+        return self.response(self.sendRequest("sendVoice", data), types.Message)
 
-    def sendVideoNote (self,chat_id: (int,str),video_note: (types.InputFile,str),reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,duration : int = None ,length : int = None ,thumb: (types.InputFile,str) = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendVideoNote(self, chat_id: (int, str), video_note: (types.InputFile, str), reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                      duration: int = None, length: int = None, thumb: (types.InputFile, str) = None,
+                      disable_notification: bool = None, reply_to_message_id: int = None):
         """As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvideonote)
 
         - - - - -
@@ -446,20 +494,22 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "video_note" : helper.toDict(video_note,True),
-            "duration" : duration,
-            "length" : length,
-            "thumb" : helper.toDict(thumb,True),
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "video_note": helper.toDict(video_note, True),
+            "duration": duration,
+            "length": length,
+            "thumb": helper.toDict(thumb, True),
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendVideoNote", data),types.Message)
+        return self.response(self.sendRequest("sendVideoNote", data), types.Message)
 
-    def sendMediaGroup (self,chat_id: (int,str),media : list,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendMediaGroup(self, chat_id: (int, str), media: list, disable_notification: bool = None,
+                       reply_to_message_id: int = None):
         """Use this method to send a group of photos or videos as an album. On success, an array of the sent Messages is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmediagroup)
 
         - - - - -
@@ -474,16 +524,19 @@ class botApi () :
 
         - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "media" : media,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
+            "chat_id": chat_id,
+            "media": media,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
         }
-        return self.response(self.sendRequest("sendMediaGroup", data),list)
+        return self.response(self.sendRequest("sendMediaGroup", data), list)
 
-    def sendLocation (self,chat_id: (int,str),latitude : float,longitude : float,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,live_period : int = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendLocation(self, chat_id: (int, str), latitude: float, longitude: float, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                     live_period: int = None, disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send point on the map. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendlocation)
 
         - - - - -
@@ -501,19 +554,22 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "latitude" : latitude,
-            "longitude" : longitude,
-            "live_period" : live_period,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "latitude": latitude,
+            "longitude": longitude,
+            "live_period": live_period,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendLocation", data),types.Message)
+        return self.response(self.sendRequest("sendLocation", data), types.Message)
 
-    def editMessageLiveLocation (self,latitude : float,longitude : float,chat_id: (int,str) = None ,message_id : int = None ,inline_message_id : str = None ,reply_markup : types.InlineKeyboardMarkup = None):
+    def editMessageLiveLocation(self, latitude: float, longitude: float, chat_id: (int, str) = None,
+                                message_id: int = None, inline_message_id: str = None,
+                                reply_markup: types.InlineKeyboardMarkup = None):
         """Use this method to edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#editmessagelivelocation)
 
         - - - - -
@@ -531,16 +587,17 @@ class botApi () :
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
-            "latitude" : latitude,
-            "longitude" : longitude,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "latitude": latitude,
+            "longitude": longitude,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("editMessageLiveLocation", data),None)
+        return self.response(self.sendRequest("editMessageLiveLocation", data), None)
 
-    def stopMessageLiveLocation (self,chat_id: (int,str) = None ,message_id : int = None ,inline_message_id : str = None ,reply_markup : types.InlineKeyboardMarkup = None):
+    def stopMessageLiveLocation(self, chat_id: (int, str) = None, message_id: int = None, inline_message_id: str = None,
+                                reply_markup: types.InlineKeyboardMarkup = None):
         """Use this method to stop updating a live location message before live_period expires. On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#stopmessagelivelocation)
 
         - - - - -
@@ -556,14 +613,17 @@ class botApi () :
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("stopMessageLiveLocation", data),None)
+        return self.response(self.sendRequest("stopMessageLiveLocation", data), None)
 
-    def sendVenue (self,chat_id: (int,str),latitude : float,longitude : float,title : str,address : str,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,foursquare_id : str = None ,foursquare_type : str = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendVenue(self, chat_id: (int, str), latitude: float, longitude: float, title: str, address: str,
+                  reply_markup: (types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove,
+                                 types.ForceReply) = None, foursquare_id: str = None, foursquare_type: str = None,
+                  disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send information about a venue. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvenue)
 
         - - - - -
@@ -584,22 +644,26 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "latitude" : latitude,
-            "longitude" : longitude,
-            "title" : title,
-            "address" : address,
-            "foursquare_id" : foursquare_id,
-            "foursquare_type" : foursquare_type,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "latitude": latitude,
+            "longitude": longitude,
+            "title": title,
+            "address": address,
+            "foursquare_id": foursquare_id,
+            "foursquare_type": foursquare_type,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendVenue", data),types.Message)
+        return self.response(self.sendRequest("sendVenue", data), types.Message)
 
-    def sendContact (self,chat_id: (int,str),phone_number : str,first_name : str,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,last_name : str = None ,vcard : str = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendContact(self, chat_id: (int, str), phone_number: str, first_name: str, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                    last_name: str = None, vcard: str = None, disable_notification: bool = None,
+                    reply_to_message_id: int = None):
         """Use this method to send phone contacts. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendcontact)
 
         - - - - -
@@ -618,20 +682,26 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "phone_number" : phone_number,
-            "first_name" : first_name,
-            "last_name" : last_name,
-            "vcard" : vcard,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "phone_number": phone_number,
+            "first_name": first_name,
+            "last_name": last_name,
+            "vcard": vcard,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendContact", data),types.Message)
+        return self.response(self.sendRequest("sendContact", data), types.Message)
 
-    def sendPoll (self,chat_id: (int,str),question : str,options : list,reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,is_anonymous : bool = None ,type : str = None ,allows_multiple_answers : bool = None ,correct_option_id : int = None ,explanation : str = None ,explanation_parse_mode : str = None ,open_period : int = None ,close_date : int = None ,is_closed : bool = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendPoll(self, chat_id: (int, str), question: str, options: list, reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                 is_anonymous: bool = None, type: str = None, allows_multiple_answers: bool = None,
+                 correct_option_id: int = None, explanation: str = None, explanation_parse_mode: str = None,
+                 open_period: int = None, close_date: int = None, is_closed: bool = None,
+                 disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send a native poll. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendpoll)
 
         - - - - -
@@ -657,27 +727,30 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "question" : question,
-            "options" : options,
-            "is_anonymous" : is_anonymous,
-            "type" : type,
-            "allows_multiple_answers" : allows_multiple_answers,
-            "correct_option_id" : correct_option_id,
-            "explanation" : explanation,
-            "explanation_parse_mode" : explanation_parse_mode,
-            "open_period" : open_period,
-            "close_date" : close_date,
-            "is_closed" : is_closed,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "question": question,
+            "options": options,
+            "is_anonymous": is_anonymous,
+            "type": type,
+            "allows_multiple_answers": allows_multiple_answers,
+            "correct_option_id": correct_option_id,
+            "explanation": explanation,
+            "explanation_parse_mode": explanation_parse_mode,
+            "open_period": open_period,
+            "close_date": close_date,
+            "is_closed": is_closed,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendPoll", data),types.Message)
+        return self.response(self.sendRequest("sendPoll", data), types.Message)
 
-    def sendDice (self,chat_id: (int,str),reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,emoji : str = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendDice(self, chat_id: (int, str), reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                 emoji: str = None, disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent Message is returned. (Yes, we're aware of the 'proper' singular of die. But it's awkward, and we decided to help it change. One dice at a time!) [See Telegram API](https://core.telegram.org/bots/api#senddice)
 
         - - - - -
@@ -693,17 +766,18 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "emoji" : emoji,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "emoji": emoji,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendDice", data),types.Message)
+        return self.response(self.sendRequest("sendDice", data), types.Message)
 
-    def sendChatAction (self,chat_id: (int,str),action : str,):
+    def sendChatAction(self, chat_id: (int, str), action: str, ):
         """Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
         We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive. [See Telegram API](https://core.telegram.org/bots/api#sendchataction)
 
@@ -718,12 +792,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "action" : action,
+            "chat_id": chat_id,
+            "action": action,
         }
-        return self.response(self.sendRequest("sendChatAction", data),bool)
+        return self.response(self.sendRequest("sendChatAction", data), bool)
 
-    def getUserProfilePhotos (self,user_id : int,offset : int = None ,limit : int = None):
+    def getUserProfilePhotos(self, user_id: int, offset: int = None, limit: int = None):
         """Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object. [See Telegram API](https://core.telegram.org/bots/api#getuserprofilephotos)
 
         - - - - -
@@ -738,13 +812,13 @@ class botApi () :
         - A `tuple`, on success a `types.UserProfilePhotos` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "offset" : offset,
-            "limit" : limit,
+            "user_id": user_id,
+            "offset": offset,
+            "limit": limit,
         }
-        return self.response(self.sendRequest("getUserProfilePhotos", data),types.UserProfilePhotos)
+        return self.response(self.sendRequest("getUserProfilePhotos", data), types.UserProfilePhotos)
 
-    def getFile (self,file_id : str,):
+    def getFile(self, file_id: str, ):
         """Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again. [See Telegram API](https://core.telegram.org/bots/api#getfile)
 
         - - - - -
@@ -757,11 +831,11 @@ class botApi () :
         - A `tuple`, on success a `types.File` as first member and a botApiResponse object as second member
         """
         data = {
-            "file_id" : file_id,
+            "file_id": file_id,
         }
-        return self.response(self.sendRequest("getFile", data),types.File)
+        return self.response(self.sendRequest("getFile", data), types.File)
 
-    def kickChatMember (self,chat_id: (int,str),user_id : int,until_date : int = None):
+    def kickChatMember(self, chat_id: (int, str), user_id: int, until_date: int = None):
         """Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#kickchatmember)
 
         - - - - -
@@ -776,13 +850,13 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "user_id" : user_id,
-            "until_date" : until_date,
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "until_date": until_date,
         }
-        return self.response(self.sendRequest("kickChatMember", data),bool)
+        return self.response(self.sendRequest("kickChatMember", data), bool)
 
-    def unbanChatMember (self,chat_id: (int,str),user_id : int,):
+    def unbanChatMember(self, chat_id: (int, str), user_id: int, ):
         """Use this method to unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#unbanchatmember)
 
         - - - - -
@@ -796,12 +870,13 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "user_id" : user_id,
+            "chat_id": chat_id,
+            "user_id": user_id,
         }
-        return self.response(self.sendRequest("unbanChatMember", data),bool)
+        return self.response(self.sendRequest("unbanChatMember", data), bool)
 
-    def restrictChatMember (self,chat_id: (int,str),user_id : int,permissions : types.ChatPermissions,until_date : int = None):
+    def restrictChatMember(self, chat_id: (int, str), user_id: int, permissions: types.ChatPermissions,
+                           until_date: int = None):
         """Use this method to restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate admin rights. Pass True for all permissions to lift restrictions from a user. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#restrictchatmember)
 
         - - - - -
@@ -817,14 +892,18 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "user_id" : user_id,
-            "permissions" : helper.toDict(permissions,True),
-            "until_date" : until_date,
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "permissions": helper.toDict(permissions, True),
+            "until_date": until_date,
         }
-        return self.response(self.sendRequest("restrictChatMember", data),bool)
+        return self.response(self.sendRequest("restrictChatMember", data), bool)
 
-    def promoteChatMember (self,chat_id: (int,str),user_id : int,can_change_info : bool = None ,can_post_messages : bool = None ,can_edit_messages : bool = None ,can_delete_messages : bool = None ,can_invite_users : bool = None ,can_restrict_members : bool = None ,can_pin_messages : bool = None ,can_promote_members : bool = None):
+    def promoteChatMember(self, chat_id: (int, str), user_id: int, can_change_info: bool = None,
+                          can_post_messages: bool = None, can_edit_messages: bool = None,
+                          can_delete_messages: bool = None, can_invite_users: bool = None,
+                          can_restrict_members: bool = None, can_pin_messages: bool = None,
+                          can_promote_members: bool = None):
         """Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean parameters to demote a user. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#promotechatmember)
 
         - - - - -
@@ -846,20 +925,20 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "user_id" : user_id,
-            "can_change_info" : can_change_info,
-            "can_post_messages" : can_post_messages,
-            "can_edit_messages" : can_edit_messages,
-            "can_delete_messages" : can_delete_messages,
-            "can_invite_users" : can_invite_users,
-            "can_restrict_members" : can_restrict_members,
-            "can_pin_messages" : can_pin_messages,
-            "can_promote_members" : can_promote_members,
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "can_change_info": can_change_info,
+            "can_post_messages": can_post_messages,
+            "can_edit_messages": can_edit_messages,
+            "can_delete_messages": can_delete_messages,
+            "can_invite_users": can_invite_users,
+            "can_restrict_members": can_restrict_members,
+            "can_pin_messages": can_pin_messages,
+            "can_promote_members": can_promote_members,
         }
-        return self.response(self.sendRequest("promoteChatMember", data),bool)
+        return self.response(self.sendRequest("promoteChatMember", data), bool)
 
-    def setChatAdministratorCustomTitle (self,chat_id: (int,str),user_id : int,custom_title : str,):
+    def setChatAdministratorCustomTitle(self, chat_id: (int, str), user_id: int, custom_title: str, ):
         """Use this method to set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatadministratorcustomtitle)
 
         - - - - -
@@ -874,13 +953,13 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "user_id" : user_id,
-            "custom_title" : custom_title,
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "custom_title": custom_title,
         }
-        return self.response(self.sendRequest("setChatAdministratorCustomTitle", data),bool)
+        return self.response(self.sendRequest("setChatAdministratorCustomTitle", data), bool)
 
-    def setChatPermissions (self,chat_id: (int,str),permissions : types.ChatPermissions,):
+    def setChatPermissions(self, chat_id: (int, str), permissions: types.ChatPermissions, ):
         """Use this method to set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatpermissions)
 
         - - - - -
@@ -894,12 +973,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "permissions" : helper.toDict(permissions,True),
+            "chat_id": chat_id,
+            "permissions": helper.toDict(permissions, True),
         }
-        return self.response(self.sendRequest("setChatPermissions", data),bool)
+        return self.response(self.sendRequest("setChatPermissions", data), bool)
 
-    def exportChatInviteLink (self,chat_id: (int,str),):
+    def exportChatInviteLink(self, chat_id: (int, str), ):
         """Use this method to generate a new invite link for a chat; any previously generated link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as String on success. [See Telegram API](https://core.telegram.org/bots/api#exportchatinvitelink)
 
         - - - - -
@@ -912,11 +991,11 @@ class botApi () :
         - A `tuple`, on success a `str` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("exportChatInviteLink", data),str)
+        return self.response(self.sendRequest("exportChatInviteLink", data), str)
 
-    def setChatPhoto (self,chat_id: (int,str),photo : types.InputFile,):
+    def setChatPhoto(self, chat_id: (int, str), photo: types.InputFile, ):
         """Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatphoto)
 
         - - - - -
@@ -930,12 +1009,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "photo" : helper.toDict(photo,True),
+            "chat_id": chat_id,
+            "photo": helper.toDict(photo, True),
         }
-        return self.response(self.sendRequest("setChatPhoto", data),bool)
+        return self.response(self.sendRequest("setChatPhoto", data), bool)
 
-    def deleteChatPhoto (self,chat_id: (int,str),):
+    def deleteChatPhoto(self, chat_id: (int, str), ):
         """Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletechatphoto)
 
         - - - - -
@@ -948,11 +1027,11 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("deleteChatPhoto", data),bool)
+        return self.response(self.sendRequest("deleteChatPhoto", data), bool)
 
-    def setChatTitle (self,chat_id: (int,str),title : str,):
+    def setChatTitle(self, chat_id: (int, str), title: str, ):
         """Use this method to change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchattitle)
 
         - - - - -
@@ -966,12 +1045,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "title" : title,
+            "chat_id": chat_id,
+            "title": title,
         }
-        return self.response(self.sendRequest("setChatTitle", data),bool)
+        return self.response(self.sendRequest("setChatTitle", data), bool)
 
-    def setChatDescription (self,chat_id: (int,str),description : str = None):
+    def setChatDescription(self, chat_id: (int, str), description: str = None):
         """Use this method to change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatdescription)
 
         - - - - -
@@ -985,12 +1064,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "description" : description,
+            "chat_id": chat_id,
+            "description": description,
         }
-        return self.response(self.sendRequest("setChatDescription", data),bool)
+        return self.response(self.sendRequest("setChatDescription", data), bool)
 
-    def pinChatMessage (self,chat_id: (int,str),message_id : int,disable_notification : bool = None):
+    def pinChatMessage(self, chat_id: (int, str), message_id: int, disable_notification: bool = None):
         """Use this method to pin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in the supergroup or 'can_edit_messages' admin right in the channel. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#pinchatmessage)
 
         - - - - -
@@ -1004,15 +1083,16 @@ class botApi () :
 
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "disable_notification" : disable_notification,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "disable_notification": disable_notification,
         }
-        return self.response(self.sendRequest("pinChatMessage", data),bool)
+        return self.response(self.sendRequest("pinChatMessage", data), bool)
 
-    def unpinChatMessage (self,chat_id: (int,str),):
+    def unpinChatMessage(self, chat_id: (int, str), ):
         """Use this method to unpin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' admin right in the supergroup or 'can_edit_messages' admin right in the channel. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#unpinchatmessage)
 
         - - - - -
@@ -1025,11 +1105,11 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("unpinChatMessage", data),bool)
+        return self.response(self.sendRequest("unpinChatMessage", data), bool)
 
-    def leaveChat (self,chat_id: (int,str),):
+    def leaveChat(self, chat_id: (int, str), ):
         """Use this method for your bot to leave a group, supergroup or channel. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#leavechat)
 
         - - - - -
@@ -1042,11 +1122,11 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("leaveChat", data),bool)
+        return self.response(self.sendRequest("leaveChat", data), bool)
 
-    def getChat (self,chat_id: (int,str),):
+    def getChat(self, chat_id: (int, str), ):
         """Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success. [See Telegram API](https://core.telegram.org/bots/api#getchat)
 
         - - - - -
@@ -1059,11 +1139,11 @@ class botApi () :
         - A `tuple`, on success a `types.Chat` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("getChat", data),types.Chat)
+        return self.response(self.sendRequest("getChat", data), types.Chat)
 
-    def getChatAdministrators (self,chat_id: (int,str),):
+    def getChatAdministrators(self, chat_id: (int, str), ):
         """Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned. [See Telegram API](https://core.telegram.org/bots/api#getchatadministrators)
 
         - - - - -
@@ -1076,11 +1156,11 @@ class botApi () :
         - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("getChatAdministrators", data),list)
+        return self.response(self.sendRequest("getChatAdministrators", data), list)
 
-    def getChatMembersCount (self,chat_id: (int,str),):
+    def getChatMembersCount(self, chat_id: (int, str), ):
         """Use this method to get the number of members in a chat. Returns Int on success. [See Telegram API](https://core.telegram.org/bots/api#getchatmemberscount)
 
         - - - - -
@@ -1093,11 +1173,11 @@ class botApi () :
         - A `tuple`, on success a `int` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("getChatMembersCount", data),int)
+        return self.response(self.sendRequest("getChatMembersCount", data), int)
 
-    def getChatMember (self,chat_id: (int,str),user_id : int,):
+    def getChatMember(self, chat_id: (int, str), user_id: int, ):
         """Use this method to get information about a member of a chat. Returns a ChatMember object on success. [See Telegram API](https://core.telegram.org/bots/api#getchatmember)
 
         - - - - -
@@ -1111,12 +1191,12 @@ class botApi () :
         - A `tuple`, on success a `types.ChatMember` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "user_id" : user_id,
+            "chat_id": chat_id,
+            "user_id": user_id,
         }
-        return self.response(self.sendRequest("getChatMember", data),types.ChatMember)
+        return self.response(self.sendRequest("getChatMember", data), types.ChatMember)
 
-    def setChatStickerSet (self,chat_id: (int,str),sticker_set_name : str,):
+    def setChatStickerSet(self, chat_id: (int, str), sticker_set_name: str, ):
         """Use this method to set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatstickerset)
 
         - - - - -
@@ -1130,12 +1210,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "sticker_set_name" : sticker_set_name,
+            "chat_id": chat_id,
+            "sticker_set_name": sticker_set_name,
         }
-        return self.response(self.sendRequest("setChatStickerSet", data),bool)
+        return self.response(self.sendRequest("setChatStickerSet", data), bool)
 
-    def deleteChatStickerSet (self,chat_id: (int,str),):
+    def deleteChatStickerSet(self, chat_id: (int, str), ):
         """Use this method to delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletechatstickerset)
 
         - - - - -
@@ -1148,11 +1228,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
+            "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("deleteChatStickerSet", data),bool)
+        return self.response(self.sendRequest("deleteChatStickerSet", data), bool)
 
-    def answerCallbackQuery (self,callback_query_id : str,text : str = None ,show_alert : bool = None ,url : str = None ,cache_time : int = None):
+    def answerCallbackQuery(self, callback_query_id: str, text: str = None, show_alert: bool = None, url: str = None,
+                            cache_time: int = None):
         """Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned. [See Telegram API](https://core.telegram.org/bots/api#answercallbackquery)
 
         - - - - -
@@ -1169,15 +1250,15 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "callback_query_id" : callback_query_id,
-            "text" : text,
-            "show_alert" : show_alert,
-            "url" : url,
-            "cache_time" : cache_time,
+            "callback_query_id": callback_query_id,
+            "text": text,
+            "show_alert": show_alert,
+            "url": url,
+            "cache_time": cache_time,
         }
-        return self.response(self.sendRequest("answerCallbackQuery", data),bool)
+        return self.response(self.sendRequest("answerCallbackQuery", data), bool)
 
-    def setMyCommands (self,commands : list,):
+    def setMyCommands(self, commands: list, ):
         """Use this method to change the list of the bot's commands. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setmycommands)
 
         - - - - -
@@ -1190,11 +1271,11 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "commands" : commands,
+            "commands": commands,
         }
-        return self.response(self.sendRequest("setMyCommands", data),bool)
+        return self.response(self.sendRequest("setMyCommands", data), bool)
 
-    def getMyCommands (self,):
+    def getMyCommands(self, ):
         """Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success. [See Telegram API](https://core.telegram.org/bots/api#getmycommands)
 
         - - - - -
@@ -1207,9 +1288,11 @@ class botApi () :
         """
         data = {
         }
-        return self.response(self.sendRequest("getMyCommands", data),list)
+        return self.response(self.sendRequest("getMyCommands", data), list)
 
-    def editMessageText (self,text : str,chat_id: (int,str) = None ,message_id : int = None ,inline_message_id : str = None ,reply_markup : types.InlineKeyboardMarkup = None ,parse_mode : str = None ,disable_web_page_preview : bool = None):
+    def editMessageText(self, text: str, chat_id: (int, str) = None, message_id: int = None,
+                        inline_message_id: str = None, reply_markup: types.InlineKeyboardMarkup = None,
+                        parse_mode: str = None, disable_web_page_preview: bool = None):
         """Use this method to edit text and game messages. On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#editmessagetext)
 
         - - - - -
@@ -1227,20 +1310,24 @@ class botApi () :
 
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
-        if disable_web_page_preview == None: disable_web_page_preview = self.default_disable_web_preview
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
+        if disable_web_page_preview is None:
+            disable_web_page_preview = self.default_disable_web_preview
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
-            "text" : text,
-            "parse_mode" : parse_mode,
-            "disable_web_page_preview" : disable_web_page_preview,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "text": text,
+            "parse_mode": parse_mode,
+            "disable_web_page_preview": disable_web_page_preview,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("editMessageText", data),None)
+        return self.response(self.sendRequest("editMessageText", data), None)
 
-    def editMessageCaption (self,chat_id: (int,str) = None ,message_id : int = None ,caption : str = None ,inline_message_id : str = None ,reply_markup : types.InlineKeyboardMarkup = None ,parse_mode : str = None):
+    def editMessageCaption(self, chat_id: (int, str) = None, message_id: int = None, caption: str = None,
+                           inline_message_id: str = None, reply_markup: types.InlineKeyboardMarkup = None,
+                           parse_mode: str = None):
         """Use this method to edit captions of messages. On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#editmessagecaption)
 
         - - - - -
@@ -1257,18 +1344,20 @@ class botApi () :
 
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
-        if parse_mode == None: parse_mode = self.default_parse_mode
+        if parse_mode is None:
+            parse_mode = self.default_parse_mode
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
-            "caption" : caption,
-            "parse_mode" : parse_mode,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("editMessageCaption", data),None)
+        return self.response(self.sendRequest("editMessageCaption", data), None)
 
-    def editMessageMedia (self,media : types.InputMedia,chat_id: (int,str) = None ,message_id : int = None ,inline_message_id : str = None ,reply_markup : types.InlineKeyboardMarkup = None):
+    def editMessageMedia(self, media: types.InputMedia, chat_id: (int, str) = None, message_id: int = None,
+                         inline_message_id: str = None, reply_markup: types.InlineKeyboardMarkup = None):
         """Use this method to edit animation, audio, document, photo, or video messages. If a message is a part of a message album, then it can be edited only to a photo or a video. Otherwise, message type can be changed arbitrarily. When inline message is edited, new file can't be uploaded. Use previously uploaded file via its file_id or specify a URL. On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#editmessagemedia)
 
         - - - - -
@@ -1285,15 +1374,16 @@ class botApi () :
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
-            "media" : helper.toDict(media,True),
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "media": helper.toDict(media, True),
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("editMessageMedia", data),None)
+        return self.response(self.sendRequest("editMessageMedia", data), None)
 
-    def editMessageReplyMarkup (self,chat_id: (int,str) = None ,message_id : int = None ,inline_message_id : str = None ,reply_markup : types.InlineKeyboardMarkup = None):
+    def editMessageReplyMarkup(self, chat_id: (int, str) = None, message_id: int = None, inline_message_id: str = None,
+                               reply_markup: types.InlineKeyboardMarkup = None):
         """Use this method to edit only the reply markup of messages. On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#editmessagereplymarkup)
 
         - - - - -
@@ -1309,14 +1399,14 @@ class botApi () :
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("editMessageReplyMarkup", data),None)
+        return self.response(self.sendRequest("editMessageReplyMarkup", data), None)
 
-    def stopPoll (self,chat_id: (int,str),message_id : int,reply_markup : types.InlineKeyboardMarkup = None):
+    def stopPoll(self, chat_id: (int, str), message_id: int, reply_markup: types.InlineKeyboardMarkup = None):
         """Use this method to stop a poll which was sent by the bot. On success, the stopped Poll with the final results is returned. [See Telegram API](https://core.telegram.org/bots/api#stoppoll)
 
         - - - - -
@@ -1331,13 +1421,13 @@ class botApi () :
         - A `tuple`, on success a `types.Poll` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("stopPoll", data),types.Poll)
+        return self.response(self.sendRequest("stopPoll", data), types.Poll)
 
-    def deleteMessage (self,chat_id: (int,str),message_id : int,):
+    def deleteMessage(self, chat_id: (int, str), message_id: int, ):
         """Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted can_post_messages permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletemessage)
 
         - - - - -
@@ -1351,12 +1441,14 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "chat_id" : chat_id,
-            "message_id" : message_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
         }
-        return self.response(self.sendRequest("deleteMessage", data),bool)
+        return self.response(self.sendRequest("deleteMessage", data), bool)
 
-    def sendSticker (self,chat_id: (int,str),sticker: (types.InputFile,str),reply_markup: (types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply) = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendSticker(self, chat_id: (int, str), sticker: (types.InputFile, str), reply_markup: (
+            types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None,
+                    disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendsticker)
 
         - - - - -
@@ -1372,17 +1464,18 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "sticker" : helper.toDict(sticker,True),
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "sticker": helper.toDict(sticker, True),
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendSticker", data),types.Message)
+        return self.response(self.sendRequest("sendSticker", data), types.Message)
 
-    def getStickerSet (self,name : str,):
+    def getStickerSet(self, name: str, ):
         """Use this method to get a sticker set. On success, a StickerSet object is returned. [See Telegram API](https://core.telegram.org/bots/api#getstickerset)
 
         - - - - -
@@ -1395,11 +1488,11 @@ class botApi () :
         - A `tuple`, on success a `types.StickerSet` as first member and a botApiResponse object as second member
         """
         data = {
-            "name" : name,
+            "name": name,
         }
-        return self.response(self.sendRequest("getStickerSet", data),types.StickerSet)
+        return self.response(self.sendRequest("getStickerSet", data), types.StickerSet)
 
-    def uploadStickerFile (self,user_id : int,png_sticker : types.InputFile,):
+    def uploadStickerFile(self, user_id: int, png_sticker: types.InputFile, ):
         """Use this method to upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success. [See Telegram API](https://core.telegram.org/bots/api#uploadstickerfile)
 
         - - - - -
@@ -1413,12 +1506,14 @@ class botApi () :
         - A `tuple`, on success a `types.File` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "png_sticker" : helper.toDict(png_sticker,True),
+            "user_id": user_id,
+            "png_sticker": helper.toDict(png_sticker, True),
         }
-        return self.response(self.sendRequest("uploadStickerFile", data),types.File)
+        return self.response(self.sendRequest("uploadStickerFile", data), types.File)
 
-    def createNewStickerSet (self,user_id : int,name : str,title : str,emojis : str,png_sticker: (types.InputFile,str) = None ,tgs_sticker : types.InputFile = None ,contains_masks : bool = None ,mask_position : types.MaskPosition = None):
+    def createNewStickerSet(self, user_id: int, name: str, title: str, emojis: str,
+                            png_sticker: (types.InputFile, str) = None, tgs_sticker: types.InputFile = None,
+                            contains_masks: bool = None, mask_position: types.MaskPosition = None):
         """Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker or tgs_sticker. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#createnewstickerset)
 
         - - - - -
@@ -1438,18 +1533,19 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "name" : name,
-            "title" : title,
-            "png_sticker" : helper.toDict(png_sticker,True),
-            "tgs_sticker" : helper.toDict(tgs_sticker,True),
-            "emojis" : emojis,
-            "contains_masks" : contains_masks,
-            "mask_position" : helper.toDict(mask_position,True),
+            "user_id": user_id,
+            "name": name,
+            "title": title,
+            "png_sticker": helper.toDict(png_sticker, True),
+            "tgs_sticker": helper.toDict(tgs_sticker, True),
+            "emojis": emojis,
+            "contains_masks": contains_masks,
+            "mask_position": helper.toDict(mask_position, True),
         }
-        return self.response(self.sendRequest("createNewStickerSet", data),bool)
+        return self.response(self.sendRequest("createNewStickerSet", data), bool)
 
-    def addStickerToSet (self,user_id : int,name : str,png_sticker: (types.InputFile,str),emojis : str,tgs_sticker : types.InputFile = None ,mask_position : types.MaskPosition = None):
+    def addStickerToSet(self, user_id: int, name: str, png_sticker: (types.InputFile, str), emojis: str,
+                        tgs_sticker: types.InputFile = None, mask_position: types.MaskPosition = None):
         """Use this method to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker or tgs_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#addstickertoset)
 
         - - - - -
@@ -1467,16 +1563,16 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "name" : name,
-            "png_sticker" : helper.toDict(png_sticker,True),
-            "tgs_sticker" : helper.toDict(tgs_sticker,True),
-            "emojis" : emojis,
-            "mask_position" : helper.toDict(mask_position,True),
+            "user_id": user_id,
+            "name": name,
+            "png_sticker": helper.toDict(png_sticker, True),
+            "tgs_sticker": helper.toDict(tgs_sticker, True),
+            "emojis": emojis,
+            "mask_position": helper.toDict(mask_position, True),
         }
-        return self.response(self.sendRequest("addStickerToSet", data),bool)
+        return self.response(self.sendRequest("addStickerToSet", data), bool)
 
-    def setStickerPositionInSet (self,sticker : str,position : int,):
+    def setStickerPositionInSet(self, sticker: str, position: int, ):
         """Use this method to move a sticker in a set created by the bot to a specific position. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setstickerpositioninset)
 
         - - - - -
@@ -1490,12 +1586,12 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "sticker" : sticker,
-            "position" : position,
+            "sticker": sticker,
+            "position": position,
         }
-        return self.response(self.sendRequest("setStickerPositionInSet", data),bool)
+        return self.response(self.sendRequest("setStickerPositionInSet", data), bool)
 
-    def deleteStickerFromSet (self,sticker : str,):
+    def deleteStickerFromSet(self, sticker: str, ):
         """Use this method to delete a sticker from a set created by the bot. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletestickerfromset)
 
         - - - - -
@@ -1508,11 +1604,11 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "sticker" : sticker,
+            "sticker": sticker,
         }
-        return self.response(self.sendRequest("deleteStickerFromSet", data),bool)
+        return self.response(self.sendRequest("deleteStickerFromSet", data), bool)
 
-    def setStickerSetThumb (self,user_id : int,name : str,thumb: (types.InputFile,str) = None):
+    def setStickerSetThumb(self, user_id: int, name: str, thumb: (types.InputFile, str) = None):
         """Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setstickersetthumb)
 
         - - - - -
@@ -1527,13 +1623,14 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "name" : name,
-            "user_id" : user_id,
-            "thumb" : helper.toDict(thumb,True),
+            "name": name,
+            "user_id": user_id,
+            "thumb": helper.toDict(thumb, True),
         }
-        return self.response(self.sendRequest("setStickerSetThumb", data),bool)
+        return self.response(self.sendRequest("setStickerSetThumb", data), bool)
 
-    def answerInlineQuery (self,inline_query_id : str,results : list,cache_time : int = None ,is_personal : bool = None ,next_offset : str = None ,switch_pm_text : str = None ,switch_pm_parameter : str = None):
+    def answerInlineQuery(self, inline_query_id: str, results: list, cache_time: int = None, is_personal: bool = None,
+                          next_offset: str = None, switch_pm_text: str = None, switch_pm_parameter: str = None):
         """Use this method to send answers to an inline query. On success, True is returned.No more than 50 results per query are allowed. [See Telegram API](https://core.telegram.org/bots/api#answerinlinequery)
 
         - - - - -
@@ -1552,17 +1649,23 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "inline_query_id" : inline_query_id,
-            "results" : results,
-            "cache_time" : cache_time,
-            "is_personal" : is_personal,
-            "next_offset" : next_offset,
-            "switch_pm_text" : switch_pm_text,
-            "switch_pm_parameter" : switch_pm_parameter,
+            "inline_query_id": inline_query_id,
+            "results": results,
+            "cache_time": cache_time,
+            "is_personal": is_personal,
+            "next_offset": next_offset,
+            "switch_pm_text": switch_pm_text,
+            "switch_pm_parameter": switch_pm_parameter,
         }
-        return self.response(self.sendRequest("answerInlineQuery", data),bool)
+        return self.response(self.sendRequest("answerInlineQuery", data), bool)
 
-    def sendInvoice (self,chat_id : int,title : str,description : str,payload : str,provider_token : str,start_parameter : str,currency : str,prices : list,reply_markup : types.InlineKeyboardMarkup = None ,provider_data : str = None ,photo_url : str = None ,photo_size : int = None ,photo_width : int = None ,photo_height : int = None ,need_name : bool = None ,need_phone_number : bool = None ,need_email : bool = None ,need_shipping_address : bool = None ,send_phone_number_to_provider : bool = None ,send_email_to_provider : bool = None ,is_flexible : bool = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendInvoice(self, chat_id: int, title: str, description: str, payload: str, provider_token: str,
+                    start_parameter: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None,
+                    provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None,
+                    photo_height: int = None, need_name: bool = None, need_phone_number: bool = None,
+                    need_email: bool = None, need_shipping_address: bool = None,
+                    send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None,
+                    is_flexible: bool = None, disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send invoices. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendinvoice)
 
         - - - - -
@@ -1596,35 +1699,37 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "title" : title,
-            "description" : description,
-            "payload" : payload,
-            "provider_token" : provider_token,
-            "start_parameter" : start_parameter,
-            "currency" : currency,
-            "prices" : prices,
-            "provider_data" : provider_data,
-            "photo_url" : photo_url,
-            "photo_size" : photo_size,
-            "photo_width" : photo_width,
-            "photo_height" : photo_height,
-            "need_name" : need_name,
-            "need_phone_number" : need_phone_number,
-            "need_email" : need_email,
-            "need_shipping_address" : need_shipping_address,
-            "send_phone_number_to_provider" : send_phone_number_to_provider,
-            "send_email_to_provider" : send_email_to_provider,
-            "is_flexible" : is_flexible,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "title": title,
+            "description": description,
+            "payload": payload,
+            "provider_token": provider_token,
+            "start_parameter": start_parameter,
+            "currency": currency,
+            "prices": prices,
+            "provider_data": provider_data,
+            "photo_url": photo_url,
+            "photo_size": photo_size,
+            "photo_width": photo_width,
+            "photo_height": photo_height,
+            "need_name": need_name,
+            "need_phone_number": need_phone_number,
+            "need_email": need_email,
+            "need_shipping_address": need_shipping_address,
+            "send_phone_number_to_provider": send_phone_number_to_provider,
+            "send_email_to_provider": send_email_to_provider,
+            "is_flexible": is_flexible,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendInvoice", data),types.Message)
+        return self.response(self.sendRequest("sendInvoice", data), types.Message)
 
-    def answerShippingQuery (self,shipping_query_id : str,ok : bool,shipping_options : list = None ,error_message : str = None):
+    def answerShippingQuery(self, shipping_query_id: str, ok: bool, shipping_options: list = None,
+                            error_message: str = None):
         """If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned. [See Telegram API](https://core.telegram.org/bots/api#answershippingquery)
 
         - - - - -
@@ -1640,14 +1745,14 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "shipping_query_id" : shipping_query_id,
-            "ok" : ok,
-            "shipping_options" : shipping_options,
-            "error_message" : error_message,
+            "shipping_query_id": shipping_query_id,
+            "ok": ok,
+            "shipping_options": shipping_options,
+            "error_message": error_message,
         }
-        return self.response(self.sendRequest("answerShippingQuery", data),bool)
+        return self.response(self.sendRequest("answerShippingQuery", data), bool)
 
-    def answerPreCheckoutQuery (self,pre_checkout_query_id : str,ok : bool,error_message : str = None):
+    def answerPreCheckoutQuery(self, pre_checkout_query_id: str, ok: bool, error_message: str = None):
         """Once the user has confirmed their payment and shipping details, the Bot API sends the final confirmation in the form of an Update with the field pre_checkout_query. Use this method to respond to such pre-checkout queries. On success, True is returned. Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent. [See Telegram API](https://core.telegram.org/bots/api#answerprecheckoutquery)
 
         - - - - -
@@ -1662,13 +1767,13 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "pre_checkout_query_id" : pre_checkout_query_id,
-            "ok" : ok,
-            "error_message" : error_message,
+            "pre_checkout_query_id": pre_checkout_query_id,
+            "ok": ok,
+            "error_message": error_message,
         }
-        return self.response(self.sendRequest("answerPreCheckoutQuery", data),bool)
+        return self.response(self.sendRequest("answerPreCheckoutQuery", data), bool)
 
-    def setPassportDataErrors (self,user_id : int,errors : list,):
+    def setPassportDataErrors(self, user_id: int, errors: list, ):
         """Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
         Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues. [See Telegram API](https://core.telegram.org/bots/api#setpassportdataerrors)
 
@@ -1683,12 +1788,13 @@ class botApi () :
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "errors" : errors,
+            "user_id": user_id,
+            "errors": errors,
         }
-        return self.response(self.sendRequest("setPassportDataErrors", data),bool)
+        return self.response(self.sendRequest("setPassportDataErrors", data), bool)
 
-    def sendGame (self,chat_id : int,game_short_name : str,reply_markup : types.InlineKeyboardMarkup = None ,disable_notification : bool = None ,reply_to_message_id : int = None):
+    def sendGame(self, chat_id: int, game_short_name: str, reply_markup: types.InlineKeyboardMarkup = None,
+                 disable_notification: bool = None, reply_to_message_id: int = None):
         """Use this method to send a game. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendgame)
 
         - - - - -
@@ -1704,17 +1810,19 @@ class botApi () :
 
         - A `tuple`, on success a `types.Message` as first member and a botApiResponse object as second member
         """
-        if disable_notification == None: disable_notification = self.default_disable_notifications
+        if disable_notification is None:
+            disable_notification = self.default_disable_notifications
         data = {
-            "chat_id" : chat_id,
-            "game_short_name" : game_short_name,
-            "disable_notification" : disable_notification,
-            "reply_to_message_id" : reply_to_message_id,
-            "reply_markup" : helper.toDict(reply_markup,True),
+            "chat_id": chat_id,
+            "game_short_name": game_short_name,
+            "disable_notification": disable_notification,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": helper.toDict(reply_markup, True),
         }
-        return self.response(self.sendRequest("sendGame", data),types.Message)
+        return self.response(self.sendRequest("sendGame", data), types.Message)
 
-    def setGameScore (self,user_id : int,score : int,chat_id : int = None ,message_id : int = None ,inline_message_id : str = None ,force : bool = None ,disable_edit_message : bool = None):
+    def setGameScore(self, user_id: int, score: int, chat_id: int = None, message_id: int = None,
+                     inline_message_id: str = None, force: bool = None, disable_edit_message: bool = None):
         """Use this method to set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited Message, otherwise returns True. Returns an error, if the new score is not greater than the user's current score in the chat and force is False. [See Telegram API](https://core.telegram.org/bots/api#setgamescore)
 
         - - - - -
@@ -1733,17 +1841,18 @@ class botApi () :
         - A `tuple`, on success a `None` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "score" : score,
-            "force" : force,
-            "disable_edit_message" : disable_edit_message,
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
+            "user_id": user_id,
+            "score": score,
+            "force": force,
+            "disable_edit_message": disable_edit_message,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
         }
-        return self.response(self.sendRequest("setGameScore", data),None)
+        return self.response(self.sendRequest("setGameScore", data), None)
 
-    def getGameHighScores (self,user_id : int,chat_id : int = None ,message_id : int = None ,inline_message_id : str = None):
+    def getGameHighScores(self, user_id: int, chat_id: int = None, message_id: int = None,
+                          inline_message_id: str = None):
         """Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an Array of GameHighScore objects. [See Telegram API](https://core.telegram.org/bots/api#getgamehighscores)
 
         - - - - -
@@ -1759,10 +1868,9 @@ class botApi () :
         - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
         """
         data = {
-            "user_id" : user_id,
-            "chat_id" : chat_id,
-            "message_id" : message_id,
-            "inline_message_id" : inline_message_id,
+            "user_id": user_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
         }
-        return self.response(self.sendRequest("getGameHighScores", data),list)
-
+        return self.response(self.sendRequest("getGameHighScores", data), list)
