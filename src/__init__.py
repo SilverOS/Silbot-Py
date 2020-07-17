@@ -6,14 +6,14 @@ This is a simple framework for [telegram bot API](https://core.telegram.org/bots
 
 - [__Examples__](https://github.com/SilverOS/Silbot-Py/tree/master/examples)
 - [__Github__](https://github.com/SilverOS/Silbot-Py)
-- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.1.0.zip)
+- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.1.3.zip)
 
 """
 
 from silbot import botapi, update
 
 
-def startpool(bot: botapi.BotApi, handlefunc):
+def startpool(bot: botapi.BotApi, handlefunc, onUpdate=None):
     """ This is a builtin function to handle updates with getUpdates
 
     **Args:**
@@ -22,6 +22,7 @@ def startpool(bot: botapi.BotApi, handlefunc):
     - handlefunc (`function`): function **defined by the user**, that function has to accept there arguments:
         - `update` (`silbot.types.update`) : The object that rapresents the update
         - `bot` (`silbot.botapi.botApi`) : The botApi object for that bot,
+    - onUpdate (`function`, optional): a function that is called every update (non async)
     If this is not clear, check the examples
     """
     offset = -1
@@ -31,6 +32,8 @@ def startpool(bot: botapi.BotApi, handlefunc):
         if js["ok"]:
             if len(js["result"]) > 0:
                 for up in js["result"]:
+                    if onUpdate is not None:
+                        onUpdate()
                     offset = up["update_id"] + 1
                     thread = update.update(up, bot, handlefunc)
                     thread.start()
