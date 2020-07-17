@@ -1,9 +1,7 @@
-import json
-import silbot
-from silbot import helper
-from silbot import objects
+from silbot import objects, helper
 
-class Update ():
+
+class Update:
     """This object represents an incoming update.At most one of the optional parameters can be present in any given update.[See on Telegram API](https://core.telegram.org/bots/api#update)
 
     - - - - -
@@ -22,38 +20,41 @@ class Update ():
     - `poll`: `Poll` - Optional. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
     - `poll_answer`: `PollAnswer` - Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "update_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "update_id" and value is not None:
                 self.update_id = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = Message(value)
-            elif index == "edited_message" and value != None:
+            elif index == "edited_message" and value is not None:
                 self.edited_message = Message(value)
-            elif index == "channel_post" and value != None:
+            elif index == "channel_post" and value is not None:
                 self.channel_post = Message(value)
-            elif index == "edited_channel_post" and value != None:
+            elif index == "edited_channel_post" and value is not None:
                 self.edited_channel_post = Message(value)
-            elif index == "inline_query" and value != None:
+            elif index == "inline_query" and value is not None:
                 self.inline_query = InlineQuery(value)
-            elif index == "chosen_inline_result" and value != None:
+            elif index == "chosen_inline_result" and value is not None:
                 self.chosen_inline_result = ChosenInlineResult(value)
-            elif index == "callback_query" and value != None:
+            elif index == "callback_query" and value is not None:
                 self.callback_query = CallbackQuery(value)
-            elif index == "shipping_query" and value != None:
+            elif index == "shipping_query" and value is not None:
                 self.shipping_query = ShippingQuery(value)
-            elif index == "pre_checkout_query" and value != None:
+            elif index == "pre_checkout_query" and value is not None:
                 self.pre_checkout_query = PreCheckoutQuery(value)
-            elif index == "poll" and value != None:
+            elif index == "poll" and value is not None:
                 self.poll = Poll(value)
-            elif index == "poll_answer" and value != None:
+            elif index == "poll_answer" and value is not None:
                 self.poll_answer = PollAnswer(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class WebhookInfo ():
+class WebhookInfo:
     """Contains information about the current status of a webhook.[See on Telegram API](https://core.telegram.org/bots/api#webhookinfo)
 
     - - - - -
@@ -67,30 +68,33 @@ class WebhookInfo ():
     - `max_connections`: `int` - Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
     - `allowed_updates`: `string[]` - Optional. A list of update types the bot is subscribed to. Defaults to all update types
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "url" and value != None:
+        for index, value in self.dict.items():
+            if index == "url" and value is not None:
                 self.url = value
-            elif index == "has_custom_certificate" and value != None:
+            elif index == "has_custom_certificate" and value is not None:
                 self.has_custom_certificate = value
-            elif index == "pending_update_count" and value != None:
+            elif index == "pending_update_count" and value is not None:
                 self.pending_update_count = value
-            elif index == "last_error_date" and value != None:
+            elif index == "last_error_date" and value is not None:
                 self.last_error_date = value
-            elif index == "last_error_message" and value != None:
+            elif index == "last_error_message" and value is not None:
                 self.last_error_message = value
-            elif index == "max_connections" and value != None:
+            elif index == "max_connections" and value is not None:
                 self.max_connections = value
-            elif index == "allowed_updates" and value != None:
+            elif index == "allowed_updates" and value is not None:
                 self.allowed_updates = list()
                 for i1 in value:
                     self.allowed_updates.append(i1)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class User (objects.User):
+class User(objects.User):
     """This object represents a Telegram user or bot.[See on Telegram API](https://core.telegram.org/bots/api#user)
 
     - - - - -
@@ -106,32 +110,35 @@ class User (objects.User):
     - `can_read_all_group_messages`: `bool` - Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
     - `supports_inline_queries`: `bool` - Optional. True, if the bot supports inline queries. Returned only in getMe.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "is_bot" and value != None:
+            elif index == "is_bot" and value is not None:
                 self.is_bot = value
-            elif index == "first_name" and value != None:
+            elif index == "first_name" and value is not None:
                 self.first_name = value
-            elif index == "last_name" and value != None:
+            elif index == "last_name" and value is not None:
                 self.last_name = value
-            elif index == "username" and value != None:
+            elif index == "username" and value is not None:
                 self.username = value
-            elif index == "language_code" and value != None:
+            elif index == "language_code" and value is not None:
                 self.language_code = value
-            elif index == "can_join_groups" and value != None:
+            elif index == "can_join_groups" and value is not None:
                 self.can_join_groups = value
-            elif index == "can_read_all_group_messages" and value != None:
+            elif index == "can_read_all_group_messages" and value is not None:
                 self.can_read_all_group_messages = value
-            elif index == "supports_inline_queries" and value != None:
+            elif index == "supports_inline_queries" and value is not None:
                 self.supports_inline_queries = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Chat (objects.Chat):
+class Chat(objects.Chat):
     """This object represents a chat.[See on Telegram API](https://core.telegram.org/bots/api#chat)
 
     - - - - -
@@ -152,42 +159,45 @@ class Chat (objects.Chat):
     - `sticker_set_name`: `string` - Optional. For supergroups, name of group sticker set. Returned only in getChat.
     - `can_set_sticker_set`: `bool` - Optional. True, if the bot can change the group sticker set. Returned only in getChat.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "username" and value != None:
+            elif index == "username" and value is not None:
                 self.username = value
-            elif index == "first_name" and value != None:
+            elif index == "first_name" and value is not None:
                 self.first_name = value
-            elif index == "last_name" and value != None:
+            elif index == "last_name" and value is not None:
                 self.last_name = value
-            elif index == "photo" and value != None:
+            elif index == "photo" and value is not None:
                 self.photo = ChatPhoto(value)
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "invite_link" and value != None:
+            elif index == "invite_link" and value is not None:
                 self.invite_link = value
-            elif index == "pinned_message" and value != None:
+            elif index == "pinned_message" and value is not None:
                 self.pinned_message = Message(value)
-            elif index == "permissions" and value != None:
+            elif index == "permissions" and value is not None:
                 self.permissions = ChatPermissions(value)
-            elif index == "slow_mode_delay" and value != None:
+            elif index == "slow_mode_delay" and value is not None:
                 self.slow_mode_delay = value
-            elif index == "sticker_set_name" and value != None:
+            elif index == "sticker_set_name" and value is not None:
                 self.sticker_set_name = value
-            elif index == "can_set_sticker_set" and value != None:
+            elif index == "can_set_sticker_set" and value is not None:
                 self.can_set_sticker_set = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Message ():
+class Message:
     """This object represents a message.[See on Telegram API](https://core.telegram.org/bots/api#message)
 
     - - - - -
@@ -242,120 +252,123 @@ class Message ():
     - `passport_data`: `PassportData` - Optional. Telegram Passport data
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "message_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "message_id" and value is not None:
                 self.message_id = value
-            elif index == "from" and value != None:
+            elif index == "from" and value is not None:
                 self.user = User(value)
-            elif index == "date" and value != None:
+            elif index == "date" and value is not None:
                 self.date = value
-            elif index == "chat" and value != None:
+            elif index == "chat" and value is not None:
                 self.chat = Chat(value)
-            elif index == "forward_from" and value != None:
+            elif index == "forward_from" and value is not None:
                 self.forward_from = User(value)
-            elif index == "forward_from_chat" and value != None:
+            elif index == "forward_from_chat" and value is not None:
                 self.forward_from_chat = Chat(value)
-            elif index == "forward_from_message_id" and value != None:
+            elif index == "forward_from_message_id" and value is not None:
                 self.forward_from_message_id = value
-            elif index == "forward_signature" and value != None:
+            elif index == "forward_signature" and value is not None:
                 self.forward_signature = value
-            elif index == "forward_sender_name" and value != None:
+            elif index == "forward_sender_name" and value is not None:
                 self.forward_sender_name = value
-            elif index == "forward_date" and value != None:
+            elif index == "forward_date" and value is not None:
                 self.forward_date = value
-            elif index == "reply_to_message" and value != None:
+            elif index == "reply_to_message" and value is not None:
                 self.reply_to_message = Message(value)
-            elif index == "edit_date" and value != None:
+            elif index == "edit_date" and value is not None:
                 self.edit_date = value
-            elif index == "media_group_id" and value != None:
+            elif index == "media_group_id" and value is not None:
                 self.media_group_id = value
-            elif index == "author_signature" and value != None:
+            elif index == "author_signature" and value is not None:
                 self.author_signature = value
-            elif index == "text" and value != None:
+            elif index == "text" and value is not None:
                 self.text = value
-            elif index == "entities" and value != None:
+            elif index == "entities" and value is not None:
                 self.entities = list()
                 for i1 in value:
                     self.entities.append(MessageEntity(i1))
-            elif index == "caption_entities" and value != None:
+            elif index == "caption_entities" and value is not None:
                 self.caption_entities = list()
                 for i1 in value:
                     self.caption_entities.append(MessageEntity(i1))
-            elif index == "audio" and value != None:
+            elif index == "audio" and value is not None:
                 self.audio = Audio(value)
-            elif index == "document" and value != None:
+            elif index == "document" and value is not None:
                 self.document = Document(value)
-            elif index == "animation" and value != None:
+            elif index == "animation" and value is not None:
                 self.animation = Animation(value)
-            elif index == "game" and value != None:
+            elif index == "game" and value is not None:
                 self.game = Game(value)
-            elif index == "photo" and value != None:
+            elif index == "photo" and value is not None:
                 self.photo = list()
                 for i1 in value:
                     self.photo.append(PhotoSize(i1))
-            elif index == "sticker" and value != None:
+            elif index == "sticker" and value is not None:
                 self.sticker = Sticker(value)
-            elif index == "video" and value != None:
+            elif index == "video" and value is not None:
                 self.video = Video(value)
-            elif index == "voice" and value != None:
+            elif index == "voice" and value is not None:
                 self.voice = Voice(value)
-            elif index == "video_note" and value != None:
+            elif index == "video_note" and value is not None:
                 self.video_note = VideoNote(value)
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "contact" and value != None:
+            elif index == "contact" and value is not None:
                 self.contact = Contact(value)
-            elif index == "location" and value != None:
+            elif index == "location" and value is not None:
                 self.location = Location(value)
-            elif index == "venue" and value != None:
+            elif index == "venue" and value is not None:
                 self.venue = Venue(value)
-            elif index == "poll" and value != None:
+            elif index == "poll" and value is not None:
                 self.poll = Poll(value)
-            elif index == "dice" and value != None:
+            elif index == "dice" and value is not None:
                 self.dice = Dice(value)
-            elif index == "new_chat_members" and value != None:
+            elif index == "new_chat_members" and value is not None:
                 self.new_chat_members = list()
                 for i1 in value:
                     self.new_chat_members.append(User(i1))
-            elif index == "left_chat_member" and value != None:
+            elif index == "left_chat_member" and value is not None:
                 self.left_chat_member = User(value)
-            elif index == "new_chat_title" and value != None:
+            elif index == "new_chat_title" and value is not None:
                 self.new_chat_title = value
-            elif index == "new_chat_photo" and value != None:
+            elif index == "new_chat_photo" and value is not None:
                 self.new_chat_photo = list()
                 for i1 in value:
                     self.new_chat_photo.append(PhotoSize(i1))
-            elif index == "delete_chat_photo" and value != None:
+            elif index == "delete_chat_photo" and value is not None:
                 self.delete_chat_photo = value
-            elif index == "group_chat_created" and value != None:
+            elif index == "group_chat_created" and value is not None:
                 self.group_chat_created = value
-            elif index == "supergroup_chat_created" and value != None:
+            elif index == "supergroup_chat_created" and value is not None:
                 self.supergroup_chat_created = value
-            elif index == "channel_chat_created" and value != None:
+            elif index == "channel_chat_created" and value is not None:
                 self.channel_chat_created = value
-            elif index == "migrate_to_chat_id" and value != None:
+            elif index == "migrate_to_chat_id" and value is not None:
                 self.migrate_to_chat_id = value
-            elif index == "migrate_from_chat_id" and value != None:
+            elif index == "migrate_from_chat_id" and value is not None:
                 self.migrate_from_chat_id = value
-            elif index == "pinned_message" and value != None:
+            elif index == "pinned_message" and value is not None:
                 self.pinned_message = Message(value)
-            elif index == "invoice" and value != None:
+            elif index == "invoice" and value is not None:
                 self.invoice = Invoice(value)
-            elif index == "successful_payment" and value != None:
+            elif index == "successful_payment" and value is not None:
                 self.successful_payment = SuccessfulPayment(value)
-            elif index == "connected_website" and value != None:
+            elif index == "connected_website" and value is not None:
                 self.connected_website = value
-            elif index == "passport_data" and value != None:
+            elif index == "passport_data" and value is not None:
                 self.passport_data = PassportData(value)
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class MessageEntity ():
+class MessageEntity:
     """This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.[See on Telegram API](https://core.telegram.org/bots/api#messageentity)
 
     - - - - -
@@ -368,26 +381,29 @@ class MessageEntity ():
     - `user`: `User` - Optional. For “text_mention” only, the mentioned user
     - `language`: `string` - Optional. For “pre” only, the programming language of the entity text
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "offset" and value != None:
+            elif index == "offset" and value is not None:
                 self.offset = value
-            elif index == "length" and value != None:
+            elif index == "length" and value is not None:
                 self.length = value
-            elif index == "url" and value != None:
+            elif index == "url" and value is not None:
                 self.url = value
-            elif index == "user" and value != None:
+            elif index == "user" and value is not None:
                 self.user = User(value)
-            elif index == "language" and value != None:
+            elif index == "language" and value is not None:
                 self.language = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PhotoSize ():
+class PhotoSize:
     """This object represents one size of a photo or a file / sticker thumbnail.[See on Telegram API](https://core.telegram.org/bots/api#photosize)
 
     - - - - -
@@ -399,24 +415,27 @@ class PhotoSize ():
     - `height`: `int` - Photo height
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "width" and value != None:
+            elif index == "width" and value is not None:
                 self.width = value
-            elif index == "height" and value != None:
+            elif index == "height" and value is not None:
                 self.height = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Audio ():
+class Audio:
     """This object represents an audio file to be treated as music by the Telegram clients.[See on Telegram API](https://core.telegram.org/bots/api#audio)
 
     - - - - -
@@ -431,30 +450,33 @@ class Audio ():
     - `file_size`: `int` - Optional. File size
     - `thumb`: `PhotoSize` - Optional. Thumbnail of the album cover to which the music file belongs
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "performer" and value != None:
+            elif index == "performer" and value is not None:
                 self.performer = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Document ():
+class Document:
     """This object represents a general file (as opposed to photos, voice messages and audio files).[See on Telegram API](https://core.telegram.org/bots/api#document)
 
     - - - - -
@@ -467,26 +489,29 @@ class Document ():
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
-            elif index == "file_name" and value != None:
+            elif index == "file_name" and value is not None:
                 self.file_name = value
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Video ():
+class Video:
     """This object represents a video file.[See on Telegram API](https://core.telegram.org/bots/api#video)
 
     - - - - -
@@ -501,30 +526,33 @@ class Video ():
     - `mime_type`: `string` - Optional. Mime type of a file as defined by sender
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "width" and value != None:
+            elif index == "width" and value is not None:
                 self.width = value
-            elif index == "height" and value != None:
+            elif index == "height" and value is not None:
                 self.height = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Animation ():
+class Animation:
     """This object represents an animation file (GIF or H.264/MPEG-4 AVC video without sound).[See on Telegram API](https://core.telegram.org/bots/api#animation)
 
     - - - - -
@@ -540,32 +568,35 @@ class Animation ():
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "width" and value != None:
+            elif index == "width" and value is not None:
                 self.width = value
-            elif index == "height" and value != None:
+            elif index == "height" and value is not None:
                 self.height = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
-            elif index == "file_name" and value != None:
+            elif index == "file_name" and value is not None:
                 self.file_name = value
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Voice ():
+class Voice:
     """This object represents a voice note.[See on Telegram API](https://core.telegram.org/bots/api#voice)
 
     - - - - -
@@ -577,24 +608,27 @@ class Voice ():
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class VideoNote ():
+class VideoNote:
     """This object represents a video message (available in Telegram apps as of v.4.0).[See on Telegram API](https://core.telegram.org/bots/api#videonote)
 
     - - - - -
@@ -607,26 +641,29 @@ class VideoNote ():
     - `thumb`: `PhotoSize` - Optional. Video thumbnail
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "length" and value != None:
+            elif index == "length" and value is not None:
                 self.length = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Contact ():
+class Contact:
     """This object represents a phone contact.[See on Telegram API](https://core.telegram.org/bots/api#contact)
 
     - - - - -
@@ -638,24 +675,27 @@ class Contact ():
     - `user_id`: `int` - Optional. Contact's user identifier in Telegram
     - `vcard`: `string` - Optional. Additional data about the contact in the form of a vCard
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "phone_number" and value != None:
+        for index, value in self.dict.items():
+            if index == "phone_number" and value is not None:
                 self.phone_number = value
-            elif index == "first_name" and value != None:
+            elif index == "first_name" and value is not None:
                 self.first_name = value
-            elif index == "last_name" and value != None:
+            elif index == "last_name" and value is not None:
                 self.last_name = value
-            elif index == "user_id" and value != None:
+            elif index == "user_id" and value is not None:
                 self.user_id = value
-            elif index == "vcard" and value != None:
+            elif index == "vcard" and value is not None:
                 self.vcard = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Location ():
+class Location:
     """This object represents a point on the map.[See on Telegram API](https://core.telegram.org/bots/api#location)
 
     - - - - -
@@ -664,18 +704,21 @@ class Location ():
     - `longitude`: `float` - Longitude as defined by sender
     - `latitude`: `float` - Latitude as defined by sender
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "longitude" and value != None:
+        for index, value in self.dict.items():
+            if index == "longitude" and value is not None:
                 self.longitude = value
-            elif index == "latitude" and value != None:
+            elif index == "latitude" and value is not None:
                 self.latitude = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Venue ():
+class Venue:
     """This object represents a venue.[See on Telegram API](https://core.telegram.org/bots/api#venue)
 
     - - - - -
@@ -687,24 +730,27 @@ class Venue ():
     - `foursquare_id`: `string` - Optional. Foursquare identifier of the venue
     - `foursquare_type`: `string` - Optional. Foursquare type of the venue. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "location" and value != None:
+        for index, value in self.dict.items():
+            if index == "location" and value is not None:
                 self.location = Location(value)
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "address" and value != None:
+            elif index == "address" and value is not None:
                 self.address = value
-            elif index == "foursquare_id" and value != None:
+            elif index == "foursquare_id" and value is not None:
                 self.foursquare_id = value
-            elif index == "foursquare_type" and value != None:
+            elif index == "foursquare_type" and value is not None:
                 self.foursquare_type = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PollOption ():
+class PollOption:
     """This object contains information about one answer option in a poll.[See on Telegram API](https://core.telegram.org/bots/api#polloption)
 
     - - - - -
@@ -713,18 +759,21 @@ class PollOption ():
     - `text`: `string` - Option text, 1-100 characters
     - `voter_count`: `int` - Number of users that voted for this option
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "text" and value != None:
+        for index, value in self.dict.items():
+            if index == "text" and value is not None:
                 self.text = value
-            elif index == "voter_count" and value != None:
+            elif index == "voter_count" and value is not None:
                 self.voter_count = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PollAnswer ():
+class PollAnswer:
     """This object represents an answer of a user in a non-anonymous poll.[See on Telegram API](https://core.telegram.org/bots/api#pollanswer)
 
     - - - - -
@@ -734,22 +783,25 @@ class PollAnswer ():
     - `user`: `User` - The user, who changed the answer to the poll
     - `option_ids`: `int[]` - 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "poll_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "poll_id" and value is not None:
                 self.poll_id = value
-            elif index == "user" and value != None:
+            elif index == "user" and value is not None:
                 self.user = User(value)
-            elif index == "option_ids" and value != None:
+            elif index == "option_ids" and value is not None:
                 self.option_ids = list()
                 for i1 in value:
                     self.option_ids.append(i1)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Poll ():
+class Poll:
     """This object contains information about a poll.[See on Telegram API](https://core.telegram.org/bots/api#poll)
 
     - - - - -
@@ -769,44 +821,47 @@ class Poll ():
     - `open_period`: `int` - Optional. Amount of time in seconds the poll will be active after creation
     - `close_date`: `int` - Optional. Point in time (Unix timestamp) when the poll will be automatically closed
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "question" and value != None:
+            elif index == "question" and value is not None:
                 self.question = value
-            elif index == "options" and value != None:
+            elif index == "options" and value is not None:
                 self.options = list()
                 for i1 in value:
                     self.options.append(PollOption(i1))
-            elif index == "total_voter_count" and value != None:
+            elif index == "total_voter_count" and value is not None:
                 self.total_voter_count = value
-            elif index == "is_closed" and value != None:
+            elif index == "is_closed" and value is not None:
                 self.is_closed = value
-            elif index == "is_anonymous" and value != None:
+            elif index == "is_anonymous" and value is not None:
                 self.is_anonymous = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "allows_multiple_answers" and value != None:
+            elif index == "allows_multiple_answers" and value is not None:
                 self.allows_multiple_answers = value
-            elif index == "correct_option_id" and value != None:
+            elif index == "correct_option_id" and value is not None:
                 self.correct_option_id = value
-            elif index == "explanation" and value != None:
+            elif index == "explanation" and value is not None:
                 self.explanation = value
-            elif index == "explanation_entities" and value != None:
+            elif index == "explanation_entities" and value is not None:
                 self.explanation_entities = list()
                 for i1 in value:
                     self.explanation_entities.append(MessageEntity(i1))
-            elif index == "open_period" and value != None:
+            elif index == "open_period" and value is not None:
                 self.open_period = value
-            elif index == "close_date" and value != None:
+            elif index == "close_date" and value is not None:
                 self.close_date = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Dice ():
+class Dice:
     """This object represents a dice with a random value from 1 to 6 for currently supported base emoji. (Yes, we're aware of the “proper” singular of die. But it's awkward, and we decided to help it change. One dice at a time!)[See on Telegram API](https://core.telegram.org/bots/api#dice)
 
     - - - - -
@@ -815,18 +870,21 @@ class Dice ():
     - `emoji`: `string` - Emoji on which the dice throw animation is based
     - `value`: `int` - Value of the dice, 1-6 for currently supported base emoji
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "emoji" and value != None:
+        for index, value in self.dict.items():
+            if index == "emoji" and value is not None:
                 self.emoji = value
-            elif index == "value" and value != None:
+            elif index == "value" and value is not None:
                 self.value = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class UserProfilePhotos ():
+class UserProfilePhotos:
     """This object represent a user's profile pictures.[See on Telegram API](https://core.telegram.org/bots/api#userprofilephotos)
 
     - - - - -
@@ -835,12 +893,15 @@ class UserProfilePhotos ():
     - `total_count`: `int` - Total number of profile pictures the target user has
     - `photos`: `PhotoSize[][]` - Requested profile pictures (in up to 4 sizes each)
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "total_count" and value != None:
+        for index, value in self.dict.items():
+            if index == "total_count" and value is not None:
                 self.total_count = value
-            elif index == "photos" and value != None:
+            elif index == "photos" and value is not None:
                 self.photos = list()
                 for i1 in value:
                     sublist = list()
@@ -848,10 +909,10 @@ class UserProfilePhotos ():
                         sublist.append(PhotoSize(i2))
                     self.photos.append(sublist)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class File ():
+class File:
     """This object represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.[See on Telegram API](https://core.telegram.org/bots/api#file)
 
     - - - - -
@@ -862,22 +923,25 @@ class File ():
     - `file_size`: `int` - Optional. File size, if known
     - `file_path`: `string` - Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
-            elif index == "file_path" and value != None:
+            elif index == "file_path" and value is not None:
                 self.file_path = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ReplyKeyboardMarkup (objects.ReplyKeyboardMarkup):
+class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
     """This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).[See on Telegram API](https://core.telegram.org/bots/api#replykeyboardmarkup)
 
     - - - - -
@@ -888,27 +952,30 @@ class ReplyKeyboardMarkup (objects.ReplyKeyboardMarkup):
     - `one_time_keyboard`: `bool` - Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
     - `selective`: `bool` - Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user requests to change the bot‘s language, bot replies to the request with a keyboard to select the new language. Other users in the group don’t see the keyboard.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "keyboard" and value != None:
+        for index, value in self.dict.items():
+            if index == "keyboard" and value is not None:
                 self.keyboard = list()
                 for i1 in value:
                     sublist = list()
                     for i2 in i1:
                         sublist.append(KeyboardButton(i2))
                     self.keyboard.append(sublist)
-            elif index == "resize_keyboard" and value != None:
+            elif index == "resize_keyboard" and value is not None:
                 self.resize_keyboard = value
-            elif index == "one_time_keyboard" and value != None:
+            elif index == "one_time_keyboard" and value is not None:
                 self.one_time_keyboard = value
-            elif index == "selective" and value != None:
+            elif index == "selective" and value is not None:
                 self.selective = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class KeyboardButton ():
+class KeyboardButton:
     """This object represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields request_contact, request_location, and request_poll are mutually exclusive.[See on Telegram API](https://core.telegram.org/bots/api#keyboardbutton)
 
     - - - - -
@@ -919,22 +986,25 @@ class KeyboardButton ():
     - `request_location`: `bool` - Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
     - `request_poll`: `KeyboardButtonPollType` - Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "text" and value != None:
+        for index, value in self.dict.items():
+            if index == "text" and value is not None:
                 self.text = value
-            elif index == "request_contact" and value != None:
+            elif index == "request_contact" and value is not None:
                 self.request_contact = value
-            elif index == "request_location" and value != None:
+            elif index == "request_location" and value is not None:
                 self.request_location = value
-            elif index == "request_poll" and value != None:
+            elif index == "request_poll" and value is not None:
                 self.request_poll = KeyboardButtonPollType(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class KeyboardButtonPollType ():
+class KeyboardButtonPollType:
     """This object represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.[See on Telegram API](https://core.telegram.org/bots/api#keyboardbuttonpolltype)
 
     - - - - -
@@ -942,16 +1012,19 @@ class KeyboardButtonPollType ():
 
     - `type`: `string` - Optional. If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is passed, only regular polls will be allowed. Otherwise, the user will be allowed to create a poll of any type.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ReplyKeyboardRemove ():
+class ReplyKeyboardRemove:
     """Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a bot. An exception is made for one-time keyboards that are hidden immediately after the user presses a button (see ReplyKeyboardMarkup).[See on Telegram API](https://core.telegram.org/bots/api#replykeyboardremove)
 
     - - - - -
@@ -960,18 +1033,21 @@ class ReplyKeyboardRemove ():
     - `remove_keyboard`: `True` - Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
     - `selective`: `bool` - Optional. Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "remove_keyboard" and value != None:
+        for index, value in self.dict.items():
+            if index == "remove_keyboard" and value is not None:
                 self.remove_keyboard = value
-            elif index == "selective" and value != None:
+            elif index == "selective" and value is not None:
                 self.selective = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineKeyboardMarkup (objects.InlineKeyboardMarkup):
+class InlineKeyboardMarkup(objects.InlineKeyboardMarkup):
     """This object represents an inline keyboard that appears right next to the message it belongs to.[See on Telegram API](https://core.telegram.org/bots/api#inlinekeyboardmarkup)
 
     - - - - -
@@ -979,10 +1055,13 @@ class InlineKeyboardMarkup (objects.InlineKeyboardMarkup):
 
     - `inline_keyboard`: `InlineKeyboardButton[][]` - Array of button rows, each represented by an Array of InlineKeyboardButton objects
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "inline_keyboard" and value != None:
+        for index, value in self.dict.items():
+            if index == "inline_keyboard" and value is not None:
                 self.inline_keyboard = list()
                 for i1 in value:
                     sublist = list()
@@ -990,10 +1069,10 @@ class InlineKeyboardMarkup (objects.InlineKeyboardMarkup):
                         sublist.append(InlineKeyboardButton(i2))
                     self.inline_keyboard.append(sublist)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineKeyboardButton ():
+class InlineKeyboardButton:
     """This object represents one button of an inline keyboard. You must use exactly one of the optional fields.[See on Telegram API](https://core.telegram.org/bots/api#inlinekeyboardbutton)
 
     - - - - -
@@ -1008,30 +1087,33 @@ class InlineKeyboardButton ():
     - `callback_game`: `CallbackGame` - Optional. Description of the game that will be launched when the user presses the button.NOTE: This type of button must always be the first button in the first row.
     - `pay`: `bool` - Optional. Specify True, to send a Pay button.NOTE: This type of button must always be the first button in the first row.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "text" and value != None:
+        for index, value in self.dict.items():
+            if index == "text" and value is not None:
                 self.text = value
-            elif index == "url" and value != None:
+            elif index == "url" and value is not None:
                 self.url = value
-            elif index == "login_url" and value != None:
+            elif index == "login_url" and value is not None:
                 self.login_url = LoginUrl(value)
-            elif index == "callback_data" and value != None:
+            elif index == "callback_data" and value is not None:
                 self.callback_data = value
-            elif index == "switch_inline_query" and value != None:
+            elif index == "switch_inline_query" and value is not None:
                 self.switch_inline_query = value
-            elif index == "switch_inline_query_current_chat" and value != None:
+            elif index == "switch_inline_query_current_chat" and value is not None:
                 self.switch_inline_query_current_chat = value
-            elif index == "callback_game" and value != None:
+            elif index == "callback_game" and value is not None:
                 self.callback_game = CallbackGame(value)
-            elif index == "pay" and value != None:
+            elif index == "pay" and value is not None:
                 self.pay = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class LoginUrl ():
+class LoginUrl:
     """This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:
 Telegram apps support these buttons as of version 5.7.[See on Telegram API](https://core.telegram.org/bots/api#loginurl)
 
@@ -1043,22 +1125,25 @@ Telegram apps support these buttons as of version 5.7.[See on Telegram API](http
     - `bot_username`: `string` - Optional. Username of a bot, which will be used for user authorization. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the bot. See Linking your domain to the bot for more details.
     - `request_write_access`: `bool` - Optional. Pass True to request the permission for your bot to send messages to the user.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "url" and value != None:
+        for index, value in self.dict.items():
+            if index == "url" and value is not None:
                 self.url = value
-            elif index == "forward_text" and value != None:
+            elif index == "forward_text" and value is not None:
                 self.forward_text = value
-            elif index == "bot_username" and value != None:
+            elif index == "bot_username" and value is not None:
                 self.bot_username = value
-            elif index == "request_write_access" and value != None:
+            elif index == "request_write_access" and value is not None:
                 self.request_write_access = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class CallbackQuery (objects.CallbackQuery):
+class CallbackQuery(objects.CallbackQuery):
     """This object represents an incoming callback query from a callback button in an inline keyboard. If the button that originated the query was attached to a message sent by the bot, the field message will be present. If the button was attached to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.[See on Telegram API](https://core.telegram.org/bots/api#callbackquery)
 
     - - - - -
@@ -1072,28 +1157,31 @@ class CallbackQuery (objects.CallbackQuery):
     - `data`: `string` - Optional. Data associated with the callback button. Be aware that a bad client can send arbitrary data in this field.
     - `game_short_name`: `string` - Optional. Short name of a Game to be returned, serves as the unique identifier for the game
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "from" and value != None:
+            elif index == "from" and value is not None:
                 self.user = User(value)
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = Message(value)
-            elif index == "inline_message_id" and value != None:
+            elif index == "inline_message_id" and value is not None:
                 self.inline_message_id = value
-            elif index == "chat_instance" and value != None:
+            elif index == "chat_instance" and value is not None:
                 self.chat_instance = value
-            elif index == "data" and value != None:
+            elif index == "data" and value is not None:
                 self.data = value
-            elif index == "game_short_name" and value != None:
+            elif index == "game_short_name" and value is not None:
                 self.game_short_name = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ForceReply ():
+class ForceReply:
     """Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot‘s message and tapped ’Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode.[See on Telegram API](https://core.telegram.org/bots/api#forcereply)
 
     - - - - -
@@ -1102,18 +1190,21 @@ class ForceReply ():
     - `force_reply`: `True` - Shows reply interface to the user, as if they manually selected the bot‘s message and tapped ’Reply'
     - `selective`: `bool` - Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "force_reply" and value != None:
+        for index, value in self.dict.items():
+            if index == "force_reply" and value is not None:
                 self.force_reply = value
-            elif index == "selective" and value != None:
+            elif index == "selective" and value is not None:
                 self.selective = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ChatPhoto ():
+class ChatPhoto:
     """This object represents a chat photo.[See on Telegram API](https://core.telegram.org/bots/api#chatphoto)
 
     - - - - -
@@ -1124,22 +1215,25 @@ class ChatPhoto ():
     - `big_file_id`: `string` - File identifier of big (640x640) chat photo. This file_id can be used only for photo download and only for as long as the photo is not changed.
     - `big_file_unique_id`: `string` - Unique file identifier of big (640x640) chat photo, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "small_file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "small_file_id" and value is not None:
                 self.small_file_id = value
-            elif index == "small_file_unique_id" and value != None:
+            elif index == "small_file_unique_id" and value is not None:
                 self.small_file_unique_id = value
-            elif index == "big_file_id" and value != None:
+            elif index == "big_file_id" and value is not None:
                 self.big_file_id = value
-            elif index == "big_file_unique_id" and value != None:
+            elif index == "big_file_unique_id" and value is not None:
                 self.big_file_unique_id = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ChatMember ():
+class ChatMember:
     """This object contains information about one member of a chat.[See on Telegram API](https://core.telegram.org/bots/api#chatmember)
 
     - - - - -
@@ -1165,52 +1259,55 @@ class ChatMember ():
     - `can_send_other_messages`: `bool` - Optional. Restricted only. True, if the user is allowed to send animations, games, stickers and use inline bots
     - `can_add_web_page_previews`: `bool` - Optional. Restricted only. True, if the user is allowed to add web page previews to their messages
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "user" and value != None:
+        for index, value in self.dict.items():
+            if index == "user" and value is not None:
                 self.user = User(value)
-            elif index == "status" and value != None:
+            elif index == "status" and value is not None:
                 self.status = value
-            elif index == "custom_title" and value != None:
+            elif index == "custom_title" and value is not None:
                 self.custom_title = value
-            elif index == "until_date" and value != None:
+            elif index == "until_date" and value is not None:
                 self.until_date = value
-            elif index == "can_be_edited" and value != None:
+            elif index == "can_be_edited" and value is not None:
                 self.can_be_edited = value
-            elif index == "can_post_messages" and value != None:
+            elif index == "can_post_messages" and value is not None:
                 self.can_post_messages = value
-            elif index == "can_edit_messages" and value != None:
+            elif index == "can_edit_messages" and value is not None:
                 self.can_edit_messages = value
-            elif index == "can_delete_messages" and value != None:
+            elif index == "can_delete_messages" and value is not None:
                 self.can_delete_messages = value
-            elif index == "can_restrict_members" and value != None:
+            elif index == "can_restrict_members" and value is not None:
                 self.can_restrict_members = value
-            elif index == "can_promote_members" and value != None:
+            elif index == "can_promote_members" and value is not None:
                 self.can_promote_members = value
-            elif index == "can_change_info" and value != None:
+            elif index == "can_change_info" and value is not None:
                 self.can_change_info = value
-            elif index == "can_invite_users" and value != None:
+            elif index == "can_invite_users" and value is not None:
                 self.can_invite_users = value
-            elif index == "can_pin_messages" and value != None:
+            elif index == "can_pin_messages" and value is not None:
                 self.can_pin_messages = value
-            elif index == "is_member" and value != None:
+            elif index == "is_member" and value is not None:
                 self.is_member = value
-            elif index == "can_send_messages" and value != None:
+            elif index == "can_send_messages" and value is not None:
                 self.can_send_messages = value
-            elif index == "can_send_media_messages" and value != None:
+            elif index == "can_send_media_messages" and value is not None:
                 self.can_send_media_messages = value
-            elif index == "can_send_polls" and value != None:
+            elif index == "can_send_polls" and value is not None:
                 self.can_send_polls = value
-            elif index == "can_send_other_messages" and value != None:
+            elif index == "can_send_other_messages" and value is not None:
                 self.can_send_other_messages = value
-            elif index == "can_add_web_page_previews" and value != None:
+            elif index == "can_add_web_page_previews" and value is not None:
                 self.can_add_web_page_previews = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ChatPermissions ():
+class ChatPermissions:
     """Describes actions that a non-administrator user is allowed to take in a chat.[See on Telegram API](https://core.telegram.org/bots/api#chatpermissions)
 
     - - - - -
@@ -1225,30 +1322,33 @@ class ChatPermissions ():
     - `can_invite_users`: `bool` - Optional. True, if the user is allowed to invite new users to the chat
     - `can_pin_messages`: `bool` - Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "can_send_messages" and value != None:
+        for index, value in self.dict.items():
+            if index == "can_send_messages" and value is not None:
                 self.can_send_messages = value
-            elif index == "can_send_media_messages" and value != None:
+            elif index == "can_send_media_messages" and value is not None:
                 self.can_send_media_messages = value
-            elif index == "can_send_polls" and value != None:
+            elif index == "can_send_polls" and value is not None:
                 self.can_send_polls = value
-            elif index == "can_send_other_messages" and value != None:
+            elif index == "can_send_other_messages" and value is not None:
                 self.can_send_other_messages = value
-            elif index == "can_add_web_page_previews" and value != None:
+            elif index == "can_add_web_page_previews" and value is not None:
                 self.can_add_web_page_previews = value
-            elif index == "can_change_info" and value != None:
+            elif index == "can_change_info" and value is not None:
                 self.can_change_info = value
-            elif index == "can_invite_users" and value != None:
+            elif index == "can_invite_users" and value is not None:
                 self.can_invite_users = value
-            elif index == "can_pin_messages" and value != None:
+            elif index == "can_pin_messages" and value is not None:
                 self.can_pin_messages = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class BotCommand ():
+class BotCommand:
     """This object represents a bot command.[See on Telegram API](https://core.telegram.org/bots/api#botcommand)
 
     - - - - -
@@ -1257,18 +1357,21 @@ class BotCommand ():
     - `command`: `string` - Text of the command, 1-32 characters. Can contain only lowercase English letters, digits and underscores.
     - `description`: `string` - Description of the command, 3-256 characters.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "command" and value != None:
+        for index, value in self.dict.items():
+            if index == "command" and value is not None:
                 self.command = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ResponseParameters ():
+class ResponseParameters:
     """Contains information about why a request was unsuccessful.[See on Telegram API](https://core.telegram.org/bots/api#responseparameters)
 
     - - - - -
@@ -1277,31 +1380,37 @@ class ResponseParameters ():
     - `migrate_to_chat_id`: `int` - Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
     - `retry_after`: `int` - Optional. In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "migrate_to_chat_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "migrate_to_chat_id" and value is not None:
                 self.migrate_to_chat_id = value
-            elif index == "retry_after" and value != None:
+            elif index == "retry_after" and value is not None:
                 self.retry_after = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputMedia ():
+class InputMedia:
     """This object represents the content of a media message to be sent. It should be one of[See on Telegram API](https://core.telegram.org/bots/api#inputmedia)
 
     - - - - -
     **Fields**:
 
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            setattr(self,index,helper.setBvar(value))
+        for index, value in self.dict.items():
+            setattr(self, index, helper.setBvar(value))
 
 
-class InputMediaPhoto ():
+class InputMediaPhoto:
     """Represents a photo to be sent.[See on Telegram API](https://core.telegram.org/bots/api#inputmediaphoto)
 
     - - - - -
@@ -1312,22 +1421,25 @@ class InputMediaPhoto ():
     - `caption`: `string` - Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the photo caption. See formatting options for more details.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "media" and value != None:
+            elif index == "media" and value is not None:
                 self.media = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputMediaVideo ():
+class InputMediaVideo:
     """Represents a video to be sent.[See on Telegram API](https://core.telegram.org/bots/api#inputmediavideo)
 
     - - - - -
@@ -1342,30 +1454,33 @@ class InputMediaVideo ():
     - `duration`: `int` - Optional. Video duration
     - `supports_streaming`: `bool` - Optional. Pass True, if the uploaded video is suitable for streaming
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "media" and value != None:
+            elif index == "media" and value is not None:
                 self.media = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "width" and value != None:
+            elif index == "width" and value is not None:
                 self.width = value
-            elif index == "height" and value != None:
+            elif index == "height" and value is not None:
                 self.height = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "supports_streaming" and value != None:
+            elif index == "supports_streaming" and value is not None:
                 self.supports_streaming = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputMediaAnimation ():
+class InputMediaAnimation:
     """Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.[See on Telegram API](https://core.telegram.org/bots/api#inputmediaanimation)
 
     - - - - -
@@ -1379,28 +1494,31 @@ class InputMediaAnimation ():
     - `height`: `int` - Optional. Animation height
     - `duration`: `int` - Optional. Animation duration
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "media" and value != None:
+            elif index == "media" and value is not None:
                 self.media = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "width" and value != None:
+            elif index == "width" and value is not None:
                 self.width = value
-            elif index == "height" and value != None:
+            elif index == "height" and value is not None:
                 self.height = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputMediaAudio ():
+class InputMediaAudio:
     """Represents an audio file to be treated as music to be sent.[See on Telegram API](https://core.telegram.org/bots/api#inputmediaaudio)
 
     - - - - -
@@ -1414,28 +1532,31 @@ class InputMediaAudio ():
     - `performer`: `string` - Optional. Performer of the audio
     - `title`: `string` - Optional. Title of the audio
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "media" and value != None:
+            elif index == "media" and value is not None:
                 self.media = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "duration" and value != None:
+            elif index == "duration" and value is not None:
                 self.duration = value
-            elif index == "performer" and value != None:
+            elif index == "performer" and value is not None:
                 self.performer = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputMediaDocument ():
+class InputMediaDocument:
     """Represents a general file to be sent.[See on Telegram API](https://core.telegram.org/bots/api#inputmediadocument)
 
     - - - - -
@@ -1446,35 +1567,41 @@ class InputMediaDocument ():
     - `caption`: `string` - Optional. Caption of the document to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the document caption. See formatting options for more details.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "media" and value != None:
+            elif index == "media" and value is not None:
                 self.media = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputFile ():
+class InputFile:
     """This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.[See on Telegram API](https://core.telegram.org/bots/api#inputfile)
 
     - - - - -
     **Fields**:
 
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            setattr(self,index,helper.setBvar(value))
+        for index, value in self.dict.items():
+            setattr(self, index, helper.setBvar(value))
 
 
-class Sticker ():
+class Sticker:
     """This object represents a sticker.[See on Telegram API](https://core.telegram.org/bots/api#sticker)
 
     - - - - -
@@ -1491,34 +1618,37 @@ class Sticker ():
     - `mask_position`: `MaskPosition` - Optional. For mask stickers, the position where the mask should be placed
     - `file_size`: `int` - Optional. File size
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "width" and value != None:
+            elif index == "width" and value is not None:
                 self.width = value
-            elif index == "height" and value != None:
+            elif index == "height" and value is not None:
                 self.height = value
-            elif index == "is_animated" and value != None:
+            elif index == "is_animated" and value is not None:
                 self.is_animated = value
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
-            elif index == "emoji" and value != None:
+            elif index == "emoji" and value is not None:
                 self.emoji = value
-            elif index == "set_name" and value != None:
+            elif index == "set_name" and value is not None:
                 self.set_name = value
-            elif index == "mask_position" and value != None:
+            elif index == "mask_position" and value is not None:
                 self.mask_position = MaskPosition(value)
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class StickerSet ():
+class StickerSet:
     """This object represents a sticker set.[See on Telegram API](https://core.telegram.org/bots/api#stickerset)
 
     - - - - -
@@ -1531,28 +1661,31 @@ class StickerSet ():
     - `stickers`: `Sticker[]` - List of all set stickers
     - `thumb`: `PhotoSize` - Optional. Sticker set thumbnail in the .WEBP or .TGS format
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "name" and value != None:
+        for index, value in self.dict.items():
+            if index == "name" and value is not None:
                 self.name = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "is_animated" and value != None:
+            elif index == "is_animated" and value is not None:
                 self.is_animated = value
-            elif index == "contains_masks" and value != None:
+            elif index == "contains_masks" and value is not None:
                 self.contains_masks = value
-            elif index == "stickers" and value != None:
+            elif index == "stickers" and value is not None:
                 self.stickers = list()
                 for i1 in value:
                     self.stickers.append(Sticker(i1))
-            elif index == "thumb" and value != None:
+            elif index == "thumb" and value is not None:
                 self.thumb = PhotoSize(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class MaskPosition ():
+class MaskPosition:
     """This object describes the position on faces where a mask should be placed by default.[See on Telegram API](https://core.telegram.org/bots/api#maskposition)
 
     - - - - -
@@ -1563,22 +1696,25 @@ class MaskPosition ():
     - `y_shift`: `float` - Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom. For example, 1.0 will place the mask just below the default mask position.
     - `scale`: `float` - Mask scaling coefficient. For example, 2.0 means double size.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "point" and value != None:
+        for index, value in self.dict.items():
+            if index == "point" and value is not None:
                 self.point = value
-            elif index == "x_shift" and value != None:
+            elif index == "x_shift" and value is not None:
                 self.x_shift = value
-            elif index == "y_shift" and value != None:
+            elif index == "y_shift" and value is not None:
                 self.y_shift = value
-            elif index == "scale" and value != None:
+            elif index == "scale" and value is not None:
                 self.scale = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQuery ():
+class InlineQuery:
     """This object represents an incoming inline query. When the user sends an empty query, your bot could return some default or trending results.[See on Telegram API](https://core.telegram.org/bots/api#inlinequery)
 
     - - - - -
@@ -1590,37 +1726,43 @@ class InlineQuery ():
     - `query`: `string` - Text of the query (up to 256 characters)
     - `offset`: `string` - Offset of the results to be returned, can be controlled by the bot
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "from" and value != None:
+            elif index == "from" and value is not None:
                 self.user = User(value)
-            elif index == "location" and value != None:
+            elif index == "location" and value is not None:
                 self.location = Location(value)
-            elif index == "query" and value != None:
+            elif index == "query" and value is not None:
                 self.query = value
-            elif index == "offset" and value != None:
+            elif index == "offset" and value is not None:
                 self.offset = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResult ():
+class InlineQueryResult:
     """This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresult)
 
     - - - - -
     **Fields**:
 
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            setattr(self,index,helper.setBvar(value))
+        for index, value in self.dict.items():
+            setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultArticle ():
+class InlineQueryResultArticle:
     """Represents a link to an article or web page.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultarticle)
 
     - - - - -
@@ -1638,36 +1780,39 @@ class InlineQueryResultArticle ():
     - `thumb_width`: `int` - Optional. Thumbnail width
     - `thumb_height`: `int` - Optional. Thumbnail height
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "url" and value != None:
+            elif index == "url" and value is not None:
                 self.url = value
-            elif index == "hide_url" and value != None:
+            elif index == "hide_url" and value is not None:
                 self.hide_url = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "thumb_width" and value != None:
+            elif index == "thumb_width" and value is not None:
                 self.thumb_width = value
-            elif index == "thumb_height" and value != None:
+            elif index == "thumb_height" and value is not None:
                 self.thumb_height = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultPhoto ():
+class InlineQueryResultPhoto:
     """Represents a link to a photo. By default, this photo will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultphoto)
 
     - - - - -
@@ -1686,38 +1831,41 @@ class InlineQueryResultPhoto ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the photo
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "photo_url" and value != None:
+            elif index == "photo_url" and value is not None:
                 self.photo_url = value
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "photo_width" and value != None:
+            elif index == "photo_width" and value is not None:
                 self.photo_width = value
-            elif index == "photo_height" and value != None:
+            elif index == "photo_height" and value is not None:
                 self.photo_height = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultGif ():
+class InlineQueryResultGif:
     """Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultgif)
 
     - - - - -
@@ -1736,38 +1884,41 @@ class InlineQueryResultGif ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the GIF animation
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "gif_url" and value != None:
+            elif index == "gif_url" and value is not None:
                 self.gif_url = value
-            elif index == "gif_width" and value != None:
+            elif index == "gif_width" and value is not None:
                 self.gif_width = value
-            elif index == "gif_height" and value != None:
+            elif index == "gif_height" and value is not None:
                 self.gif_height = value
-            elif index == "gif_duration" and value != None:
+            elif index == "gif_duration" and value is not None:
                 self.gif_duration = value
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultMpeg4Gif ():
+class InlineQueryResultMpeg4Gif:
     """Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4 file will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif)
 
     - - - - -
@@ -1786,38 +1937,41 @@ class InlineQueryResultMpeg4Gif ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video animation
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "mpeg4_url" and value != None:
+            elif index == "mpeg4_url" and value is not None:
                 self.mpeg4_url = value
-            elif index == "mpeg4_width" and value != None:
+            elif index == "mpeg4_width" and value is not None:
                 self.mpeg4_width = value
-            elif index == "mpeg4_height" and value != None:
+            elif index == "mpeg4_height" and value is not None:
                 self.mpeg4_height = value
-            elif index == "mpeg4_duration" and value != None:
+            elif index == "mpeg4_duration" and value is not None:
                 self.mpeg4_duration = value
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultVideo ():
+class InlineQueryResultVideo:
     """Represents a link to a page containing an embedded video player or a video file. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultvideo)
 
     - - - - -
@@ -1838,42 +1992,45 @@ class InlineQueryResultVideo ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video).
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "video_url" and value != None:
+            elif index == "video_url" and value is not None:
                 self.video_url = value
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "video_width" and value != None:
+            elif index == "video_width" and value is not None:
                 self.video_width = value
-            elif index == "video_height" and value != None:
+            elif index == "video_height" and value is not None:
                 self.video_height = value
-            elif index == "video_duration" and value != None:
+            elif index == "video_duration" and value is not None:
                 self.video_duration = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultAudio ():
+class InlineQueryResultAudio:
     """Represents a link to an MP3 audio file. By default, this audio file will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the audio.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultaudio)
 
     - - - - -
@@ -1890,34 +2047,37 @@ class InlineQueryResultAudio ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the audio
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "audio_url" and value != None:
+            elif index == "audio_url" and value is not None:
                 self.audio_url = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "performer" and value != None:
+            elif index == "performer" and value is not None:
                 self.performer = value
-            elif index == "audio_duration" and value != None:
+            elif index == "audio_duration" and value is not None:
                 self.audio_duration = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultVoice ():
+class InlineQueryResultVoice:
     """Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this voice recording will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the the voice message.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultvoice)
 
     - - - - -
@@ -1933,32 +2093,35 @@ class InlineQueryResultVoice ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the voice recording
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "voice_url" and value != None:
+            elif index == "voice_url" and value is not None:
                 self.voice_url = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "voice_duration" and value != None:
+            elif index == "voice_duration" and value is not None:
                 self.voice_duration = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultDocument ():
+class InlineQueryResultDocument:
     """Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file. Currently, only .PDF and .ZIP files can be sent using this method.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultdocument)
 
     - - - - -
@@ -1978,40 +2141,43 @@ class InlineQueryResultDocument ():
     - `thumb_width`: `int` - Optional. Thumbnail width
     - `thumb_height`: `int` - Optional. Thumbnail height
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "document_url" and value != None:
+            elif index == "document_url" and value is not None:
                 self.document_url = value
-            elif index == "mime_type" and value != None:
+            elif index == "mime_type" and value is not None:
                 self.mime_type = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "thumb_width" and value != None:
+            elif index == "thumb_width" and value is not None:
                 self.thumb_width = value
-            elif index == "thumb_height" and value != None:
+            elif index == "thumb_height" and value is not None:
                 self.thumb_height = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultLocation ():
+class InlineQueryResultLocation:
     """Represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the location.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultlocation)
 
     - - - - -
@@ -2029,36 +2195,39 @@ class InlineQueryResultLocation ():
     - `thumb_width`: `int` - Optional. Thumbnail width
     - `thumb_height`: `int` - Optional. Thumbnail height
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "latitude" and value != None:
+            elif index == "latitude" and value is not None:
                 self.latitude = value
-            elif index == "longitude" and value != None:
+            elif index == "longitude" and value is not None:
                 self.longitude = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "live_period" and value != None:
+            elif index == "live_period" and value is not None:
                 self.live_period = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "thumb_width" and value != None:
+            elif index == "thumb_width" and value is not None:
                 self.thumb_width = value
-            elif index == "thumb_height" and value != None:
+            elif index == "thumb_height" and value is not None:
                 self.thumb_height = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultVenue ():
+class InlineQueryResultVenue:
     """Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the venue.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultvenue)
 
     - - - - -
@@ -2078,40 +2247,43 @@ class InlineQueryResultVenue ():
     - `thumb_width`: `int` - Optional. Thumbnail width
     - `thumb_height`: `int` - Optional. Thumbnail height
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "latitude" and value != None:
+            elif index == "latitude" and value is not None:
                 self.latitude = value
-            elif index == "longitude" and value != None:
+            elif index == "longitude" and value is not None:
                 self.longitude = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "address" and value != None:
+            elif index == "address" and value is not None:
                 self.address = value
-            elif index == "foursquare_id" and value != None:
+            elif index == "foursquare_id" and value is not None:
                 self.foursquare_id = value
-            elif index == "foursquare_type" and value != None:
+            elif index == "foursquare_type" and value is not None:
                 self.foursquare_type = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "thumb_width" and value != None:
+            elif index == "thumb_width" and value is not None:
                 self.thumb_width = value
-            elif index == "thumb_height" and value != None:
+            elif index == "thumb_height" and value is not None:
                 self.thumb_height = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultContact ():
+class InlineQueryResultContact:
     """Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the contact.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcontact)
 
     - - - - -
@@ -2129,36 +2301,39 @@ class InlineQueryResultContact ():
     - `thumb_width`: `int` - Optional. Thumbnail width
     - `thumb_height`: `int` - Optional. Thumbnail height
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "phone_number" and value != None:
+            elif index == "phone_number" and value is not None:
                 self.phone_number = value
-            elif index == "first_name" and value != None:
+            elif index == "first_name" and value is not None:
                 self.first_name = value
-            elif index == "last_name" and value != None:
+            elif index == "last_name" and value is not None:
                 self.last_name = value
-            elif index == "vcard" and value != None:
+            elif index == "vcard" and value is not None:
                 self.vcard = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value != None:
+            elif index == "thumb_url" and value is not None:
                 self.thumb_url = value
-            elif index == "thumb_width" and value != None:
+            elif index == "thumb_width" and value is not None:
                 self.thumb_width = value
-            elif index == "thumb_height" and value != None:
+            elif index == "thumb_height" and value is not None:
                 self.thumb_height = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultGame ():
+class InlineQueryResultGame:
     """Represents a Game.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultgame)
 
     - - - - -
@@ -2169,22 +2344,25 @@ class InlineQueryResultGame ():
     - `game_short_name`: `string` - Short name of the game
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "game_short_name" and value != None:
+            elif index == "game_short_name" and value is not None:
                 self.game_short_name = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedPhoto ():
+class InlineQueryResultCachedPhoto:
     """Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedphoto)
 
     - - - - -
@@ -2200,32 +2378,35 @@ class InlineQueryResultCachedPhoto ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the photo
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "photo_file_id" and value != None:
+            elif index == "photo_file_id" and value is not None:
                 self.photo_file_id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedGif ():
+class InlineQueryResultCachedGif:
     """Represents a link to an animated GIF file stored on the Telegram servers. By default, this animated GIF file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with specified content instead of the animation.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedgif)
 
     - - - - -
@@ -2240,30 +2421,33 @@ class InlineQueryResultCachedGif ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the GIF animation
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "gif_file_id" and value != None:
+            elif index == "gif_file_id" and value is not None:
                 self.gif_file_id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedMpeg4Gif ():
+class InlineQueryResultCachedMpeg4Gif:
     """Represents a link to a video animation (H.264/MPEG-4 AVC video without sound) stored on the Telegram servers. By default, this animated MPEG-4 file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the animation.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif)
 
     - - - - -
@@ -2278,30 +2462,33 @@ class InlineQueryResultCachedMpeg4Gif ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video animation
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "mpeg4_file_id" and value != None:
+            elif index == "mpeg4_file_id" and value is not None:
                 self.mpeg4_file_id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedSticker ():
+class InlineQueryResultCachedSticker:
     """Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the sticker.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedsticker)
 
     - - - - -
@@ -2313,24 +2500,27 @@ class InlineQueryResultCachedSticker ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the sticker
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "sticker_file_id" and value != None:
+            elif index == "sticker_file_id" and value is not None:
                 self.sticker_file_id = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedDocument ():
+class InlineQueryResultCachedDocument:
     """Represents a link to a file stored on the Telegram servers. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcacheddocument)
 
     - - - - -
@@ -2346,32 +2536,35 @@ class InlineQueryResultCachedDocument ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the file
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "document_file_id" and value != None:
+            elif index == "document_file_id" and value is not None:
                 self.document_file_id = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedVideo ():
+class InlineQueryResultCachedVideo:
     """Represents a link to a video file stored on the Telegram servers. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedvideo)
 
     - - - - -
@@ -2387,32 +2580,35 @@ class InlineQueryResultCachedVideo ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "video_file_id" and value != None:
+            elif index == "video_file_id" and value is not None:
                 self.video_file_id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedVoice ():
+class InlineQueryResultCachedVoice:
     """Represents a link to a voice message stored on the Telegram servers. By default, this voice message will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the voice message.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedvoice)
 
     - - - - -
@@ -2427,30 +2623,33 @@ class InlineQueryResultCachedVoice ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the voice message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "voice_file_id" and value != None:
+            elif index == "voice_file_id" and value is not None:
                 self.voice_file_id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InlineQueryResultCachedAudio ():
+class InlineQueryResultCachedAudio:
     """Represents a link to an MP3 audio file stored on the Telegram servers. By default, this audio file will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the audio.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresultcachedaudio)
 
     - - - - -
@@ -2464,41 +2663,47 @@ class InlineQueryResultCachedAudio ():
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the audio
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "id" and value != None:
+            elif index == "id" and value is not None:
                 self.id = value
-            elif index == "audio_file_id" and value != None:
+            elif index == "audio_file_id" and value is not None:
                 self.audio_file_id = value
-            elif index == "caption" and value != None:
+            elif index == "caption" and value is not None:
                 self.caption = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "reply_markup" and value != None:
+            elif index == "reply_markup" and value is not None:
                 self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value != None:
+            elif index == "input_message_content" and value is not None:
                 self.input_message_content = InputMessageContent(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputMessageContent ():
+class InputMessageContent:
     """This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 4 types:[See on Telegram API](https://core.telegram.org/bots/api#inputmessagecontent)
 
     - - - - -
     **Fields**:
 
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            setattr(self,index,helper.setBvar(value))
+        for index, value in self.dict.items():
+            setattr(self, index, helper.setBvar(value))
 
 
-class InputTextMessageContent ():
+class InputTextMessageContent:
     """Represents the content of a text message to be sent as the result of an inline query.[See on Telegram API](https://core.telegram.org/bots/api#inputtextmessagecontent)
 
     - - - - -
@@ -2508,20 +2713,23 @@ class InputTextMessageContent ():
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the message text. See formatting options for more details.
     - `disable_web_page_preview`: `bool` - Optional. Disables link previews for links in the sent message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "message_text" and value != None:
+        for index, value in self.dict.items():
+            if index == "message_text" and value is not None:
                 self.message_text = value
-            elif index == "parse_mode" and value != None:
+            elif index == "parse_mode" and value is not None:
                 self.parse_mode = value
-            elif index == "disable_web_page_preview" and value != None:
+            elif index == "disable_web_page_preview" and value is not None:
                 self.disable_web_page_preview = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputLocationMessageContent ():
+class InputLocationMessageContent:
     """Represents the content of a location message to be sent as the result of an inline query.[See on Telegram API](https://core.telegram.org/bots/api#inputlocationmessagecontent)
 
     - - - - -
@@ -2531,20 +2739,23 @@ class InputLocationMessageContent ():
     - `longitude`: `float` - Longitude of the location in degrees
     - `live_period`: `int` - Optional. Period in seconds for which the location can be updated, should be between 60 and 86400.
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "latitude" and value != None:
+        for index, value in self.dict.items():
+            if index == "latitude" and value is not None:
                 self.latitude = value
-            elif index == "longitude" and value != None:
+            elif index == "longitude" and value is not None:
                 self.longitude = value
-            elif index == "live_period" and value != None:
+            elif index == "live_period" and value is not None:
                 self.live_period = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputVenueMessageContent ():
+class InputVenueMessageContent:
     """Represents the content of a venue message to be sent as the result of an inline query.[See on Telegram API](https://core.telegram.org/bots/api#inputvenuemessagecontent)
 
     - - - - -
@@ -2557,26 +2768,29 @@ class InputVenueMessageContent ():
     - `foursquare_id`: `string` - Optional. Foursquare identifier of the venue, if known
     - `foursquare_type`: `string` - Optional. Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "latitude" and value != None:
+        for index, value in self.dict.items():
+            if index == "latitude" and value is not None:
                 self.latitude = value
-            elif index == "longitude" and value != None:
+            elif index == "longitude" and value is not None:
                 self.longitude = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "address" and value != None:
+            elif index == "address" and value is not None:
                 self.address = value
-            elif index == "foursquare_id" and value != None:
+            elif index == "foursquare_id" and value is not None:
                 self.foursquare_id = value
-            elif index == "foursquare_type" and value != None:
+            elif index == "foursquare_type" and value is not None:
                 self.foursquare_type = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class InputContactMessageContent ():
+class InputContactMessageContent:
     """Represents the content of a contact message to be sent as the result of an inline query.[See on Telegram API](https://core.telegram.org/bots/api#inputcontactmessagecontent)
 
     - - - - -
@@ -2587,22 +2801,25 @@ class InputContactMessageContent ():
     - `last_name`: `string` - Optional. Contact's last name
     - `vcard`: `string` - Optional. Additional data about the contact in the form of a vCard, 0-2048 bytes
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "phone_number" and value != None:
+        for index, value in self.dict.items():
+            if index == "phone_number" and value is not None:
                 self.phone_number = value
-            elif index == "first_name" and value != None:
+            elif index == "first_name" and value is not None:
                 self.first_name = value
-            elif index == "last_name" and value != None:
+            elif index == "last_name" and value is not None:
                 self.last_name = value
-            elif index == "vcard" and value != None:
+            elif index == "vcard" and value is not None:
                 self.vcard = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ChosenInlineResult ():
+class ChosenInlineResult:
     """Represents a result of an inline query that was chosen by the user and sent to their chat partner.[See on Telegram API](https://core.telegram.org/bots/api#choseninlineresult)
 
     - - - - -
@@ -2614,24 +2831,27 @@ class ChosenInlineResult ():
     - `inline_message_id`: `string` - Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message. Will be also received in callback queries and can be used to edit the message.
     - `query`: `string` - The query that was used to obtain the result
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "result_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "result_id" and value is not None:
                 self.result_id = value
-            elif index == "from" and value != None:
+            elif index == "from" and value is not None:
                 self.user = User(value)
-            elif index == "location" and value != None:
+            elif index == "location" and value is not None:
                 self.location = Location(value)
-            elif index == "inline_message_id" and value != None:
+            elif index == "inline_message_id" and value is not None:
                 self.inline_message_id = value
-            elif index == "query" and value != None:
+            elif index == "query" and value is not None:
                 self.query = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class LabeledPrice ():
+class LabeledPrice:
     """This object represents a portion of the price for goods or services.[See on Telegram API](https://core.telegram.org/bots/api#labeledprice)
 
     - - - - -
@@ -2640,18 +2860,21 @@ class LabeledPrice ():
     - `label`: `string` - Portion label
     - `amount`: `int` - Price of the product in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "label" and value != None:
+        for index, value in self.dict.items():
+            if index == "label" and value is not None:
                 self.label = value
-            elif index == "amount" and value != None:
+            elif index == "amount" and value is not None:
                 self.amount = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Invoice ():
+class Invoice:
     """This object contains basic information about an invoice.[See on Telegram API](https://core.telegram.org/bots/api#invoice)
 
     - - - - -
@@ -2663,24 +2886,27 @@ class Invoice ():
     - `currency`: `string` - Three-letter ISO 4217 currency code
     - `total_amount`: `int` - Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "title" and value != None:
+        for index, value in self.dict.items():
+            if index == "title" and value is not None:
                 self.title = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "start_parameter" and value != None:
+            elif index == "start_parameter" and value is not None:
                 self.start_parameter = value
-            elif index == "currency" and value != None:
+            elif index == "currency" and value is not None:
                 self.currency = value
-            elif index == "total_amount" and value != None:
+            elif index == "total_amount" and value is not None:
                 self.total_amount = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ShippingAddress ():
+class ShippingAddress:
     """This object represents a shipping address.[See on Telegram API](https://core.telegram.org/bots/api#shippingaddress)
 
     - - - - -
@@ -2693,26 +2919,29 @@ class ShippingAddress ():
     - `street_line2`: `string` - Second line for the address
     - `post_code`: `string` - Address post code
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "country_code" and value != None:
+        for index, value in self.dict.items():
+            if index == "country_code" and value is not None:
                 self.country_code = value
-            elif index == "state" and value != None:
+            elif index == "state" and value is not None:
                 self.state = value
-            elif index == "city" and value != None:
+            elif index == "city" and value is not None:
                 self.city = value
-            elif index == "street_line1" and value != None:
+            elif index == "street_line1" and value is not None:
                 self.street_line1 = value
-            elif index == "street_line2" and value != None:
+            elif index == "street_line2" and value is not None:
                 self.street_line2 = value
-            elif index == "post_code" and value != None:
+            elif index == "post_code" and value is not None:
                 self.post_code = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class OrderInfo ():
+class OrderInfo:
     """This object represents information about an order.[See on Telegram API](https://core.telegram.org/bots/api#orderinfo)
 
     - - - - -
@@ -2723,22 +2952,25 @@ class OrderInfo ():
     - `email`: `string` - Optional. User email
     - `shipping_address`: `ShippingAddress` - Optional. User shipping address
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "name" and value != None:
+        for index, value in self.dict.items():
+            if index == "name" and value is not None:
                 self.name = value
-            elif index == "phone_number" and value != None:
+            elif index == "phone_number" and value is not None:
                 self.phone_number = value
-            elif index == "email" and value != None:
+            elif index == "email" and value is not None:
                 self.email = value
-            elif index == "shipping_address" and value != None:
+            elif index == "shipping_address" and value is not None:
                 self.shipping_address = ShippingAddress(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ShippingOption ():
+class ShippingOption:
     """This object represents one shipping option.[See on Telegram API](https://core.telegram.org/bots/api#shippingoption)
 
     - - - - -
@@ -2748,22 +2980,25 @@ class ShippingOption ():
     - `title`: `string` - Option title
     - `prices`: `LabeledPrice[]` - List of price portions
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "title" and value != None:
+            elif index == "title" and value is not None:
                 self.title = value
-            elif index == "prices" and value != None:
+            elif index == "prices" and value is not None:
                 self.prices = list()
                 for i1 in value:
                     self.prices.append(LabeledPrice(i1))
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class SuccessfulPayment ():
+class SuccessfulPayment:
     """This object contains basic information about a successful payment.[See on Telegram API](https://core.telegram.org/bots/api#successfulpayment)
 
     - - - - -
@@ -2777,28 +3012,31 @@ class SuccessfulPayment ():
     - `telegram_payment_charge_id`: `string` - Telegram payment identifier
     - `provider_payment_charge_id`: `string` - Provider payment identifier
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "currency" and value != None:
+        for index, value in self.dict.items():
+            if index == "currency" and value is not None:
                 self.currency = value
-            elif index == "total_amount" and value != None:
+            elif index == "total_amount" and value is not None:
                 self.total_amount = value
-            elif index == "invoice_payload" and value != None:
+            elif index == "invoice_payload" and value is not None:
                 self.invoice_payload = value
-            elif index == "shipping_option_id" and value != None:
+            elif index == "shipping_option_id" and value is not None:
                 self.shipping_option_id = value
-            elif index == "order_info" and value != None:
+            elif index == "order_info" and value is not None:
                 self.order_info = OrderInfo(value)
-            elif index == "telegram_payment_charge_id" and value != None:
+            elif index == "telegram_payment_charge_id" and value is not None:
                 self.telegram_payment_charge_id = value
-            elif index == "provider_payment_charge_id" and value != None:
+            elif index == "provider_payment_charge_id" and value is not None:
                 self.provider_payment_charge_id = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class ShippingQuery ():
+class ShippingQuery:
     """This object contains information about an incoming shipping query.[See on Telegram API](https://core.telegram.org/bots/api#shippingquery)
 
     - - - - -
@@ -2809,22 +3047,25 @@ class ShippingQuery ():
     - `invoice_payload`: `string` - Bot specified invoice payload
     - `shipping_address`: `ShippingAddress` - User specified shipping address
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "from" and value != None:
+            elif index == "from" and value is not None:
                 self.user = User(value)
-            elif index == "invoice_payload" and value != None:
+            elif index == "invoice_payload" and value is not None:
                 self.invoice_payload = value
-            elif index == "shipping_address" and value != None:
+            elif index == "shipping_address" and value is not None:
                 self.shipping_address = ShippingAddress(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PreCheckoutQuery ():
+class PreCheckoutQuery:
     """This object contains information about an incoming pre-checkout query.[See on Telegram API](https://core.telegram.org/bots/api#precheckoutquery)
 
     - - - - -
@@ -2838,28 +3079,31 @@ class PreCheckoutQuery ():
     - `shipping_option_id`: `string` - Optional. Identifier of the shipping option chosen by the user
     - `order_info`: `OrderInfo` - Optional. Order info provided by the user
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "id" and value != None:
+        for index, value in self.dict.items():
+            if index == "id" and value is not None:
                 self.id = value
-            elif index == "from" and value != None:
+            elif index == "from" and value is not None:
                 self.user = User(value)
-            elif index == "currency" and value != None:
+            elif index == "currency" and value is not None:
                 self.currency = value
-            elif index == "total_amount" and value != None:
+            elif index == "total_amount" and value is not None:
                 self.total_amount = value
-            elif index == "invoice_payload" and value != None:
+            elif index == "invoice_payload" and value is not None:
                 self.invoice_payload = value
-            elif index == "shipping_option_id" and value != None:
+            elif index == "shipping_option_id" and value is not None:
                 self.shipping_option_id = value
-            elif index == "order_info" and value != None:
+            elif index == "order_info" and value is not None:
                 self.order_info = OrderInfo(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportData ():
+class PassportData:
     """Contains information about Telegram Passport data shared with the bot by the user.[See on Telegram API](https://core.telegram.org/bots/api#passportdata)
 
     - - - - -
@@ -2868,20 +3112,23 @@ class PassportData ():
     - `data`: `EncryptedPassportElement[]` - Array with information about documents and other Telegram Passport elements that was shared with the bot
     - `credentials`: `EncryptedCredentials` - Encrypted credentials required to decrypt the data
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "data" and value != None:
+        for index, value in self.dict.items():
+            if index == "data" and value is not None:
                 self.data = list()
                 for i1 in value:
                     self.data.append(EncryptedPassportElement(i1))
-            elif index == "credentials" and value != None:
+            elif index == "credentials" and value is not None:
                 self.credentials = EncryptedCredentials(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportFile ():
+class PassportFile:
     """This object represents a file uploaded to Telegram Passport. Currently all Telegram Passport files are in JPEG format when decrypted and don't exceed 10MB.[See on Telegram API](https://core.telegram.org/bots/api#passportfile)
 
     - - - - -
@@ -2892,22 +3139,25 @@ class PassportFile ():
     - `file_size`: `int` - File size
     - `file_date`: `int` - Unix time when the file was uploaded
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "file_id" and value != None:
+        for index, value in self.dict.items():
+            if index == "file_id" and value is not None:
                 self.file_id = value
-            elif index == "file_unique_id" and value != None:
+            elif index == "file_unique_id" and value is not None:
                 self.file_unique_id = value
-            elif index == "file_size" and value != None:
+            elif index == "file_size" and value is not None:
                 self.file_size = value
-            elif index == "file_date" and value != None:
+            elif index == "file_date" and value is not None:
                 self.file_date = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class EncryptedPassportElement ():
+class EncryptedPassportElement:
     """Contains information about documents or other Telegram Passport elements shared with the bot by the user.[See on Telegram API](https://core.telegram.org/bots/api#encryptedpassportelement)
 
     - - - - -
@@ -2924,38 +3174,41 @@ class EncryptedPassportElement ():
     - `translation`: `PassportFile[]` - Optional. Array of encrypted files with translated versions of documents provided by the user. Available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
     - `hash`: `string` - Base64-encoded element hash for using in PassportElementErrorUnspecified
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "type" and value != None:
+        for index, value in self.dict.items():
+            if index == "type" and value is not None:
                 self.type = value
-            elif index == "data" and value != None:
+            elif index == "data" and value is not None:
                 self.data = value
-            elif index == "phone_number" and value != None:
+            elif index == "phone_number" and value is not None:
                 self.phone_number = value
-            elif index == "email" and value != None:
+            elif index == "email" and value is not None:
                 self.email = value
-            elif index == "files" and value != None:
+            elif index == "files" and value is not None:
                 self.files = list()
                 for i1 in value:
                     self.files.append(PassportFile(i1))
-            elif index == "front_side" and value != None:
+            elif index == "front_side" and value is not None:
                 self.front_side = PassportFile(value)
-            elif index == "reverse_side" and value != None:
+            elif index == "reverse_side" and value is not None:
                 self.reverse_side = PassportFile(value)
-            elif index == "selfie" and value != None:
+            elif index == "selfie" and value is not None:
                 self.selfie = PassportFile(value)
-            elif index == "translation" and value != None:
+            elif index == "translation" and value is not None:
                 self.translation = list()
                 for i1 in value:
                     self.translation.append(PassportFile(i1))
-            elif index == "hash" and value != None:
+            elif index == "hash" and value is not None:
                 self.hash = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class EncryptedCredentials ():
+class EncryptedCredentials:
     """Contains data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.[See on Telegram API](https://core.telegram.org/bots/api#encryptedcredentials)
 
     - - - - -
@@ -2965,33 +3218,39 @@ class EncryptedCredentials ():
     - `hash`: `string` - Base64-encoded data hash for data authentication
     - `secret`: `string` - Base64-encoded secret, encrypted with the bot's public RSA key, required for data decryption
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "data" and value != None:
+        for index, value in self.dict.items():
+            if index == "data" and value is not None:
                 self.data = value
-            elif index == "hash" and value != None:
+            elif index == "hash" and value is not None:
                 self.hash = value
-            elif index == "secret" and value != None:
+            elif index == "secret" and value is not None:
                 self.secret = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementError ():
+class PassportElementError:
     """This object represents an error in the Telegram Passport element which was submitted that should be resolved by the user. It should be one of:[See on Telegram API](https://core.telegram.org/bots/api#passportelementerror)
 
     - - - - -
     **Fields**:
 
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            setattr(self,index,helper.setBvar(value))
+        for index, value in self.dict.items():
+            setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorDataField ():
+class PassportElementErrorDataField:
     """Represents an issue in one of the data fields that was provided by the user. The error is considered resolved when the field's value changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrordatafield)
 
     - - - - -
@@ -3003,24 +3262,27 @@ class PassportElementErrorDataField ():
     - `data_hash`: `string` - Base64-encoded data hash
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "field_name" and value != None:
+            elif index == "field_name" and value is not None:
                 self.field_name = value
-            elif index == "data_hash" and value != None:
+            elif index == "data_hash" and value is not None:
                 self.data_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorFrontSide ():
+class PassportElementErrorFrontSide:
     """Represents an issue with the front side of a document. The error is considered resolved when the file with the front side of the document changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrorfrontside)
 
     - - - - -
@@ -3031,22 +3293,25 @@ class PassportElementErrorFrontSide ():
     - `file_hash`: `string` - Base64-encoded hash of the file with the front side of the document
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hash" and value != None:
+            elif index == "file_hash" and value is not None:
                 self.file_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorReverseSide ():
+class PassportElementErrorReverseSide:
     """Represents an issue with the reverse side of a document. The error is considered resolved when the file with reverse side of the document changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrorreverseside)
 
     - - - - -
@@ -3057,22 +3322,25 @@ class PassportElementErrorReverseSide ():
     - `file_hash`: `string` - Base64-encoded hash of the file with the reverse side of the document
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hash" and value != None:
+            elif index == "file_hash" and value is not None:
                 self.file_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorSelfie ():
+class PassportElementErrorSelfie:
     """Represents an issue with the selfie with a document. The error is considered resolved when the file with the selfie changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrorselfie)
 
     - - - - -
@@ -3083,22 +3351,25 @@ class PassportElementErrorSelfie ():
     - `file_hash`: `string` - Base64-encoded hash of the file with the selfie
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hash" and value != None:
+            elif index == "file_hash" and value is not None:
                 self.file_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorFile ():
+class PassportElementErrorFile:
     """Represents an issue with a document scan. The error is considered resolved when the file with the document scan changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrorfile)
 
     - - - - -
@@ -3109,22 +3380,25 @@ class PassportElementErrorFile ():
     - `file_hash`: `string` - Base64-encoded file hash
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hash" and value != None:
+            elif index == "file_hash" and value is not None:
                 self.file_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorFiles ():
+class PassportElementErrorFiles:
     """Represents an issue with a list of scans. The error is considered resolved when the list of files containing the scans changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrorfiles)
 
     - - - - -
@@ -3135,24 +3409,27 @@ class PassportElementErrorFiles ():
     - `file_hashes`: `string[]` - List of base64-encoded file hashes
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hashes" and value != None:
+            elif index == "file_hashes" and value is not None:
                 self.file_hashes = list()
                 for i1 in value:
                     self.file_hashes.append(i1)
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorTranslationFile ():
+class PassportElementErrorTranslationFile:
     """Represents an issue with one of the files that constitute the translation of a document. The error is considered resolved when the file changes.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrortranslationfile)
 
     - - - - -
@@ -3163,22 +3440,25 @@ class PassportElementErrorTranslationFile ():
     - `file_hash`: `string` - Base64-encoded file hash
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hash" and value != None:
+            elif index == "file_hash" and value is not None:
                 self.file_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorTranslationFiles ():
+class PassportElementErrorTranslationFiles:
     """Represents an issue with the translated version of a document. The error is considered resolved when a file with the document translation change.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrortranslationfiles)
 
     - - - - -
@@ -3189,24 +3469,27 @@ class PassportElementErrorTranslationFiles ():
     - `file_hashes`: `string[]` - List of base64-encoded file hashes
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "file_hashes" and value != None:
+            elif index == "file_hashes" and value is not None:
                 self.file_hashes = list()
                 for i1 in value:
                     self.file_hashes.append(i1)
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class PassportElementErrorUnspecified ():
+class PassportElementErrorUnspecified:
     """Represents an issue in an unspecified place. The error is considered resolved when new data is added.[See on Telegram API](https://core.telegram.org/bots/api#passportelementerrorunspecified)
 
     - - - - -
@@ -3217,22 +3500,25 @@ class PassportElementErrorUnspecified ():
     - `element_hash`: `string` - Base64-encoded element hash
     - `message`: `string` - Error message
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "source" and value != None:
+        for index, value in self.dict.items():
+            if index == "source" and value is not None:
                 self.source = value
-            elif index == "type" and value != None:
+            elif index == "type" and value is not None:
                 self.type = value
-            elif index == "element_hash" and value != None:
+            elif index == "element_hash" and value is not None:
                 self.element_hash = value
-            elif index == "message" and value != None:
+            elif index == "message" and value is not None:
                 self.message = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class Game ():
+class Game:
     """This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.[See on Telegram API](https://core.telegram.org/bots/api#game)
 
     - - - - -
@@ -3245,43 +3531,49 @@ class Game ():
     - `text_entities`: `MessageEntity[]` - Optional. Special entities that appear in text, such as usernames, URLs, bot commands, etc.
     - `animation`: `Animation` - Optional. Animation that will be displayed in the game message in chats. Upload via BotFather
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "title" and value != None:
+        for index, value in self.dict.items():
+            if index == "title" and value is not None:
                 self.title = value
-            elif index == "description" and value != None:
+            elif index == "description" and value is not None:
                 self.description = value
-            elif index == "photo" and value != None:
+            elif index == "photo" and value is not None:
                 self.photo = list()
                 for i1 in value:
                     self.photo.append(PhotoSize(i1))
-            elif index == "text" and value != None:
+            elif index == "text" and value is not None:
                 self.text = value
-            elif index == "text_entities" and value != None:
+            elif index == "text_entities" and value is not None:
                 self.text_entities = list()
                 for i1 in value:
                     self.text_entities.append(MessageEntity(i1))
-            elif index == "animation" and value != None:
+            elif index == "animation" and value is not None:
                 self.animation = Animation(value)
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))
 
 
-class CallbackGame ():
+class CallbackGame:
     """A placeholder, currently holds no information. Use BotFather to set up your game.[See on Telegram API](https://core.telegram.org/bots/api#callbackgame)
 
     - - - - -
     **Fields**:
 
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            setattr(self,index,helper.setBvar(value))
+        for index, value in self.dict.items():
+            setattr(self, index, helper.setBvar(value))
 
 
-class GameHighScore ():
+class GameHighScore:
     """This object represents one row of the high scores table for a game.[See on Telegram API](https://core.telegram.org/bots/api#gamehighscore)
 
     - - - - -
@@ -3291,14 +3583,17 @@ class GameHighScore ():
     - `user`: `User` - User
     - `score`: `int` - Score
     """
-    def __init__(self,dictionary={}):
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
         self.dict = dictionary
-        for index,value in self.dict.items():
-            if index == "position" and value != None:
+        for index, value in self.dict.items():
+            if index == "position" and value is not None:
                 self.position = value
-            elif index == "user" and value != None:
+            elif index == "user" and value is not None:
                 self.user = User(value)
-            elif index == "score" and value != None:
+            elif index == "score" and value is not None:
                 self.score = value
             else:
-                setattr(self,index,helper.setBvar(value))
+                setattr(self, index, helper.setBvar(value))

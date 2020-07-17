@@ -1,26 +1,25 @@
 import silbot
-from silbot.helper import *
 
-token = "12345:abcdefghi" # Put bot token here
-bot = silbot.botapi.botApi(token)
+token = "12345:abcdefghi"  # Put bot token here
+bot = silbot.botapi.BotApi(token)
 
-r,response = bot.getMe()
+r, response = bot.getMe()
 print(response.expected_object.__module__)
-if response.ok == False:
-  print("Error, wrong bot Token")
-  exit()
+if not response.ok:
+    print("Error, wrong bot Token")
+    exit()
 else:
-  print("Bot @" + r.username + " started")
+    print("Bot @" + r.username + " started")
 
 
-def updateH (update: silbot.types.Update,bot: silbot.botapi.botApi):
+def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
     """
     You should edit this function to set bot commands
     """
-    if hasattr(update,"message"):
+    if hasattr(update, "message"):
         message = update.message
         chat = message.chat
-        bot.sendMessage(chat.id,message.text)
+        bot.sendMessage(chat.id, message.text)
 
-silbot.startpool(bot,updateH)
-    
+
+silbot.startpool(bot, updateH)

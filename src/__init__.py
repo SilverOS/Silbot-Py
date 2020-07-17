@@ -10,11 +10,10 @@ This is a simple framework for [telegram bot API](https://core.telegram.org/bots
 
 """
 
-from silbot import botapi
-from silbot import update
-import json
+from silbot import botapi, update
 
-def startpool(bot : botapi.botApi,handlefunc):
+
+def startpool(bot: botapi.BotApi, handlefunc):
     """ This is a builtin function to handle updates with getUpdates
 
     **Args:**
@@ -27,20 +26,13 @@ def startpool(bot : botapi.botApi,handlefunc):
     """
     offset = -1
     while True:
-        try:
-            response = bot.getUpdates(offset)[1]
-        except Exception:
-            continue
+        response = bot.getUpdates(offset)[1]
         js = response.decoded
         if js["ok"]:
             if len(js["result"]) > 0:
                 for up in js["result"]:
-                    offset = up["update_id"]+1
-                    thread = update.update(up,bot,handlefunc)
+                    offset = up["update_id"] + 1
+                    thread = update.update(up, bot, handlefunc)
                     thread.start()
-        else :
+        else:
             continue
-
-
-
-

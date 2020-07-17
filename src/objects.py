@@ -1,14 +1,17 @@
 """
 ## Here there are some extra methods for [types](types.m.html) objects
 """
-from silbot import types
+
+
 class InlineKeyboardMarkup:
     """types.InlineKeyboardMarkup will inherit this class' methods"""
 
-    def __init__(self,inline_keyboard = []):
+    def __init__(self, inline_keyboard=None):
+        if inline_keyboard is None:
+            inline_keyboard = []
         self.inline_keyboard = inline_keyboard
 
-    def addLine(self,line : list):
+    def addLine(self, line: list):
         """Adds a line to the given keyboard
 
         Args:
@@ -17,7 +20,7 @@ class InlineKeyboardMarkup:
         """
         self.inline_keyboard.append(line)
 
-    def removeLine(self,line_number : int):
+    def removeLine(self, line_number: int):
         """Removes a line from the given keyboard
 
         Args:
@@ -30,10 +33,12 @@ class InlineKeyboardMarkup:
 class ReplyKeyboardMarkup:
     """types.KeyboardMarkup will inherit this class' methods"""
 
-    def __init__(self,keyboard = []):
+    def __init__(self, keyboard=None):
+        if keyboard is None:
+            keyboard = []
         self.keyboard = keyboard
 
-    def addLine(self,line : list):
+    def addLine(self, line: list):
         """Adds a line to the given keyboard
 
         Args:
@@ -42,7 +47,7 @@ class ReplyKeyboardMarkup:
         """
         self.keyboard.append(line)
 
-    def removeLine(self,line_number):
+    def removeLine(self, line_number):
         """Removes a line from the given keyboard
 
         Args:
@@ -51,13 +56,14 @@ class ReplyKeyboardMarkup:
         """
         self.keyboard.pop(line_number)
 
-class CallbackQuery():
 
-    def __init__(self,id,user_id):
+class CallbackQuery:
+
+    def __init__(self, id, user_id):
         self.id = id
         self.user_id = user_id
-    
-    def answer(self,bot,text=None,show_alert=None,url=None,cache_time=None):
+
+    def answer(self, bot, text=None, show_alert=None, url=None, cache_time=None):
         """Sends a answerCallbackQuery request to botApi for the given callback
        
         - - - - -
@@ -73,14 +79,15 @@ class CallbackQuery():
 
         - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
         """
-        return bot.answerCallbackQuery(self.id,text,show_alert,url,cache_time)
+        return bot.answerCallbackQuery(self.id, text, show_alert, url, cache_time)
 
-class User():
-    def __init__(self,id,type):
+
+class User:
+    def __init__(self, id, type):
         self.id = id
         self.type = type
-    
-    def isMember(self,bot,chat_id):
+
+    def isMember(self, bot, chat_id):
         """Sends a getChatMember request to botApi and returns if the current user is a member of a given group
        
         - - - - -
@@ -92,14 +99,16 @@ class User():
         **Returns**
         - `bool` True if the user is in the chat, False otherwise
         """
-        obj,response = bot.getChatMember(chat_id,self.id)
+        obj, response = bot.getChatMember(chat_id, self.id)
         if response.ok:
-            if obj.status == "left" or obj.status == "kicked" or (obj.status == "restricted" and obj.is_member == False):
+            if obj.status == "left" or obj.status == "kicked" or (
+                    obj.status == "restricted" and obj.is_member is False):
                 return False
             else:
                 return True
         return False
-    def isAdmin(self,bot,chat_id):
+
+    def isAdmin(self, bot, chat_id):
         """Sends a getChatMember request to botApi and returns if the current user is a admin of a given group
        
         - - - - -
@@ -111,17 +120,19 @@ class User():
         **Returns**
         - `bool` True if the user is admin in the chat, False otherwise
         """
-        obj,response = bot.getChatMember(chat_id,self.id)
+        obj, response = bot.getChatMember(chat_id, self.id)
         if response.ok:
             if obj.status == "administrator" or obj.status == "creator":
                 return True
         return False
-class Chat():
-    def __init__(self,id,type):
+
+
+class Chat:
+    def __init__(self, id, type):
         self.id = id
         self.type = type
-    
-    def isMember(self,bot,user_id):
+
+    def isMember(self, bot, user_id):
         """Sends a getChatMember request to botApi and returns if a given user is in the current chat
        
         - - - - -
@@ -133,14 +144,16 @@ class Chat():
         **Returns**
         - `bool` True if the user is in the chat, False otherwise
         """
-        obj,response = bot.getChatMember(self.id,user_id)
+        obj, response = bot.getChatMember(self.id, user_id)
         if response.ok:
-            if obj.status == "left" or obj.status == "kicked" or (obj.status == "restricted" and obj.is_member == False):
+            if obj.status == "left" or obj.status == "kicked" or (
+                    obj.status == "restricted" and obj.is_member is False):
                 return False
             else:
                 return True
         return False
-    def isAdmin(self,bot,user_id):
+
+    def isAdmin(self, bot, user_id):
         """Sends a getChatMember request to botApi and returns if a given user is admin in the current chat
        
         - - - - -
@@ -152,9 +165,8 @@ class Chat():
         **Returns**
         - `bool` True if the user is an admin, False otherwise
         """
-        obj,response = bot.getChatMember(self.id,user_id)
+        obj, response = bot.getChatMember(self.id, user_id)
         if response.ok:
             if obj.status == "administrator" or obj.status == "creator":
                 return True
         return False
-        

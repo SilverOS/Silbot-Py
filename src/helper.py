@@ -2,6 +2,7 @@
 ## Here there are some functions that can be useful
 """
 import json
+
 from silbot import types
 
 
@@ -17,16 +18,17 @@ def setBvar(value):
     - `generic_json` if value is a dict, otherwise it returns the value
     """
     if type(value) == dict:
-        return generic_json(value)
+        return Generic_Json(value)
     else:
         return value
 
 
-class generic_json():
+class Generic_Json:
     """
     Converts a `dict` into an objects where keys are attributes, ex. self.key = value
     """
-    def __init__(self,d):
+
+    def __init__(self, d):
         """Creates a generic_json objects
 
         Sets attributes and creates new generic_json objects from dicts
@@ -36,15 +38,15 @@ class generic_json():
         - `d` (`dict`): dictionary to convert
         """
         self.d = d
-        for index,value in self.d.items():
+        for index, value in self.d.items():
             if type(index) == str:
                 if type(value) == dict:
-                    setattr(self,index,generic_json(value))
+                    setattr(self, index, Generic_Json(value))
                 else:
-                    setattr(self,index,value)
+                    setattr(self, index, value)
 
 
-def toDict(obj,dump = False):
+def toDict(obj, dump=False):
     """Converts silbot.types Objects into dictionary, the main utility of this function is internal, 
 
     If `obj` is a silbot object, this function turns it into a dict, else returns it
@@ -74,8 +76,8 @@ def toDict(obj,dump = False):
         if attribute.startswith("__") or attribute == "dict":
             continue
         else:
-            value = getattr(obj,attribute,None)
-            if value == None or str(type(value)) == "<class 'method'>":
+            value = getattr(obj, attribute, None)
+            if value is None or str(type(value)) == "<class 'method'>":
                 continue
             if type(value) == list:
                 dictionary[attribute] = dictList(value)
@@ -111,7 +113,7 @@ def dictList(l):
     return newlist
 
 
-def inlineKBData(text,callback_data = ""):
+def inlineKBData(text, callback_data=""):
     """
     Returns an `InlineKeyboardButton` with `callback_data` field
     
@@ -120,10 +122,10 @@ def inlineKBData(text,callback_data = ""):
     - `text` (`string`): Text of the button
     - `callback_data` (`string`): Callback Data of the button
     """
-    return types.InlineKeyboardButton({"text" : text, "callback_data" : callback_data})
+    return types.InlineKeyboardButton({"text": text, "callback_data": callback_data})
 
 
-def inlineKBUrl(text,url):
+def inlineKBUrl(text, url):
     """
     Returns an `InlineKeyboardButton` with `url` field
     
@@ -132,10 +134,10 @@ def inlineKBUrl(text,url):
     - `text` (`string`): Text of the button
     - `url` (`string`): Url of the button
     """
-    return types.InlineKeyboardButton({"text" : text, "url" : url})
+    return types.InlineKeyboardButton({"text": text, "url": url})
 
 
-def inlineKBSwitch(text,switch_par):
+def inlineKBSwitch(text, switch_par):
     """
     Returns an `InlineKeyboardButton` with `switch_inline_query` field
 
@@ -144,9 +146,10 @@ def inlineKBSwitch(text,switch_par):
     - `text` (`string`): Text of the button
     - `swtich_par` (`string`): Text to show when switched to inline query
     """
-    return types.InlineKeyboardButton({"text" : text, "switch_inline_query" : switch_par})
+    return types.InlineKeyboardButton({"text": text, "switch_inline_query": switch_par})
 
-def inlineKBSwitchCurrent(text,switch_par):
+
+def inlineKBSwitchCurrent(text, switch_par):
     """
     Returns an `InlineKeyboardButton` with `switch_inline_query_current_chat` field
 
@@ -155,7 +158,7 @@ def inlineKBSwitchCurrent(text,switch_par):
     - `text` (`string`): Text of the button
     - `swtich_par` (`string`): Text to show when switched to inline query
     """
-    return types.InlineKeyboardButton({"text" : text, "switch_inline_query_current_chat" : switch_par})
+    return types.InlineKeyboardButton({"text": text, "switch_inline_query_current_chat": switch_par})
 
 
 def inlineKBRow(*argv) -> list:
@@ -179,10 +182,10 @@ def InlineKBMarkup(*argv):
     l = list()
     for arg in argv:
         l.append(arg)
-    return types.InlineKeyboardMarkup({"inline_keyboard" : dictList(l)})
-    
+    return types.InlineKeyboardMarkup({"inline_keyboard": dictList(l)})
 
-def replyKBbutton(text, request_contact = None, request_location = None,request_poll = None):
+
+def replyKBbutton(text, request_contact=None, request_location=None, request_poll=None):
     """
     Returns a `KeyboardButton` for reply keyboards
 
@@ -193,7 +196,9 @@ def replyKBbutton(text, request_contact = None, request_location = None,request_
     - `request_location` (`optional`):
     - `request_poll` (`optional`)
     """
-    return types.KeyboardButton({"text" : text,"requests_contact" : request_contact, "request_location": request_location, "request_poll" : request_poll})
+    return types.KeyboardButton(
+        {"text": text, "requests_contact": request_contact, "request_location": request_location,
+         "request_poll": request_poll})
 
 
 def replyKBRow(*argv) -> list:
@@ -217,10 +222,4 @@ def replyKeyboard(*argv):
     l = list()
     for arg in argv:
         l.append(arg)
-    return types.ReplyKeyboardMarkup({"keyboard" : dictList(l)})
-
-
-
-
-
-
+    return types.ReplyKeyboardMarkup({"keyboard": dictList(l)})
