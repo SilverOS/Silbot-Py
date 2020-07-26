@@ -27,6 +27,5 @@ pip install silbot -U
 - It is autocomplete-friendly
 # TO DO List
 - [ ] Adding new methods to classes types
-- [ ] Builtin MySQL compatibility
-- [ ] Builtin Redis compatibility
 - [ ] Builtin function to handle CronJobs
+- [ ] Make it async (for now it is only multithread)
