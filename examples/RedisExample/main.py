@@ -2,7 +2,7 @@ import silbot
 from CustomDBManager import RedisDBManager
 import redis
 
-token = "1180749940:AAFQh2WOLqM5_4Y3anFL_jge3LB0RBtp8R8"  # Put bot token here
+token = "123456:kfkcjcjfjcxj"  # Put bot token here
 bot = silbot.botapi.BotApi(token, "HTML")
 r, response = bot.getMe()
 if response.ok is False:
