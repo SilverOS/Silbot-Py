@@ -11,9 +11,9 @@ def setBvar(value):
 
     - - - - -
     **Args**:
-        
+
     - `value` (any type): value to assing
-        
+
     **Returns**
     - `generic_json` if value is a dict, otherwise it returns the value
     """
@@ -34,7 +34,7 @@ class Generic_Json:
         Sets attributes and creates new generic_json objects from dicts
         - - - - -
         **Args**:
-        
+
         - `d` (`dict`): dictionary to convert
         """
         self.d = d
@@ -47,16 +47,16 @@ class Generic_Json:
 
 
 def toDict(obj, dump=False):
-    """Converts silbot.types Objects into dictionary, the main utility of this function is internal, 
+    """Converts silbot.types Objects into dictionary, the main utility of this function is internal
 
     If `obj` is a silbot object, this function turns it into a dict, else returns it
     If `dump` is true, it returns the json encoded value if `obj` is an object, a list or a dict
     - - - - -
     **Args**:
-        
+
     - `obj` (`silbot.types` object or any value): object to turn into a dict
     - `dump` (`bool`): if the result should be json encoded
-        
+
     **Returns**
     - `obj` if value is not a silbot object or a list or a dict
     - `dict` if the value given was already a dict or it was a silbot.types object
@@ -91,19 +91,19 @@ def toDict(obj, dump=False):
         return dictionary
 
 
-def dictList(l):
-    """Converts lists of silbot.types Objects into list of dictionaries, the main utility of this function is internal, 
+def dictList(oldlist):
+    """Converts lists of silbot.types Objects into list of dictionaries, the main utility of this function is internal
 
     - - - - -
     **Args**:
-        
+
     - `l` (`list`): listo of objects to convert
-        
+
     **Returns**
     - `list` of decoded objects
     """
     newlist = list()
-    for i in l:
+    for i in oldlist:
         if type(i) == list:
             newlist.append(dictList(i))
         elif i.__class__.__module__ == "silbot.types":
@@ -116,7 +116,7 @@ def dictList(l):
 def inlineKBData(text, callback_data=""):
     """
     Returns an `InlineKeyboardButton` with `callback_data` field
-    
+
     Arguments:
 
     - `text` (`string`): Text of the button
@@ -128,7 +128,7 @@ def inlineKBData(text, callback_data=""):
 def inlineKBUrl(text, url):
     """
     Returns an `InlineKeyboardButton` with `url` field
-    
+
     Arguments:
 
     - `text` (`string`): Text of the button
@@ -167,10 +167,10 @@ def inlineKBRow(*argv) -> list:
 
     - *`argv` (`list`): Pass InlineKeyboardButton objects to generate a list (This is unuseful, you an use [button1,button2] with the same result)
     """
-    l = list()
+    result = list()
     for arg in argv:
-        l.append(arg)
-    return l
+        result.append(arg)
+    return result
 
 
 def InlineKBMarkup(*argv):
@@ -179,10 +179,10 @@ def InlineKBMarkup(*argv):
 
     - *`argv` (`list`): Pass lists of InlineKeyboardButton or use the InlineKBRow to generate them
     """
-    l = list()
+    result = list()
     for arg in argv:
-        l.append(arg)
-    return types.InlineKeyboardMarkup({"inline_keyboard": dictList(l)})
+        result.append(arg)
+    return types.InlineKeyboardMarkup({"inline_keyboard": dictList(result)})
 
 
 def replyKBbutton(text, request_contact=None, request_location=None, request_poll=None):
@@ -207,10 +207,10 @@ def replyKBRow(*argv) -> list:
 
     - *`argv` (`list`): Pass KeyboardButton objects to generate a list (This is unuseful, you an use [button1,button2] with the same result)
     """
-    l = list()
+    result = list()
     for arg in argv:
-        l.append(arg)
-    return l
+        result.append(arg)
+    return result
 
 
 def replyKeyboard(*argv):
@@ -219,7 +219,7 @@ def replyKeyboard(*argv):
 
     - *`argv` (`list`): Pass lists of KeyboardButton or use the replyKBRow to generate them
     """
-    l = list()
+    result = list()
     for arg in argv:
-        l.append(arg)
-    return types.ReplyKeyboardMarkup({"keyboard": dictList(l)})
+        result.append(arg)
+    return types.ReplyKeyboardMarkup({"keyboard": dictList(result)})

@@ -13,7 +13,7 @@ This is a simple framework for [telegram bot API](https://core.telegram.org/bots
 from silbot import botapi, update
 
 
-def startpool(bot: botapi.BotApi, handlefunc, onUpdate=None):
+def GetUpdatesLoop(bot: botapi.BotApi, handlefunc, onUpdate=None):
     """ This is a builtin function to handle updates with getUpdates
 
     **Args:**
@@ -21,7 +21,7 @@ def startpool(bot: botapi.BotApi, handlefunc, onUpdate=None):
     - bot (`botApi`): botApi object
     - handlefunc (`function`): function **defined by the user**, that function has to accept there arguments:
         - `update` (`silbot.types.update`) : The object that rapresents the update
-        - `bot` (`silbot.botapi.botApi`) : The botApi object for that bot,
+        - `bot` (`silbot.botapi.BotApi`) : The botApi object for that bot,
     - onUpdate (`function`, optional): a function that is called every update (non async)
     If this is not clear, check the examples
     """

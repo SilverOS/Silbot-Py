@@ -49,7 +49,7 @@ class BotApi:
         if arguments is None:
             arguments = {}
         try:
-            r = self.session.get("https://api.telegram.org/bot" + self.token + "/" + method, params=arguments)
+            r = self.session.get("https://api.telegram.org/bot" + self.token + "/" + method, params=arguments, timeout=10)
         except Exception:
             return json.dumps({"ok": False, "connection_error": True})
         else:

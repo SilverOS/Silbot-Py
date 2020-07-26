@@ -54,4 +54,4 @@ def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
                 callback.answer(bot, "You are not an admin of the channel")
 
 
-silbot.startpool(bot, updateH)
+silbot.GetUpdatesLoop(bot, updateH)

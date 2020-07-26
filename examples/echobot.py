@@ -22,4 +22,4 @@ def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
         bot.sendMessage(chat.id, message.text)
 
 
-silbot.startpool(bot, updateH)
+silbot.GetUpdatesLoop(bot, updateH)
