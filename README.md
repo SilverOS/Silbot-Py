@@ -7,7 +7,7 @@ This is a simple framework for [telegram bot API](https://core.telegram.org/bots
 
 - [__Examples__](https://github.com/SilverOS/Silbot-Py/tree/master/examples)
 - [__Documentation__](https://silbot.silveros.it)
-- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.1.2.zip)
+- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.2.0.zip)
 - - -
 
 # Installation
