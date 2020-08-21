@@ -9,7 +9,6 @@ This is a simple framework for [telegram bot API](https://core.telegram.org/bots
 - [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.1.3.zip)
 
 """
-
 from silbot import botapi, update
 
 

@@ -17,10 +17,10 @@ db = RedisDBManager(connection)
 
 def HandleUpdate(update: silbot.types.Update, bot: silbot.botapi.BotApi):
     db.fromUpdate(update)
-    if hasattr(update, "message"):
+    if update.message is not None:
         message = update.message
         chat = message.chat
-        if hasattr(message, "text"):
+        if message.text is not None:
             if message.text == "/start":
                 bot.sendMessage(chat.id, "<b>Silbot Redis Example</b>\n\nThis bot will count all text messages (excluding this bot's commands) sent in  a chat, send /count to check how many messages have been sent")
             elif message.text.startswith("/count"):

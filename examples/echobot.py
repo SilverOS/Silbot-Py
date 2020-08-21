@@ -16,7 +16,7 @@ def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
     """
     You should edit this function to set bot commands
     """
-    if hasattr(update, "message"):
+    if update.message is not None and update.message.text is not None:
         message = update.message
         chat = message.chat
         bot.sendMessage(chat.id, message.text)

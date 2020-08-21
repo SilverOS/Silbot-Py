@@ -1,8 +1,8 @@
 import silbot
-from silbot.helper import *
+from silbot.helper import InlineKBMarkup, inlineKBRow, inlineKBData, inlineKBUrl, replyKeyboard, replyKBRow, replyKBbutton
 
 token = "12345:sadsfsdfsdfsd"  # Put bot token here
-bot = silbot.botapi.botApi(token, "HTML")
+bot = silbot.botapi.BotApi(token, "HTML")
 
 r, response = bot.getMe()
 
@@ -14,7 +14,7 @@ else:
 
 
 def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
-    if hasattr(update, "message"):
+    if update.message is not None:
         message = update.message
         chat = message.chat
         if message.text == "/start":
@@ -33,7 +33,7 @@ def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
             bot.sendMessage(chat.id, "This is a message with <b>inline keyboard</b>", kb)
         elif message.text == "Remove Keyboard":
             bot.sendMessage(chat.id, "Keyboard removed", silbot.types.ReplyKeyboardRemove({"remove_keyboard": True}))
-    elif hasattr(update, "callback_query"):
+    elif update.callback_query is not None:
         callback = update.callback_query
         chat = update.callback_query.user
         if callback.data == "/edit":

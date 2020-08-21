@@ -79,10 +79,10 @@ class MySQLDBManager(database.DatabaseManager):
         """
         cursor = self.db.cursor()
         # Set values to put in the database
-        last_name = chat.last_name if hasattr(chat, "last_name") else ""
-        first_name = chat.first_name if hasattr(chat, "first_name") else ""
-        username = chat.username if hasattr(chat, "username") else ""
-        title = chat.title if hasattr(chat, "title") else ""
+        last_name = chat.last_name if chat.last_name is not None else ""
+        first_name = chat.first_name if chat.first_name is not None else ""
+        username = chat.username if chat.username is not None else ""
+        title = chat.title if chat.title is not None else ""
 
         info = self.getInfo(chat)
         if not info:
@@ -164,34 +164,34 @@ class MySQLDBManager(database.DatabaseManager):
 
         - update (types.Update): update to save users from
         """
-        if hasattr(update, "message"):
+        if update.message is not None:
             user = update.message.user
             chat = update.message.chat
             user.setDBManager(self)
             user.save()
             chat.setDBManager(self)
             chat.save()
-        elif hasattr(update, "callback_query"):
+        elif update.callback_query:
             user = update.callback_query.user
             user.setDBManager(self)
             user.save()
-        elif hasattr(update, "edited_message"):
+        elif update.edited_message:
             chat = update.edited_message.chat
             chat.setDBManager(self)
             chat.save()
-        elif hasattr(update, "channel_post"):
+        elif update.channel_post:
             chat = update.channel_post.chat
             chat.setDBManager(self)
             chat.save()
-        elif hasattr(update, "chosen_inline_result"):
+        elif update.chosen_inline_result:
             user = update.chosen_inline_result.user
             user.setDBManager(self)
             user.save()
-        elif hasattr(update, "inline_query"):
+        elif update.inline_query:
             user = update.inline_query.user
             user.setDBManager(self)
             user.save()
-        elif hasattr(update, "shipping_query"):
+        elif update.shipping_query:
             user = update.shipping_query.user
             user.setDBManager(self)
             user.save()

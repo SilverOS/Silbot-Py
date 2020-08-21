@@ -1,5 +1,5 @@
 import silbot
-from silbot.helper import *
+from silbot.helper import InlineKBMarkup, inlineKBRow, inlineKBData
 
 """
 This is an example of how to use new methods added with silbot 1.1
@@ -20,7 +20,7 @@ else:
 
 
 def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
-    if hasattr(update, "message"):
+    if update.message is not None:
         message = update.message
         chat = message.chat
 
@@ -35,7 +35,7 @@ def updateH(update: silbot.types.Update, bot: silbot.botapi.BotApi):
                             "<b>Silbot Py Example</b>\n\nClick the button to check if you are admin/member of the channel defined in the config",
                             kb)
 
-    elif hasattr(update, "callback_query"):
+    elif update.callback_query is not None:
 
         callback = update.callback_query
         user = callback.user

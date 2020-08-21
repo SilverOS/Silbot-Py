@@ -1,4 +1,4 @@
-from silbot import objects, helper
+from silbot import helper, objects
 
 
 class Update:
@@ -25,32 +25,21 @@ class Update:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.update_id = dictionary["update_id"] if "update_id" in dictionary else None
+        self.message = Message(dictionary["message"]) if "message" in dictionary else None
+        self.edited_message = Message(dictionary["edited_message"]) if "edited_message" in dictionary else None
+        self.channel_post = Message(dictionary["channel_post"]) if "channel_post" in dictionary else None
+        self.edited_channel_post = Message(dictionary["edited_channel_post"]) if "edited_channel_post" in dictionary else None
+        self.inline_query = InlineQuery(dictionary["inline_query"]) if "inline_query" in dictionary else None
+        self.chosen_inline_result = ChosenInlineResult(dictionary["chosen_inline_result"]) if "chosen_inline_result" in dictionary else None
+        self.callback_query = CallbackQuery(dictionary["callback_query"]) if "callback_query" in dictionary else None
+        self.shipping_query = ShippingQuery(dictionary["shipping_query"]) if "shipping_query" in dictionary else None
+        self.pre_checkout_query = PreCheckoutQuery(dictionary["pre_checkout_query"]) if "pre_checkout_query" in dictionary else None
+        self.poll = Poll(dictionary["poll"]) if "poll" in dictionary else None
+        self.poll_answer = PollAnswer(dictionary["poll_answer"]) if "poll_answer" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "update_id" and value is not None:
-                self.update_id = value
-            elif index == "message" and value is not None:
-                self.message = Message(value)
-            elif index == "edited_message" and value is not None:
-                self.edited_message = Message(value)
-            elif index == "channel_post" and value is not None:
-                self.channel_post = Message(value)
-            elif index == "edited_channel_post" and value is not None:
-                self.edited_channel_post = Message(value)
-            elif index == "inline_query" and value is not None:
-                self.inline_query = InlineQuery(value)
-            elif index == "chosen_inline_result" and value is not None:
-                self.chosen_inline_result = ChosenInlineResult(value)
-            elif index == "callback_query" and value is not None:
-                self.callback_query = CallbackQuery(value)
-            elif index == "shipping_query" and value is not None:
-                self.shipping_query = ShippingQuery(value)
-            elif index == "pre_checkout_query" and value is not None:
-                self.pre_checkout_query = PreCheckoutQuery(value)
-            elif index == "poll" and value is not None:
-                self.poll = Poll(value)
-            elif index == "poll_answer" and value is not None:
-                self.poll_answer = PollAnswer(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -73,24 +62,24 @@ class WebhookInfo:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.url = dictionary["url"] if "url" in dictionary else None
+        self.has_custom_certificate = dictionary["has_custom_certificate"] if "has_custom_certificate" in dictionary else None
+        self.pending_update_count = dictionary["pending_update_count"] if "pending_update_count" in dictionary else None
+        self.last_error_date = dictionary["last_error_date"] if "last_error_date" in dictionary else None
+        self.last_error_message = dictionary["last_error_message"] if "last_error_message" in dictionary else None
+        self.max_connections = dictionary["max_connections"] if "max_connections" in dictionary else None
+        if "allowed_updates" in dictionary:
+            self.allowed_updates = list()
+            for i1 in dictionary["allowed_updates"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(i1)
+                self.allowed_updates.append(sublist)
+        else:
+            self.allowed_updates = None
+
         for index, value in self.dict.items():
-            if index == "url" and value is not None:
-                self.url = value
-            elif index == "has_custom_certificate" and value is not None:
-                self.has_custom_certificate = value
-            elif index == "pending_update_count" and value is not None:
-                self.pending_update_count = value
-            elif index == "last_error_date" and value is not None:
-                self.last_error_date = value
-            elif index == "last_error_message" and value is not None:
-                self.last_error_message = value
-            elif index == "max_connections" and value is not None:
-                self.max_connections = value
-            elif index == "allowed_updates" and value is not None:
-                self.allowed_updates = list()
-                for i1 in value:
-                    self.allowed_updates.append(i1)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -115,26 +104,18 @@ class User(objects.User):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.is_bot = dictionary["is_bot"] if "is_bot" in dictionary else None
+        self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
+        self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
+        self.username = dictionary["username"] if "username" in dictionary else None
+        self.language_code = dictionary["language_code"] if "language_code" in dictionary else None
+        self.can_join_groups = dictionary["can_join_groups"] if "can_join_groups" in dictionary else None
+        self.can_read_all_group_messages = dictionary["can_read_all_group_messages"] if "can_read_all_group_messages" in dictionary else None
+        self.supports_inline_queries = dictionary["supports_inline_queries"] if "supports_inline_queries" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "is_bot" and value is not None:
-                self.is_bot = value
-            elif index == "first_name" and value is not None:
-                self.first_name = value
-            elif index == "last_name" and value is not None:
-                self.last_name = value
-            elif index == "username" and value is not None:
-                self.username = value
-            elif index == "language_code" and value is not None:
-                self.language_code = value
-            elif index == "can_join_groups" and value is not None:
-                self.can_join_groups = value
-            elif index == "can_read_all_group_messages" and value is not None:
-                self.can_read_all_group_messages = value
-            elif index == "supports_inline_queries" and value is not None:
-                self.supports_inline_queries = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -164,36 +145,23 @@ class Chat(objects.Chat):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.username = dictionary["username"] if "username" in dictionary else None
+        self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
+        self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
+        self.photo = ChatPhoto(dictionary["photo"]) if "photo" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.invite_link = dictionary["invite_link"] if "invite_link" in dictionary else None
+        self.pinned_message = Message(dictionary["pinned_message"]) if "pinned_message" in dictionary else None
+        self.permissions = ChatPermissions(dictionary["permissions"]) if "permissions" in dictionary else None
+        self.slow_mode_delay = dictionary["slow_mode_delay"] if "slow_mode_delay" in dictionary else None
+        self.sticker_set_name = dictionary["sticker_set_name"] if "sticker_set_name" in dictionary else None
+        self.can_set_sticker_set = dictionary["can_set_sticker_set"] if "can_set_sticker_set" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "username" and value is not None:
-                self.username = value
-            elif index == "first_name" and value is not None:
-                self.first_name = value
-            elif index == "last_name" and value is not None:
-                self.last_name = value
-            elif index == "photo" and value is not None:
-                self.photo = ChatPhoto(value)
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "invite_link" and value is not None:
-                self.invite_link = value
-            elif index == "pinned_message" and value is not None:
-                self.pinned_message = Message(value)
-            elif index == "permissions" and value is not None:
-                self.permissions = ChatPermissions(value)
-            elif index == "slow_mode_delay" and value is not None:
-                self.slow_mode_delay = value
-            elif index == "sticker_set_name" and value is not None:
-                self.sticker_set_name = value
-            elif index == "can_set_sticker_set" and value is not None:
-                self.can_set_sticker_set = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -257,114 +225,97 @@ class Message:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.message_id = dictionary["message_id"] if "message_id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.date = dictionary["date"] if "date" in dictionary else None
+        self.chat = Chat(dictionary["chat"]) if "chat" in dictionary else None
+        self.forward_from = User(dictionary["forward_from"]) if "forward_from" in dictionary else None
+        self.forward_from_chat = Chat(dictionary["forward_from_chat"]) if "forward_from_chat" in dictionary else None
+        self.forward_from_message_id = dictionary["forward_from_message_id"] if "forward_from_message_id" in dictionary else None
+        self.forward_signature = dictionary["forward_signature"] if "forward_signature" in dictionary else None
+        self.forward_sender_name = dictionary["forward_sender_name"] if "forward_sender_name" in dictionary else None
+        self.forward_date = dictionary["forward_date"] if "forward_date" in dictionary else None
+        self.reply_to_message = Message(dictionary["reply_to_message"]) if "reply_to_message" in dictionary else None
+        self.edit_date = dictionary["edit_date"] if "edit_date" in dictionary else None
+        self.media_group_id = dictionary["media_group_id"] if "media_group_id" in dictionary else None
+        self.author_signature = dictionary["author_signature"] if "author_signature" in dictionary else None
+        self.text = dictionary["text"] if "text" in dictionary else None
+        if "entities" in dictionary:
+            self.entities = list()
+            for i1 in dictionary["entities"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(MessageEntity(i1))
+                self.entities.append(sublist)
+        else:
+            self.entities = None
+        if "caption_entities" in dictionary:
+            self.caption_entities = list()
+            for i1 in dictionary["caption_entities"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(MessageEntity(i1))
+                self.caption_entities.append(sublist)
+        else:
+            self.caption_entities = None
+        self.audio = Audio(dictionary["audio"]) if "audio" in dictionary else None
+        self.document = Document(dictionary["document"]) if "document" in dictionary else None
+        self.animation = Animation(dictionary["animation"]) if "animation" in dictionary else None
+        self.game = Game(dictionary["game"]) if "game" in dictionary else None
+        if "photo" in dictionary:
+            self.photo = list()
+            for i1 in dictionary["photo"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PhotoSize(i1))
+                self.photo.append(sublist)
+        else:
+            self.photo = None
+        self.sticker = Sticker(dictionary["sticker"]) if "sticker" in dictionary else None
+        self.video = Video(dictionary["video"]) if "video" in dictionary else None
+        self.voice = Voice(dictionary["voice"]) if "voice" in dictionary else None
+        self.video_note = VideoNote(dictionary["video_note"]) if "video_note" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.contact = Contact(dictionary["contact"]) if "contact" in dictionary else None
+        self.location = Location(dictionary["location"]) if "location" in dictionary else None
+        self.venue = Venue(dictionary["venue"]) if "venue" in dictionary else None
+        self.poll = Poll(dictionary["poll"]) if "poll" in dictionary else None
+        self.dice = Dice(dictionary["dice"]) if "dice" in dictionary else None
+        if "new_chat_members" in dictionary:
+            self.new_chat_members = list()
+            for i1 in dictionary["new_chat_members"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(User(i1))
+                self.new_chat_members.append(sublist)
+        else:
+            self.new_chat_members = None
+        self.left_chat_member = User(dictionary["left_chat_member"]) if "left_chat_member" in dictionary else None
+        self.new_chat_title = dictionary["new_chat_title"] if "new_chat_title" in dictionary else None
+        if "new_chat_photo" in dictionary:
+            self.new_chat_photo = list()
+            for i1 in dictionary["new_chat_photo"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PhotoSize(i1))
+                self.new_chat_photo.append(sublist)
+        else:
+            self.new_chat_photo = None
+        self.delete_chat_photo = dictionary["delete_chat_photo"] if "delete_chat_photo" in dictionary else None
+        self.group_chat_created = dictionary["group_chat_created"] if "group_chat_created" in dictionary else None
+        self.supergroup_chat_created = dictionary["supergroup_chat_created"] if "supergroup_chat_created" in dictionary else None
+        self.channel_chat_created = dictionary["channel_chat_created"] if "channel_chat_created" in dictionary else None
+        self.migrate_to_chat_id = dictionary["migrate_to_chat_id"] if "migrate_to_chat_id" in dictionary else None
+        self.migrate_from_chat_id = dictionary["migrate_from_chat_id"] if "migrate_from_chat_id" in dictionary else None
+        self.pinned_message = Message(dictionary["pinned_message"]) if "pinned_message" in dictionary else None
+        self.invoice = Invoice(dictionary["invoice"]) if "invoice" in dictionary else None
+        self.successful_payment = SuccessfulPayment(dictionary["successful_payment"]) if "successful_payment" in dictionary else None
+        self.connected_website = dictionary["connected_website"] if "connected_website" in dictionary else None
+        self.passport_data = PassportData(dictionary["passport_data"]) if "passport_data" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "message_id" and value is not None:
-                self.message_id = value
-            elif index == "from" and value is not None:
-                self.user = User(value)
-            elif index == "date" and value is not None:
-                self.date = value
-            elif index == "chat" and value is not None:
-                self.chat = Chat(value)
-            elif index == "forward_from" and value is not None:
-                self.forward_from = User(value)
-            elif index == "forward_from_chat" and value is not None:
-                self.forward_from_chat = Chat(value)
-            elif index == "forward_from_message_id" and value is not None:
-                self.forward_from_message_id = value
-            elif index == "forward_signature" and value is not None:
-                self.forward_signature = value
-            elif index == "forward_sender_name" and value is not None:
-                self.forward_sender_name = value
-            elif index == "forward_date" and value is not None:
-                self.forward_date = value
-            elif index == "reply_to_message" and value is not None:
-                self.reply_to_message = Message(value)
-            elif index == "edit_date" and value is not None:
-                self.edit_date = value
-            elif index == "media_group_id" and value is not None:
-                self.media_group_id = value
-            elif index == "author_signature" and value is not None:
-                self.author_signature = value
-            elif index == "text" and value is not None:
-                self.text = value
-            elif index == "entities" and value is not None:
-                self.entities = list()
-                for i1 in value:
-                    self.entities.append(MessageEntity(i1))
-            elif index == "caption_entities" and value is not None:
-                self.caption_entities = list()
-                for i1 in value:
-                    self.caption_entities.append(MessageEntity(i1))
-            elif index == "audio" and value is not None:
-                self.audio = Audio(value)
-            elif index == "document" and value is not None:
-                self.document = Document(value)
-            elif index == "animation" and value is not None:
-                self.animation = Animation(value)
-            elif index == "game" and value is not None:
-                self.game = Game(value)
-            elif index == "photo" and value is not None:
-                self.photo = list()
-                for i1 in value:
-                    self.photo.append(PhotoSize(i1))
-            elif index == "sticker" and value is not None:
-                self.sticker = Sticker(value)
-            elif index == "video" and value is not None:
-                self.video = Video(value)
-            elif index == "voice" and value is not None:
-                self.voice = Voice(value)
-            elif index == "video_note" and value is not None:
-                self.video_note = VideoNote(value)
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "contact" and value is not None:
-                self.contact = Contact(value)
-            elif index == "location" and value is not None:
-                self.location = Location(value)
-            elif index == "venue" and value is not None:
-                self.venue = Venue(value)
-            elif index == "poll" and value is not None:
-                self.poll = Poll(value)
-            elif index == "dice" and value is not None:
-                self.dice = Dice(value)
-            elif index == "new_chat_members" and value is not None:
-                self.new_chat_members = list()
-                for i1 in value:
-                    self.new_chat_members.append(User(i1))
-            elif index == "left_chat_member" and value is not None:
-                self.left_chat_member = User(value)
-            elif index == "new_chat_title" and value is not None:
-                self.new_chat_title = value
-            elif index == "new_chat_photo" and value is not None:
-                self.new_chat_photo = list()
-                for i1 in value:
-                    self.new_chat_photo.append(PhotoSize(i1))
-            elif index == "delete_chat_photo" and value is not None:
-                self.delete_chat_photo = value
-            elif index == "group_chat_created" and value is not None:
-                self.group_chat_created = value
-            elif index == "supergroup_chat_created" and value is not None:
-                self.supergroup_chat_created = value
-            elif index == "channel_chat_created" and value is not None:
-                self.channel_chat_created = value
-            elif index == "migrate_to_chat_id" and value is not None:
-                self.migrate_to_chat_id = value
-            elif index == "migrate_from_chat_id" and value is not None:
-                self.migrate_from_chat_id = value
-            elif index == "pinned_message" and value is not None:
-                self.pinned_message = Message(value)
-            elif index == "invoice" and value is not None:
-                self.invoice = Invoice(value)
-            elif index == "successful_payment" and value is not None:
-                self.successful_payment = SuccessfulPayment(value)
-            elif index == "connected_website" and value is not None:
-                self.connected_website = value
-            elif index == "passport_data" and value is not None:
-                self.passport_data = PassportData(value)
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -386,20 +337,15 @@ class MessageEntity:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.offset = dictionary["offset"] if "offset" in dictionary else None
+        self.length = dictionary["length"] if "length" in dictionary else None
+        self.url = dictionary["url"] if "url" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.language = dictionary["language"] if "language" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "offset" and value is not None:
-                self.offset = value
-            elif index == "length" and value is not None:
-                self.length = value
-            elif index == "url" and value is not None:
-                self.url = value
-            elif index == "user" and value is not None:
-                self.user = User(value)
-            elif index == "language" and value is not None:
-                self.language = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -420,18 +366,14 @@ class PhotoSize:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.width = dictionary["width"] if "width" in dictionary else None
+        self.height = dictionary["height"] if "height" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "width" and value is not None:
-                self.width = value
-            elif index == "height" and value is not None:
-                self.height = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -455,24 +397,17 @@ class Audio:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.performer = dictionary["performer"] if "performer" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "performer" and value is not None:
-                self.performer = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -494,20 +429,15 @@ class Document:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+        self.file_name = dictionary["file_name"] if "file_name" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            elif index == "file_name" and value is not None:
-                self.file_name = value
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -531,24 +461,17 @@ class Video:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.width = dictionary["width"] if "width" in dictionary else None
+        self.height = dictionary["height"] if "height" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "width" and value is not None:
-                self.width = value
-            elif index == "height" and value is not None:
-                self.height = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -573,26 +496,18 @@ class Animation:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.width = dictionary["width"] if "width" in dictionary else None
+        self.height = dictionary["height"] if "height" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+        self.file_name = dictionary["file_name"] if "file_name" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "width" and value is not None:
-                self.width = value
-            elif index == "height" and value is not None:
-                self.height = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            elif index == "file_name" and value is not None:
-                self.file_name = value
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -613,18 +528,14 @@ class Voice:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -646,20 +557,15 @@ class VideoNote:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.length = dictionary["length"] if "length" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "length" and value is not None:
-                self.length = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -680,18 +586,14 @@ class Contact:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.phone_number = dictionary["phone_number"] if "phone_number" in dictionary else None
+        self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
+        self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
+        self.user_id = dictionary["user_id"] if "user_id" in dictionary else None
+        self.vcard = dictionary["vcard"] if "vcard" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "phone_number" and value is not None:
-                self.phone_number = value
-            elif index == "first_name" and value is not None:
-                self.first_name = value
-            elif index == "last_name" and value is not None:
-                self.last_name = value
-            elif index == "user_id" and value is not None:
-                self.user_id = value
-            elif index == "vcard" and value is not None:
-                self.vcard = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -709,12 +611,11 @@ class Location:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.longitude = dictionary["longitude"] if "longitude" in dictionary else None
+        self.latitude = dictionary["latitude"] if "latitude" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "longitude" and value is not None:
-                self.longitude = value
-            elif index == "latitude" and value is not None:
-                self.latitude = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -735,18 +636,14 @@ class Venue:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.location = Location(dictionary["location"]) if "location" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.address = dictionary["address"] if "address" in dictionary else None
+        self.foursquare_id = dictionary["foursquare_id"] if "foursquare_id" in dictionary else None
+        self.foursquare_type = dictionary["foursquare_type"] if "foursquare_type" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "location" and value is not None:
-                self.location = Location(value)
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "address" and value is not None:
-                self.address = value
-            elif index == "foursquare_id" and value is not None:
-                self.foursquare_id = value
-            elif index == "foursquare_type" and value is not None:
-                self.foursquare_type = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -764,12 +661,11 @@ class PollOption:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.text = dictionary["text"] if "text" in dictionary else None
+        self.voter_count = dictionary["voter_count"] if "voter_count" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "text" and value is not None:
-                self.text = value
-            elif index == "voter_count" and value is not None:
-                self.voter_count = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -788,16 +684,20 @@ class PollAnswer:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.poll_id = dictionary["poll_id"] if "poll_id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        if "option_ids" in dictionary:
+            self.option_ids = list()
+            for i1 in dictionary["option_ids"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(i1)
+                self.option_ids.append(sublist)
+        else:
+            self.option_ids = None
+
         for index, value in self.dict.items():
-            if index == "poll_id" and value is not None:
-                self.poll_id = value
-            elif index == "user" and value is not None:
-                self.user = User(value)
-            elif index == "option_ids" and value is not None:
-                self.option_ids = list()
-                for i1 in value:
-                    self.option_ids.append(i1)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -826,38 +726,38 @@ class Poll:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.question = dictionary["question"] if "question" in dictionary else None
+        if "options" in dictionary:
+            self.options = list()
+            for i1 in dictionary["options"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PollOption(i1))
+                self.options.append(sublist)
+        else:
+            self.options = None
+        self.total_voter_count = dictionary["total_voter_count"] if "total_voter_count" in dictionary else None
+        self.is_closed = dictionary["is_closed"] if "is_closed" in dictionary else None
+        self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.allows_multiple_answers = dictionary["allows_multiple_answers"] if "allows_multiple_answers" in dictionary else None
+        self.correct_option_id = dictionary["correct_option_id"] if "correct_option_id" in dictionary else None
+        self.explanation = dictionary["explanation"] if "explanation" in dictionary else None
+        if "explanation_entities" in dictionary:
+            self.explanation_entities = list()
+            for i1 in dictionary["explanation_entities"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(MessageEntity(i1))
+                self.explanation_entities.append(sublist)
+        else:
+            self.explanation_entities = None
+        self.open_period = dictionary["open_period"] if "open_period" in dictionary else None
+        self.close_date = dictionary["close_date"] if "close_date" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "question" and value is not None:
-                self.question = value
-            elif index == "options" and value is not None:
-                self.options = list()
-                for i1 in value:
-                    self.options.append(PollOption(i1))
-            elif index == "total_voter_count" and value is not None:
-                self.total_voter_count = value
-            elif index == "is_closed" and value is not None:
-                self.is_closed = value
-            elif index == "is_anonymous" and value is not None:
-                self.is_anonymous = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "allows_multiple_answers" and value is not None:
-                self.allows_multiple_answers = value
-            elif index == "correct_option_id" and value is not None:
-                self.correct_option_id = value
-            elif index == "explanation" and value is not None:
-                self.explanation = value
-            elif index == "explanation_entities" and value is not None:
-                self.explanation_entities = list()
-                for i1 in value:
-                    self.explanation_entities.append(MessageEntity(i1))
-            elif index == "open_period" and value is not None:
-                self.open_period = value
-            elif index == "close_date" and value is not None:
-                self.close_date = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -875,12 +775,11 @@ class Dice:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.emoji = dictionary["emoji"] if "emoji" in dictionary else None
+        self.value = dictionary["value"] if "value" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "emoji" and value is not None:
-                self.emoji = value
-            elif index == "value" and value is not None:
-                self.value = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -898,17 +797,19 @@ class UserProfilePhotos:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.total_count = dictionary["total_count"] if "total_count" in dictionary else None
+        if "photos" in dictionary:
+            self.photos = list()
+            for i1 in dictionary["photos"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PhotoSize(i2))
+                self.photos.append(sublist)
+        else:
+            self.photos = None
+
         for index, value in self.dict.items():
-            if index == "total_count" and value is not None:
-                self.total_count = value
-            elif index == "photos" and value is not None:
-                self.photos = list()
-                for i1 in value:
-                    sublist = list()
-                    for i2 in i1:
-                        sublist.append(PhotoSize(i2))
-                    self.photos.append(sublist)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -928,16 +829,13 @@ class File:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+        self.file_path = dictionary["file_path"] if "file_path" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            elif index == "file_path" and value is not None:
-                self.file_path = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -957,21 +855,21 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        if "keyboard" in dictionary:
+            self.keyboard = list()
+            for i1 in dictionary["keyboard"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(KeyboardButton(i2))
+                self.keyboard.append(sublist)
+        else:
+            self.keyboard = None
+        self.resize_keyboard = dictionary["resize_keyboard"] if "resize_keyboard" in dictionary else None
+        self.one_time_keyboard = dictionary["one_time_keyboard"] if "one_time_keyboard" in dictionary else None
+        self.selective = dictionary["selective"] if "selective" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "keyboard" and value is not None:
-                self.keyboard = list()
-                for i1 in value:
-                    sublist = list()
-                    for i2 in i1:
-                        sublist.append(KeyboardButton(i2))
-                    self.keyboard.append(sublist)
-            elif index == "resize_keyboard" and value is not None:
-                self.resize_keyboard = value
-            elif index == "one_time_keyboard" and value is not None:
-                self.one_time_keyboard = value
-            elif index == "selective" and value is not None:
-                self.selective = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -991,16 +889,13 @@ class KeyboardButton:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.text = dictionary["text"] if "text" in dictionary else None
+        self.request_contact = dictionary["request_contact"] if "request_contact" in dictionary else None
+        self.request_location = dictionary["request_location"] if "request_location" in dictionary else None
+        self.request_poll = KeyboardButtonPollType(dictionary["request_poll"]) if "request_poll" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "text" and value is not None:
-                self.text = value
-            elif index == "request_contact" and value is not None:
-                self.request_contact = value
-            elif index == "request_location" and value is not None:
-                self.request_location = value
-            elif index == "request_poll" and value is not None:
-                self.request_poll = KeyboardButtonPollType(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1017,10 +912,10 @@ class KeyboardButtonPollType:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1038,12 +933,11 @@ class ReplyKeyboardRemove:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.remove_keyboard = dictionary["remove_keyboard"] if "remove_keyboard" in dictionary else None
+        self.selective = dictionary["selective"] if "selective" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "remove_keyboard" and value is not None:
-                self.remove_keyboard = value
-            elif index == "selective" and value is not None:
-                self.selective = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1060,15 +954,18 @@ class InlineKeyboardMarkup(objects.InlineKeyboardMarkup):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        if "inline_keyboard" in dictionary:
+            self.inline_keyboard = list()
+            for i1 in dictionary["inline_keyboard"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(InlineKeyboardButton(i2))
+                self.inline_keyboard.append(sublist)
+        else:
+            self.inline_keyboard = None
+
         for index, value in self.dict.items():
-            if index == "inline_keyboard" and value is not None:
-                self.inline_keyboard = list()
-                for i1 in value:
-                    sublist = list()
-                    for i2 in i1:
-                        sublist.append(InlineKeyboardButton(i2))
-                    self.inline_keyboard.append(sublist)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1092,24 +989,17 @@ class InlineKeyboardButton:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.text = dictionary["text"] if "text" in dictionary else None
+        self.url = dictionary["url"] if "url" in dictionary else None
+        self.login_url = LoginUrl(dictionary["login_url"]) if "login_url" in dictionary else None
+        self.callback_data = dictionary["callback_data"] if "callback_data" in dictionary else None
+        self.switch_inline_query = dictionary["switch_inline_query"] if "switch_inline_query" in dictionary else None
+        self.switch_inline_query_current_chat = dictionary["switch_inline_query_current_chat"] if "switch_inline_query_current_chat" in dictionary else None
+        self.callback_game = CallbackGame(dictionary["callback_game"]) if "callback_game" in dictionary else None
+        self.pay = dictionary["pay"] if "pay" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "text" and value is not None:
-                self.text = value
-            elif index == "url" and value is not None:
-                self.url = value
-            elif index == "login_url" and value is not None:
-                self.login_url = LoginUrl(value)
-            elif index == "callback_data" and value is not None:
-                self.callback_data = value
-            elif index == "switch_inline_query" and value is not None:
-                self.switch_inline_query = value
-            elif index == "switch_inline_query_current_chat" and value is not None:
-                self.switch_inline_query_current_chat = value
-            elif index == "callback_game" and value is not None:
-                self.callback_game = CallbackGame(value)
-            elif index == "pay" and value is not None:
-                self.pay = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1130,16 +1020,13 @@ Telegram apps support these buttons as of version 5.7.[See on Telegram API](http
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.url = dictionary["url"] if "url" in dictionary else None
+        self.forward_text = dictionary["forward_text"] if "forward_text" in dictionary else None
+        self.bot_username = dictionary["bot_username"] if "bot_username" in dictionary else None
+        self.request_write_access = dictionary["request_write_access"] if "request_write_access" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "url" and value is not None:
-                self.url = value
-            elif index == "forward_text" and value is not None:
-                self.forward_text = value
-            elif index == "bot_username" and value is not None:
-                self.bot_username = value
-            elif index == "request_write_access" and value is not None:
-                self.request_write_access = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1162,22 +1049,16 @@ class CallbackQuery(objects.CallbackQuery):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.message = Message(dictionary["message"]) if "message" in dictionary else None
+        self.inline_message_id = dictionary["inline_message_id"] if "inline_message_id" in dictionary else None
+        self.chat_instance = dictionary["chat_instance"] if "chat_instance" in dictionary else None
+        self.data = dictionary["data"] if "data" in dictionary else None
+        self.game_short_name = dictionary["game_short_name"] if "game_short_name" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "from" and value is not None:
-                self.user = User(value)
-            elif index == "message" and value is not None:
-                self.message = Message(value)
-            elif index == "inline_message_id" and value is not None:
-                self.inline_message_id = value
-            elif index == "chat_instance" and value is not None:
-                self.chat_instance = value
-            elif index == "data" and value is not None:
-                self.data = value
-            elif index == "game_short_name" and value is not None:
-                self.game_short_name = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1195,12 +1076,11 @@ class ForceReply:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.force_reply = dictionary["force_reply"] if "force_reply" in dictionary else None
+        self.selective = dictionary["selective"] if "selective" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "force_reply" and value is not None:
-                self.force_reply = value
-            elif index == "selective" and value is not None:
-                self.selective = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1220,16 +1100,13 @@ class ChatPhoto:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.small_file_id = dictionary["small_file_id"] if "small_file_id" in dictionary else None
+        self.small_file_unique_id = dictionary["small_file_unique_id"] if "small_file_unique_id" in dictionary else None
+        self.big_file_id = dictionary["big_file_id"] if "big_file_id" in dictionary else None
+        self.big_file_unique_id = dictionary["big_file_unique_id"] if "big_file_unique_id" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "small_file_id" and value is not None:
-                self.small_file_id = value
-            elif index == "small_file_unique_id" and value is not None:
-                self.small_file_unique_id = value
-            elif index == "big_file_id" and value is not None:
-                self.big_file_id = value
-            elif index == "big_file_unique_id" and value is not None:
-                self.big_file_unique_id = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1264,46 +1141,28 @@ class ChatMember:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.status = dictionary["status"] if "status" in dictionary else None
+        self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
+        self.until_date = dictionary["until_date"] if "until_date" in dictionary else None
+        self.can_be_edited = dictionary["can_be_edited"] if "can_be_edited" in dictionary else None
+        self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
+        self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
+        self.can_delete_messages = dictionary["can_delete_messages"] if "can_delete_messages" in dictionary else None
+        self.can_restrict_members = dictionary["can_restrict_members"] if "can_restrict_members" in dictionary else None
+        self.can_promote_members = dictionary["can_promote_members"] if "can_promote_members" in dictionary else None
+        self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
+        self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
+        self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+        self.is_member = dictionary["is_member"] if "is_member" in dictionary else None
+        self.can_send_messages = dictionary["can_send_messages"] if "can_send_messages" in dictionary else None
+        self.can_send_media_messages = dictionary["can_send_media_messages"] if "can_send_media_messages" in dictionary else None
+        self.can_send_polls = dictionary["can_send_polls"] if "can_send_polls" in dictionary else None
+        self.can_send_other_messages = dictionary["can_send_other_messages"] if "can_send_other_messages" in dictionary else None
+        self.can_add_web_page_previews = dictionary["can_add_web_page_previews"] if "can_add_web_page_previews" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "user" and value is not None:
-                self.user = User(value)
-            elif index == "status" and value is not None:
-                self.status = value
-            elif index == "custom_title" and value is not None:
-                self.custom_title = value
-            elif index == "until_date" and value is not None:
-                self.until_date = value
-            elif index == "can_be_edited" and value is not None:
-                self.can_be_edited = value
-            elif index == "can_post_messages" and value is not None:
-                self.can_post_messages = value
-            elif index == "can_edit_messages" and value is not None:
-                self.can_edit_messages = value
-            elif index == "can_delete_messages" and value is not None:
-                self.can_delete_messages = value
-            elif index == "can_restrict_members" and value is not None:
-                self.can_restrict_members = value
-            elif index == "can_promote_members" and value is not None:
-                self.can_promote_members = value
-            elif index == "can_change_info" and value is not None:
-                self.can_change_info = value
-            elif index == "can_invite_users" and value is not None:
-                self.can_invite_users = value
-            elif index == "can_pin_messages" and value is not None:
-                self.can_pin_messages = value
-            elif index == "is_member" and value is not None:
-                self.is_member = value
-            elif index == "can_send_messages" and value is not None:
-                self.can_send_messages = value
-            elif index == "can_send_media_messages" and value is not None:
-                self.can_send_media_messages = value
-            elif index == "can_send_polls" and value is not None:
-                self.can_send_polls = value
-            elif index == "can_send_other_messages" and value is not None:
-                self.can_send_other_messages = value
-            elif index == "can_add_web_page_previews" and value is not None:
-                self.can_add_web_page_previews = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1327,24 +1186,17 @@ class ChatPermissions:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.can_send_messages = dictionary["can_send_messages"] if "can_send_messages" in dictionary else None
+        self.can_send_media_messages = dictionary["can_send_media_messages"] if "can_send_media_messages" in dictionary else None
+        self.can_send_polls = dictionary["can_send_polls"] if "can_send_polls" in dictionary else None
+        self.can_send_other_messages = dictionary["can_send_other_messages"] if "can_send_other_messages" in dictionary else None
+        self.can_add_web_page_previews = dictionary["can_add_web_page_previews"] if "can_add_web_page_previews" in dictionary else None
+        self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
+        self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
+        self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "can_send_messages" and value is not None:
-                self.can_send_messages = value
-            elif index == "can_send_media_messages" and value is not None:
-                self.can_send_media_messages = value
-            elif index == "can_send_polls" and value is not None:
-                self.can_send_polls = value
-            elif index == "can_send_other_messages" and value is not None:
-                self.can_send_other_messages = value
-            elif index == "can_add_web_page_previews" and value is not None:
-                self.can_add_web_page_previews = value
-            elif index == "can_change_info" and value is not None:
-                self.can_change_info = value
-            elif index == "can_invite_users" and value is not None:
-                self.can_invite_users = value
-            elif index == "can_pin_messages" and value is not None:
-                self.can_pin_messages = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1362,12 +1214,11 @@ class BotCommand:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.command = dictionary["command"] if "command" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "command" and value is not None:
-                self.command = value
-            elif index == "description" and value is not None:
-                self.description = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1385,12 +1236,11 @@ class ResponseParameters:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.migrate_to_chat_id = dictionary["migrate_to_chat_id"] if "migrate_to_chat_id" in dictionary else None
+        self.retry_after = dictionary["retry_after"] if "retry_after" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "migrate_to_chat_id" and value is not None:
-                self.migrate_to_chat_id = value
-            elif index == "retry_after" and value is not None:
-                self.retry_after = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1406,8 +1256,10 @@ class InputMedia:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+
         for index, value in self.dict.items():
-            setattr(self, index, helper.setBvar(value))
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
 
 
 class InputMediaPhoto:
@@ -1426,16 +1278,13 @@ class InputMediaPhoto:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.media = dictionary["media"] if "media" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "media" and value is not None:
-                self.media = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1459,24 +1308,17 @@ class InputMediaVideo:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.media = dictionary["media"] if "media" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.width = dictionary["width"] if "width" in dictionary else None
+        self.height = dictionary["height"] if "height" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.supports_streaming = dictionary["supports_streaming"] if "supports_streaming" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "media" and value is not None:
-                self.media = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "width" and value is not None:
-                self.width = value
-            elif index == "height" and value is not None:
-                self.height = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "supports_streaming" and value is not None:
-                self.supports_streaming = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1499,22 +1341,16 @@ class InputMediaAnimation:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.media = dictionary["media"] if "media" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.width = dictionary["width"] if "width" in dictionary else None
+        self.height = dictionary["height"] if "height" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "media" and value is not None:
-                self.media = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "width" and value is not None:
-                self.width = value
-            elif index == "height" and value is not None:
-                self.height = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1537,22 +1373,16 @@ class InputMediaAudio:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.media = dictionary["media"] if "media" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+        self.performer = dictionary["performer"] if "performer" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "media" and value is not None:
-                self.media = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "duration" and value is not None:
-                self.duration = value
-            elif index == "performer" and value is not None:
-                self.performer = value
-            elif index == "title" and value is not None:
-                self.title = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1572,16 +1402,13 @@ class InputMediaDocument:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.media = dictionary["media"] if "media" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "media" and value is not None:
-                self.media = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1597,8 +1424,10 @@ class InputFile:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+
         for index, value in self.dict.items():
-            setattr(self, index, helper.setBvar(value))
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
 
 
 class Sticker:
@@ -1623,28 +1452,19 @@ class Sticker:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.width = dictionary["width"] if "width" in dictionary else None
+        self.height = dictionary["height"] if "height" in dictionary else None
+        self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+        self.emoji = dictionary["emoji"] if "emoji" in dictionary else None
+        self.set_name = dictionary["set_name"] if "set_name" in dictionary else None
+        self.mask_position = MaskPosition(dictionary["mask_position"]) if "mask_position" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "width" and value is not None:
-                self.width = value
-            elif index == "height" and value is not None:
-                self.height = value
-            elif index == "is_animated" and value is not None:
-                self.is_animated = value
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            elif index == "emoji" and value is not None:
-                self.emoji = value
-            elif index == "set_name" and value is not None:
-                self.set_name = value
-            elif index == "mask_position" and value is not None:
-                self.mask_position = MaskPosition(value)
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1666,22 +1486,23 @@ class StickerSet:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.name = dictionary["name"] if "name" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
+        self.contains_masks = dictionary["contains_masks"] if "contains_masks" in dictionary else None
+        if "stickers" in dictionary:
+            self.stickers = list()
+            for i1 in dictionary["stickers"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(Sticker(i1))
+                self.stickers.append(sublist)
+        else:
+            self.stickers = None
+        self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "name" and value is not None:
-                self.name = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "is_animated" and value is not None:
-                self.is_animated = value
-            elif index == "contains_masks" and value is not None:
-                self.contains_masks = value
-            elif index == "stickers" and value is not None:
-                self.stickers = list()
-                for i1 in value:
-                    self.stickers.append(Sticker(i1))
-            elif index == "thumb" and value is not None:
-                self.thumb = PhotoSize(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1701,16 +1522,13 @@ class MaskPosition:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.point = dictionary["point"] if "point" in dictionary else None
+        self.x_shift = dictionary["x_shift"] if "x_shift" in dictionary else None
+        self.y_shift = dictionary["y_shift"] if "y_shift" in dictionary else None
+        self.scale = dictionary["scale"] if "scale" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "point" and value is not None:
-                self.point = value
-            elif index == "x_shift" and value is not None:
-                self.x_shift = value
-            elif index == "y_shift" and value is not None:
-                self.y_shift = value
-            elif index == "scale" and value is not None:
-                self.scale = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1731,18 +1549,14 @@ class InlineQuery:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.location = Location(dictionary["location"]) if "location" in dictionary else None
+        self.query = dictionary["query"] if "query" in dictionary else None
+        self.offset = dictionary["offset"] if "offset" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "from" and value is not None:
-                self.user = User(value)
-            elif index == "location" and value is not None:
-                self.location = Location(value)
-            elif index == "query" and value is not None:
-                self.query = value
-            elif index == "offset" and value is not None:
-                self.offset = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1758,8 +1572,10 @@ class InlineQueryResult:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+
         for index, value in self.dict.items():
-            setattr(self, index, helper.setBvar(value))
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
 
 
 class InlineQueryResultArticle:
@@ -1785,30 +1601,20 @@ class InlineQueryResultArticle:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.url = dictionary["url"] if "url" in dictionary else None
+        self.hide_url = dictionary["hide_url"] if "hide_url" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.thumb_width = dictionary["thumb_width"] if "thumb_width" in dictionary else None
+        self.thumb_height = dictionary["thumb_height"] if "thumb_height" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "url" and value is not None:
-                self.url = value
-            elif index == "hide_url" and value is not None:
-                self.hide_url = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "thumb_width" and value is not None:
-                self.thumb_width = value
-            elif index == "thumb_height" and value is not None:
-                self.thumb_height = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1836,32 +1642,21 @@ class InlineQueryResultPhoto:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.photo_url = dictionary["photo_url"] if "photo_url" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.photo_width = dictionary["photo_width"] if "photo_width" in dictionary else None
+        self.photo_height = dictionary["photo_height"] if "photo_height" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "photo_url" and value is not None:
-                self.photo_url = value
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "photo_width" and value is not None:
-                self.photo_width = value
-            elif index == "photo_height" and value is not None:
-                self.photo_height = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1889,32 +1684,21 @@ class InlineQueryResultGif:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.gif_url = dictionary["gif_url"] if "gif_url" in dictionary else None
+        self.gif_width = dictionary["gif_width"] if "gif_width" in dictionary else None
+        self.gif_height = dictionary["gif_height"] if "gif_height" in dictionary else None
+        self.gif_duration = dictionary["gif_duration"] if "gif_duration" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "gif_url" and value is not None:
-                self.gif_url = value
-            elif index == "gif_width" and value is not None:
-                self.gif_width = value
-            elif index == "gif_height" and value is not None:
-                self.gif_height = value
-            elif index == "gif_duration" and value is not None:
-                self.gif_duration = value
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1942,32 +1726,21 @@ class InlineQueryResultMpeg4Gif:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.mpeg4_url = dictionary["mpeg4_url"] if "mpeg4_url" in dictionary else None
+        self.mpeg4_width = dictionary["mpeg4_width"] if "mpeg4_width" in dictionary else None
+        self.mpeg4_height = dictionary["mpeg4_height"] if "mpeg4_height" in dictionary else None
+        self.mpeg4_duration = dictionary["mpeg4_duration"] if "mpeg4_duration" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "mpeg4_url" and value is not None:
-                self.mpeg4_url = value
-            elif index == "mpeg4_width" and value is not None:
-                self.mpeg4_width = value
-            elif index == "mpeg4_height" and value is not None:
-                self.mpeg4_height = value
-            elif index == "mpeg4_duration" and value is not None:
-                self.mpeg4_duration = value
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -1997,36 +1770,23 @@ class InlineQueryResultVideo:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.video_url = dictionary["video_url"] if "video_url" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.video_width = dictionary["video_width"] if "video_width" in dictionary else None
+        self.video_height = dictionary["video_height"] if "video_height" in dictionary else None
+        self.video_duration = dictionary["video_duration"] if "video_duration" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "video_url" and value is not None:
-                self.video_url = value
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "video_width" and value is not None:
-                self.video_width = value
-            elif index == "video_height" and value is not None:
-                self.video_height = value
-            elif index == "video_duration" and value is not None:
-                self.video_duration = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2052,28 +1812,19 @@ class InlineQueryResultAudio:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.audio_url = dictionary["audio_url"] if "audio_url" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.performer = dictionary["performer"] if "performer" in dictionary else None
+        self.audio_duration = dictionary["audio_duration"] if "audio_duration" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "audio_url" and value is not None:
-                self.audio_url = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "performer" and value is not None:
-                self.performer = value
-            elif index == "audio_duration" and value is not None:
-                self.audio_duration = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2098,26 +1849,18 @@ class InlineQueryResultVoice:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.voice_url = dictionary["voice_url"] if "voice_url" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.voice_duration = dictionary["voice_duration"] if "voice_duration" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "voice_url" and value is not None:
-                self.voice_url = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "voice_duration" and value is not None:
-                self.voice_duration = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2146,34 +1889,22 @@ class InlineQueryResultDocument:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.document_url = dictionary["document_url"] if "document_url" in dictionary else None
+        self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.thumb_width = dictionary["thumb_width"] if "thumb_width" in dictionary else None
+        self.thumb_height = dictionary["thumb_height"] if "thumb_height" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "document_url" and value is not None:
-                self.document_url = value
-            elif index == "mime_type" and value is not None:
-                self.mime_type = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "thumb_width" and value is not None:
-                self.thumb_width = value
-            elif index == "thumb_height" and value is not None:
-                self.thumb_height = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2200,30 +1931,20 @@ class InlineQueryResultLocation:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.latitude = dictionary["latitude"] if "latitude" in dictionary else None
+        self.longitude = dictionary["longitude"] if "longitude" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.live_period = dictionary["live_period"] if "live_period" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.thumb_width = dictionary["thumb_width"] if "thumb_width" in dictionary else None
+        self.thumb_height = dictionary["thumb_height"] if "thumb_height" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "latitude" and value is not None:
-                self.latitude = value
-            elif index == "longitude" and value is not None:
-                self.longitude = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "live_period" and value is not None:
-                self.live_period = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "thumb_width" and value is not None:
-                self.thumb_width = value
-            elif index == "thumb_height" and value is not None:
-                self.thumb_height = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2252,34 +1973,22 @@ class InlineQueryResultVenue:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.latitude = dictionary["latitude"] if "latitude" in dictionary else None
+        self.longitude = dictionary["longitude"] if "longitude" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.address = dictionary["address"] if "address" in dictionary else None
+        self.foursquare_id = dictionary["foursquare_id"] if "foursquare_id" in dictionary else None
+        self.foursquare_type = dictionary["foursquare_type"] if "foursquare_type" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.thumb_width = dictionary["thumb_width"] if "thumb_width" in dictionary else None
+        self.thumb_height = dictionary["thumb_height"] if "thumb_height" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "latitude" and value is not None:
-                self.latitude = value
-            elif index == "longitude" and value is not None:
-                self.longitude = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "address" and value is not None:
-                self.address = value
-            elif index == "foursquare_id" and value is not None:
-                self.foursquare_id = value
-            elif index == "foursquare_type" and value is not None:
-                self.foursquare_type = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "thumb_width" and value is not None:
-                self.thumb_width = value
-            elif index == "thumb_height" and value is not None:
-                self.thumb_height = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2306,30 +2015,20 @@ class InlineQueryResultContact:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.phone_number = dictionary["phone_number"] if "phone_number" in dictionary else None
+        self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
+        self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
+        self.vcard = dictionary["vcard"] if "vcard" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+        self.thumb_url = dictionary["thumb_url"] if "thumb_url" in dictionary else None
+        self.thumb_width = dictionary["thumb_width"] if "thumb_width" in dictionary else None
+        self.thumb_height = dictionary["thumb_height"] if "thumb_height" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "phone_number" and value is not None:
-                self.phone_number = value
-            elif index == "first_name" and value is not None:
-                self.first_name = value
-            elif index == "last_name" and value is not None:
-                self.last_name = value
-            elif index == "vcard" and value is not None:
-                self.vcard = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            elif index == "thumb_url" and value is not None:
-                self.thumb_url = value
-            elif index == "thumb_width" and value is not None:
-                self.thumb_width = value
-            elif index == "thumb_height" and value is not None:
-                self.thumb_height = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2349,16 +2048,13 @@ class InlineQueryResultGame:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.game_short_name = dictionary["game_short_name"] if "game_short_name" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "game_short_name" and value is not None:
-                self.game_short_name = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2383,26 +2079,18 @@ class InlineQueryResultCachedPhoto:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.photo_file_id = dictionary["photo_file_id"] if "photo_file_id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "photo_file_id" and value is not None:
-                self.photo_file_id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2426,24 +2114,17 @@ class InlineQueryResultCachedGif:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.gif_file_id = dictionary["gif_file_id"] if "gif_file_id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "gif_file_id" and value is not None:
-                self.gif_file_id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2467,24 +2148,17 @@ class InlineQueryResultCachedMpeg4Gif:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.mpeg4_file_id = dictionary["mpeg4_file_id"] if "mpeg4_file_id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "mpeg4_file_id" and value is not None:
-                self.mpeg4_file_id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2505,18 +2179,14 @@ class InlineQueryResultCachedSticker:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.sticker_file_id = dictionary["sticker_file_id"] if "sticker_file_id" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "sticker_file_id" and value is not None:
-                self.sticker_file_id = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2541,26 +2211,18 @@ class InlineQueryResultCachedDocument:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.document_file_id = dictionary["document_file_id"] if "document_file_id" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "document_file_id" and value is not None:
-                self.document_file_id = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2585,26 +2247,18 @@ class InlineQueryResultCachedVideo:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.video_file_id = dictionary["video_file_id"] if "video_file_id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "video_file_id" and value is not None:
-                self.video_file_id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2628,24 +2282,17 @@ class InlineQueryResultCachedVoice:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.voice_file_id = dictionary["voice_file_id"] if "voice_file_id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "voice_file_id" and value is not None:
-                self.voice_file_id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2668,22 +2315,16 @@ class InlineQueryResultCachedAudio:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.audio_file_id = dictionary["audio_file_id"] if "audio_file_id" in dictionary else None
+        self.caption = dictionary["caption"] if "caption" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
+        self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "id" and value is not None:
-                self.id = value
-            elif index == "audio_file_id" and value is not None:
-                self.audio_file_id = value
-            elif index == "caption" and value is not None:
-                self.caption = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "reply_markup" and value is not None:
-                self.reply_markup = InlineKeyboardMarkup(value)
-            elif index == "input_message_content" and value is not None:
-                self.input_message_content = InputMessageContent(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2699,8 +2340,10 @@ class InputMessageContent:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+
         for index, value in self.dict.items():
-            setattr(self, index, helper.setBvar(value))
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
 
 
 class InputTextMessageContent:
@@ -2718,14 +2361,12 @@ class InputTextMessageContent:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.message_text = dictionary["message_text"] if "message_text" in dictionary else None
+        self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
+        self.disable_web_page_preview = dictionary["disable_web_page_preview"] if "disable_web_page_preview" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "message_text" and value is not None:
-                self.message_text = value
-            elif index == "parse_mode" and value is not None:
-                self.parse_mode = value
-            elif index == "disable_web_page_preview" and value is not None:
-                self.disable_web_page_preview = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2744,14 +2385,12 @@ class InputLocationMessageContent:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.latitude = dictionary["latitude"] if "latitude" in dictionary else None
+        self.longitude = dictionary["longitude"] if "longitude" in dictionary else None
+        self.live_period = dictionary["live_period"] if "live_period" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "latitude" and value is not None:
-                self.latitude = value
-            elif index == "longitude" and value is not None:
-                self.longitude = value
-            elif index == "live_period" and value is not None:
-                self.live_period = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2773,20 +2412,15 @@ class InputVenueMessageContent:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.latitude = dictionary["latitude"] if "latitude" in dictionary else None
+        self.longitude = dictionary["longitude"] if "longitude" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.address = dictionary["address"] if "address" in dictionary else None
+        self.foursquare_id = dictionary["foursquare_id"] if "foursquare_id" in dictionary else None
+        self.foursquare_type = dictionary["foursquare_type"] if "foursquare_type" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "latitude" and value is not None:
-                self.latitude = value
-            elif index == "longitude" and value is not None:
-                self.longitude = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "address" and value is not None:
-                self.address = value
-            elif index == "foursquare_id" and value is not None:
-                self.foursquare_id = value
-            elif index == "foursquare_type" and value is not None:
-                self.foursquare_type = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2806,16 +2440,13 @@ class InputContactMessageContent:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.phone_number = dictionary["phone_number"] if "phone_number" in dictionary else None
+        self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
+        self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
+        self.vcard = dictionary["vcard"] if "vcard" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "phone_number" and value is not None:
-                self.phone_number = value
-            elif index == "first_name" and value is not None:
-                self.first_name = value
-            elif index == "last_name" and value is not None:
-                self.last_name = value
-            elif index == "vcard" and value is not None:
-                self.vcard = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2836,18 +2467,14 @@ class ChosenInlineResult:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.result_id = dictionary["result_id"] if "result_id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.location = Location(dictionary["location"]) if "location" in dictionary else None
+        self.inline_message_id = dictionary["inline_message_id"] if "inline_message_id" in dictionary else None
+        self.query = dictionary["query"] if "query" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "result_id" and value is not None:
-                self.result_id = value
-            elif index == "from" and value is not None:
-                self.user = User(value)
-            elif index == "location" and value is not None:
-                self.location = Location(value)
-            elif index == "inline_message_id" and value is not None:
-                self.inline_message_id = value
-            elif index == "query" and value is not None:
-                self.query = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2865,12 +2492,11 @@ class LabeledPrice:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.label = dictionary["label"] if "label" in dictionary else None
+        self.amount = dictionary["amount"] if "amount" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "label" and value is not None:
-                self.label = value
-            elif index == "amount" and value is not None:
-                self.amount = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2891,18 +2517,14 @@ class Invoice:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.start_parameter = dictionary["start_parameter"] if "start_parameter" in dictionary else None
+        self.currency = dictionary["currency"] if "currency" in dictionary else None
+        self.total_amount = dictionary["total_amount"] if "total_amount" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "title" and value is not None:
-                self.title = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "start_parameter" and value is not None:
-                self.start_parameter = value
-            elif index == "currency" and value is not None:
-                self.currency = value
-            elif index == "total_amount" and value is not None:
-                self.total_amount = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2924,20 +2546,15 @@ class ShippingAddress:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.country_code = dictionary["country_code"] if "country_code" in dictionary else None
+        self.state = dictionary["state"] if "state" in dictionary else None
+        self.city = dictionary["city"] if "city" in dictionary else None
+        self.street_line1 = dictionary["street_line1"] if "street_line1" in dictionary else None
+        self.street_line2 = dictionary["street_line2"] if "street_line2" in dictionary else None
+        self.post_code = dictionary["post_code"] if "post_code" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "country_code" and value is not None:
-                self.country_code = value
-            elif index == "state" and value is not None:
-                self.state = value
-            elif index == "city" and value is not None:
-                self.city = value
-            elif index == "street_line1" and value is not None:
-                self.street_line1 = value
-            elif index == "street_line2" and value is not None:
-                self.street_line2 = value
-            elif index == "post_code" and value is not None:
-                self.post_code = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2957,16 +2574,13 @@ class OrderInfo:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.name = dictionary["name"] if "name" in dictionary else None
+        self.phone_number = dictionary["phone_number"] if "phone_number" in dictionary else None
+        self.email = dictionary["email"] if "email" in dictionary else None
+        self.shipping_address = ShippingAddress(dictionary["shipping_address"]) if "shipping_address" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "name" and value is not None:
-                self.name = value
-            elif index == "phone_number" and value is not None:
-                self.phone_number = value
-            elif index == "email" and value is not None:
-                self.email = value
-            elif index == "shipping_address" and value is not None:
-                self.shipping_address = ShippingAddress(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -2985,16 +2599,20 @@ class ShippingOption:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.title = dictionary["title"] if "title" in dictionary else None
+        if "prices" in dictionary:
+            self.prices = list()
+            for i1 in dictionary["prices"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(LabeledPrice(i1))
+                self.prices.append(sublist)
+        else:
+            self.prices = None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "title" and value is not None:
-                self.title = value
-            elif index == "prices" and value is not None:
-                self.prices = list()
-                for i1 in value:
-                    self.prices.append(LabeledPrice(i1))
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3017,22 +2635,16 @@ class SuccessfulPayment:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.currency = dictionary["currency"] if "currency" in dictionary else None
+        self.total_amount = dictionary["total_amount"] if "total_amount" in dictionary else None
+        self.invoice_payload = dictionary["invoice_payload"] if "invoice_payload" in dictionary else None
+        self.shipping_option_id = dictionary["shipping_option_id"] if "shipping_option_id" in dictionary else None
+        self.order_info = OrderInfo(dictionary["order_info"]) if "order_info" in dictionary else None
+        self.telegram_payment_charge_id = dictionary["telegram_payment_charge_id"] if "telegram_payment_charge_id" in dictionary else None
+        self.provider_payment_charge_id = dictionary["provider_payment_charge_id"] if "provider_payment_charge_id" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "currency" and value is not None:
-                self.currency = value
-            elif index == "total_amount" and value is not None:
-                self.total_amount = value
-            elif index == "invoice_payload" and value is not None:
-                self.invoice_payload = value
-            elif index == "shipping_option_id" and value is not None:
-                self.shipping_option_id = value
-            elif index == "order_info" and value is not None:
-                self.order_info = OrderInfo(value)
-            elif index == "telegram_payment_charge_id" and value is not None:
-                self.telegram_payment_charge_id = value
-            elif index == "provider_payment_charge_id" and value is not None:
-                self.provider_payment_charge_id = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3052,16 +2664,13 @@ class ShippingQuery:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.invoice_payload = dictionary["invoice_payload"] if "invoice_payload" in dictionary else None
+        self.shipping_address = ShippingAddress(dictionary["shipping_address"]) if "shipping_address" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "from" and value is not None:
-                self.user = User(value)
-            elif index == "invoice_payload" and value is not None:
-                self.invoice_payload = value
-            elif index == "shipping_address" and value is not None:
-                self.shipping_address = ShippingAddress(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3084,22 +2693,16 @@ class PreCheckoutQuery:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.id = dictionary["id"] if "id" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.currency = dictionary["currency"] if "currency" in dictionary else None
+        self.total_amount = dictionary["total_amount"] if "total_amount" in dictionary else None
+        self.invoice_payload = dictionary["invoice_payload"] if "invoice_payload" in dictionary else None
+        self.shipping_option_id = dictionary["shipping_option_id"] if "shipping_option_id" in dictionary else None
+        self.order_info = OrderInfo(dictionary["order_info"]) if "order_info" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "id" and value is not None:
-                self.id = value
-            elif index == "from" and value is not None:
-                self.user = User(value)
-            elif index == "currency" and value is not None:
-                self.currency = value
-            elif index == "total_amount" and value is not None:
-                self.total_amount = value
-            elif index == "invoice_payload" and value is not None:
-                self.invoice_payload = value
-            elif index == "shipping_option_id" and value is not None:
-                self.shipping_option_id = value
-            elif index == "order_info" and value is not None:
-                self.order_info = OrderInfo(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3117,14 +2720,19 @@ class PassportData:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        if "data" in dictionary:
+            self.data = list()
+            for i1 in dictionary["data"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(EncryptedPassportElement(i1))
+                self.data.append(sublist)
+        else:
+            self.data = None
+        self.credentials = EncryptedCredentials(dictionary["credentials"]) if "credentials" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "data" and value is not None:
-                self.data = list()
-                for i1 in value:
-                    self.data.append(EncryptedPassportElement(i1))
-            elif index == "credentials" and value is not None:
-                self.credentials = EncryptedCredentials(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3144,16 +2752,13 @@ class PassportFile:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
+        self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
+        self.file_date = dictionary["file_date"] if "file_date" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "file_id" and value is not None:
-                self.file_id = value
-            elif index == "file_unique_id" and value is not None:
-                self.file_unique_id = value
-            elif index == "file_size" and value is not None:
-                self.file_size = value
-            elif index == "file_date" and value is not None:
-                self.file_date = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3179,32 +2784,35 @@ class EncryptedPassportElement:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.data = dictionary["data"] if "data" in dictionary else None
+        self.phone_number = dictionary["phone_number"] if "phone_number" in dictionary else None
+        self.email = dictionary["email"] if "email" in dictionary else None
+        if "files" in dictionary:
+            self.files = list()
+            for i1 in dictionary["files"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PassportFile(i1))
+                self.files.append(sublist)
+        else:
+            self.files = None
+        self.front_side = PassportFile(dictionary["front_side"]) if "front_side" in dictionary else None
+        self.reverse_side = PassportFile(dictionary["reverse_side"]) if "reverse_side" in dictionary else None
+        self.selfie = PassportFile(dictionary["selfie"]) if "selfie" in dictionary else None
+        if "translation" in dictionary:
+            self.translation = list()
+            for i1 in dictionary["translation"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PassportFile(i1))
+                self.translation.append(sublist)
+        else:
+            self.translation = None
+        self.hash = dictionary["hash"] if "hash" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "type" and value is not None:
-                self.type = value
-            elif index == "data" and value is not None:
-                self.data = value
-            elif index == "phone_number" and value is not None:
-                self.phone_number = value
-            elif index == "email" and value is not None:
-                self.email = value
-            elif index == "files" and value is not None:
-                self.files = list()
-                for i1 in value:
-                    self.files.append(PassportFile(i1))
-            elif index == "front_side" and value is not None:
-                self.front_side = PassportFile(value)
-            elif index == "reverse_side" and value is not None:
-                self.reverse_side = PassportFile(value)
-            elif index == "selfie" and value is not None:
-                self.selfie = PassportFile(value)
-            elif index == "translation" and value is not None:
-                self.translation = list()
-                for i1 in value:
-                    self.translation.append(PassportFile(i1))
-            elif index == "hash" and value is not None:
-                self.hash = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3223,14 +2831,12 @@ class EncryptedCredentials:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.data = dictionary["data"] if "data" in dictionary else None
+        self.hash = dictionary["hash"] if "hash" in dictionary else None
+        self.secret = dictionary["secret"] if "secret" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "data" and value is not None:
-                self.data = value
-            elif index == "hash" and value is not None:
-                self.hash = value
-            elif index == "secret" and value is not None:
-                self.secret = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3246,8 +2852,10 @@ class PassportElementError:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+
         for index, value in self.dict.items():
-            setattr(self, index, helper.setBvar(value))
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
 
 
 class PassportElementErrorDataField:
@@ -3267,18 +2875,14 @@ class PassportElementErrorDataField:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.field_name = dictionary["field_name"] if "field_name" in dictionary else None
+        self.data_hash = dictionary["data_hash"] if "data_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "field_name" and value is not None:
-                self.field_name = value
-            elif index == "data_hash" and value is not None:
-                self.data_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3298,16 +2902,13 @@ class PassportElementErrorFrontSide:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.file_hash = dictionary["file_hash"] if "file_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hash" and value is not None:
-                self.file_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3327,16 +2928,13 @@ class PassportElementErrorReverseSide:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.file_hash = dictionary["file_hash"] if "file_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hash" and value is not None:
-                self.file_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3356,16 +2954,13 @@ class PassportElementErrorSelfie:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.file_hash = dictionary["file_hash"] if "file_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hash" and value is not None:
-                self.file_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3385,16 +2980,13 @@ class PassportElementErrorFile:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.file_hash = dictionary["file_hash"] if "file_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hash" and value is not None:
-                self.file_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3414,18 +3006,21 @@ class PassportElementErrorFiles:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        if "file_hashes" in dictionary:
+            self.file_hashes = list()
+            for i1 in dictionary["file_hashes"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(i1)
+                self.file_hashes.append(sublist)
+        else:
+            self.file_hashes = None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hashes" and value is not None:
-                self.file_hashes = list()
-                for i1 in value:
-                    self.file_hashes.append(i1)
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3445,16 +3040,13 @@ class PassportElementErrorTranslationFile:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.file_hash = dictionary["file_hash"] if "file_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hash" and value is not None:
-                self.file_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3474,18 +3066,21 @@ class PassportElementErrorTranslationFiles:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        if "file_hashes" in dictionary:
+            self.file_hashes = list()
+            for i1 in dictionary["file_hashes"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(i1)
+                self.file_hashes.append(sublist)
+        else:
+            self.file_hashes = None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "file_hashes" and value is not None:
-                self.file_hashes = list()
-                for i1 in value:
-                    self.file_hashes.append(i1)
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3505,16 +3100,13 @@ class PassportElementErrorUnspecified:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.source = dictionary["source"] if "source" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.element_hash = dictionary["element_hash"] if "element_hash" in dictionary else None
+        self.message = dictionary["message"] if "message" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "source" and value is not None:
-                self.source = value
-            elif index == "type" and value is not None:
-                self.type = value
-            elif index == "element_hash" and value is not None:
-                self.element_hash = value
-            elif index == "message" and value is not None:
-                self.message = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3536,24 +3128,31 @@ class Game:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        if "photo" in dictionary:
+            self.photo = list()
+            for i1 in dictionary["photo"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(PhotoSize(i1))
+                self.photo.append(sublist)
+        else:
+            self.photo = None
+        self.text = dictionary["text"] if "text" in dictionary else None
+        if "text_entities" in dictionary:
+            self.text_entities = list()
+            for i1 in dictionary["text_entities"]:
+                sublist = list()
+                for i2 in i1:
+                    sublist.append(MessageEntity(i1))
+                self.text_entities.append(sublist)
+        else:
+            self.text_entities = None
+        self.animation = Animation(dictionary["animation"]) if "animation" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "title" and value is not None:
-                self.title = value
-            elif index == "description" and value is not None:
-                self.description = value
-            elif index == "photo" and value is not None:
-                self.photo = list()
-                for i1 in value:
-                    self.photo.append(PhotoSize(i1))
-            elif index == "text" and value is not None:
-                self.text = value
-            elif index == "text_entities" and value is not None:
-                self.text_entities = list()
-                for i1 in value:
-                    self.text_entities.append(MessageEntity(i1))
-            elif index == "animation" and value is not None:
-                self.animation = Animation(value)
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
 
 
@@ -3569,8 +3168,10 @@ class CallbackGame:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+
         for index, value in self.dict.items():
-            setattr(self, index, helper.setBvar(value))
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
 
 
 class GameHighScore:
@@ -3588,12 +3189,10 @@ class GameHighScore:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
+        self.position = dictionary["position"] if "position" in dictionary else None
+        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.score = dictionary["score"] if "score" in dictionary else None
+
         for index, value in self.dict.items():
-            if index == "position" and value is not None:
-                self.position = value
-            elif index == "user" and value is not None:
-                self.user = User(value)
-            elif index == "score" and value is not None:
-                self.score = value
-            else:
+            if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))

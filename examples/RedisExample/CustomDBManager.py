@@ -32,11 +32,11 @@ class RedisDBManager(database.DatabaseManager):
             self.db.hset(user.id, "count", 0)
 
         # Overwrite user's Telegram information
-        if hasattr(user, "first_name"):
+        if user.first_name is not None:
             self.db.hset(user.id, "first_name", user.first_name)
-        if hasattr(user, "last_name"):
+        if user.last_name is not None:
             self.db.hset(user.id, "last_name", user.first_name)
-        if hasattr(user, "username"):
+        if user.username is not None:
             self.db.hset(user.id, "username", user.username)
 
         # Return user's info
@@ -65,13 +65,13 @@ class RedisDBManager(database.DatabaseManager):
             self.db.hset(chat.id, "count", 0)
 
         # Overwrite chat's Telegram information
-        if hasattr(chat, "first_name"):
+        if chat.first_name is not None:
             self.db.hset(chat.id, "first_name", chat.first_name)
-        if hasattr(chat, "last_name"):
+        if chat.last_name is not None:
             self.db.hset(chat.id, "last_name", chat.first_name)
-        if hasattr(chat, "username"):
+        if chat.username is not None:
             self.db.hset(chat.id, "username", chat.username)
-        if hasattr(chat, "title"):
+        if chat.title is not None:
             self.db.hset(chat.id, "title", chat.title)
 
         # Return chat's info
@@ -112,34 +112,34 @@ class RedisDBManager(database.DatabaseManager):
 
         - update (types.Update): update to save users from
         """
-        if hasattr(update, "message"):
+        if update.message is not None:
             user = update.message.user
             chat = update.message.chat
             user.setDBManager(self)
             user.save()
             chat.setDBManager(self)
             chat.save()
-        elif hasattr(update, "callback_query"):
+        elif update.callback_query is not None:
             user = update.callback_query.user
             user.setDBManager(self)
             user.save()
-        elif hasattr(update, "edited_message"):
+        elif update.edited_message is not None:
             chat = update.edited_message.chat
             chat.setDBManager(self)
             chat.save()
-        elif hasattr(update, "channel_post"):
+        elif update.channel_post is not None:
             chat = update.channel_post.chat
             chat.setDBManager(self)
             chat.save()
-        elif hasattr(update, "chosen_inline_result"):
+        elif update.chosen_inline_result is not None:
             user = update.chosen_inline_result.user
             user.setDBManager(self)
             user.save()
-        elif hasattr(update, "inline_query"):
+        elif update.inline_query is not None:
             user = update.inline_query.user
             user.setDBManager(self)
             user.save()
-        elif hasattr(update, "shipping_query"):
+        elif update.shipping_query is not None:
             user = update.shipping_query.user
             user.setDBManager(self)
             user.save()
