@@ -226,7 +226,7 @@ class Message:
             dictionary = {}
         self.dict = dictionary
         self.message_id = dictionary["message_id"] if "message_id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.date = dictionary["date"] if "date" in dictionary else None
         self.chat = Chat(dictionary["chat"]) if "chat" in dictionary else None
         self.forward_from = User(dictionary["forward_from"]) if "forward_from" in dictionary else None
@@ -341,7 +341,7 @@ class MessageEntity:
         self.offset = dictionary["offset"] if "offset" in dictionary else None
         self.length = dictionary["length"] if "length" in dictionary else None
         self.url = dictionary["url"] if "url" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.language = dictionary["language"] if "language" in dictionary else None
 
         for index, value in self.dict.items():
@@ -685,7 +685,7 @@ class PollAnswer:
             dictionary = {}
         self.dict = dictionary
         self.poll_id = dictionary["poll_id"] if "poll_id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         if "option_ids" in dictionary:
             self.option_ids = list()
             for i1 in dictionary["option_ids"]:
@@ -1050,7 +1050,7 @@ class CallbackQuery(objects.CallbackQuery):
             dictionary = {}
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.message = Message(dictionary["message"]) if "message" in dictionary else None
         self.inline_message_id = dictionary["inline_message_id"] if "inline_message_id" in dictionary else None
         self.chat_instance = dictionary["chat_instance"] if "chat_instance" in dictionary else None
@@ -1141,7 +1141,7 @@ class ChatMember:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.status = dictionary["status"] if "status" in dictionary else None
         self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
         self.until_date = dictionary["until_date"] if "until_date" in dictionary else None
@@ -1550,7 +1550,7 @@ class InlineQuery:
             dictionary = {}
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.location = Location(dictionary["location"]) if "location" in dictionary else None
         self.query = dictionary["query"] if "query" in dictionary else None
         self.offset = dictionary["offset"] if "offset" in dictionary else None
@@ -2468,7 +2468,7 @@ class ChosenInlineResult:
             dictionary = {}
         self.dict = dictionary
         self.result_id = dictionary["result_id"] if "result_id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.location = Location(dictionary["location"]) if "location" in dictionary else None
         self.inline_message_id = dictionary["inline_message_id"] if "inline_message_id" in dictionary else None
         self.query = dictionary["query"] if "query" in dictionary else None
@@ -2665,7 +2665,7 @@ class ShippingQuery:
             dictionary = {}
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.invoice_payload = dictionary["invoice_payload"] if "invoice_payload" in dictionary else None
         self.shipping_address = ShippingAddress(dictionary["shipping_address"]) if "shipping_address" in dictionary else None
 
@@ -2694,7 +2694,7 @@ class PreCheckoutQuery:
             dictionary = {}
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.currency = dictionary["currency"] if "currency" in dictionary else None
         self.total_amount = dictionary["total_amount"] if "total_amount" in dictionary else None
         self.invoice_payload = dictionary["invoice_payload"] if "invoice_payload" in dictionary else None
@@ -3190,9 +3190,11 @@ class GameHighScore:
             dictionary = {}
         self.dict = dictionary
         self.position = dictionary["position"] if "position" in dictionary else None
-        self.user = User(dictionary["user"]) if "user" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.score = dictionary["score"] if "score" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
+
+
