@@ -71,10 +71,7 @@ class WebhookInfo:
         if "allowed_updates" in dictionary:
             self.allowed_updates = list()
             for i1 in dictionary["allowed_updates"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(i1)
-                self.allowed_updates.append(sublist)
+                self.allowed_updates.append(i1)
         else:
             self.allowed_updates = None
 
@@ -243,19 +240,13 @@ class Message:
         if "entities" in dictionary:
             self.entities = list()
             for i1 in dictionary["entities"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(MessageEntity(i1))
-                self.entities.append(sublist)
+                self.entities.append(MessageEntity(i1))
         else:
             self.entities = None
         if "caption_entities" in dictionary:
             self.caption_entities = list()
             for i1 in dictionary["caption_entities"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(MessageEntity(i1))
-                self.caption_entities.append(sublist)
+                self.caption_entities.append(MessageEntity(i1))
         else:
             self.caption_entities = None
         self.audio = Audio(dictionary["audio"]) if "audio" in dictionary else None
@@ -265,10 +256,7 @@ class Message:
         if "photo" in dictionary:
             self.photo = list()
             for i1 in dictionary["photo"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PhotoSize(i1))
-                self.photo.append(sublist)
+                self.photo.append(PhotoSize(i1))
         else:
             self.photo = None
         self.sticker = Sticker(dictionary["sticker"]) if "sticker" in dictionary else None
@@ -284,10 +272,7 @@ class Message:
         if "new_chat_members" in dictionary:
             self.new_chat_members = list()
             for i1 in dictionary["new_chat_members"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(User(i1))
-                self.new_chat_members.append(sublist)
+                self.new_chat_members.append(User(i1))
         else:
             self.new_chat_members = None
         self.left_chat_member = User(dictionary["left_chat_member"]) if "left_chat_member" in dictionary else None
@@ -295,10 +280,7 @@ class Message:
         if "new_chat_photo" in dictionary:
             self.new_chat_photo = list()
             for i1 in dictionary["new_chat_photo"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PhotoSize(i1))
-                self.new_chat_photo.append(sublist)
+                self.new_chat_photo.append(PhotoSize(i1))
         else:
             self.new_chat_photo = None
         self.delete_chat_photo = dictionary["delete_chat_photo"] if "delete_chat_photo" in dictionary else None
@@ -689,10 +671,7 @@ class PollAnswer:
         if "option_ids" in dictionary:
             self.option_ids = list()
             for i1 in dictionary["option_ids"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(i1)
-                self.option_ids.append(sublist)
+                self.option_ids.append(i1)
         else:
             self.option_ids = None
 
@@ -731,10 +710,7 @@ class Poll:
         if "options" in dictionary:
             self.options = list()
             for i1 in dictionary["options"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PollOption(i1))
-                self.options.append(sublist)
+                self.options.append(PollOption(i1))
         else:
             self.options = None
         self.total_voter_count = dictionary["total_voter_count"] if "total_voter_count" in dictionary else None
@@ -747,10 +723,7 @@ class Poll:
         if "explanation_entities" in dictionary:
             self.explanation_entities = list()
             for i1 in dictionary["explanation_entities"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(MessageEntity(i1))
-                self.explanation_entities.append(sublist)
+                self.explanation_entities.append(MessageEntity(i1))
         else:
             self.explanation_entities = None
         self.open_period = dictionary["open_period"] if "open_period" in dictionary else None
@@ -1493,10 +1466,7 @@ class StickerSet:
         if "stickers" in dictionary:
             self.stickers = list()
             for i1 in dictionary["stickers"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(Sticker(i1))
-                self.stickers.append(sublist)
+                self.stickers.append(Sticker(i1))
         else:
             self.stickers = None
         self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
@@ -2604,10 +2574,7 @@ class ShippingOption:
         if "prices" in dictionary:
             self.prices = list()
             for i1 in dictionary["prices"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(LabeledPrice(i1))
-                self.prices.append(sublist)
+                self.prices.append(LabeledPrice(i1))
         else:
             self.prices = None
 
@@ -2723,10 +2690,7 @@ class PassportData:
         if "data" in dictionary:
             self.data = list()
             for i1 in dictionary["data"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(EncryptedPassportElement(i1))
-                self.data.append(sublist)
+                self.data.append(EncryptedPassportElement(i1))
         else:
             self.data = None
         self.credentials = EncryptedCredentials(dictionary["credentials"]) if "credentials" in dictionary else None
@@ -2791,10 +2755,7 @@ class EncryptedPassportElement:
         if "files" in dictionary:
             self.files = list()
             for i1 in dictionary["files"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PassportFile(i1))
-                self.files.append(sublist)
+                self.files.append(PassportFile(i1))
         else:
             self.files = None
         self.front_side = PassportFile(dictionary["front_side"]) if "front_side" in dictionary else None
@@ -2803,10 +2764,7 @@ class EncryptedPassportElement:
         if "translation" in dictionary:
             self.translation = list()
             for i1 in dictionary["translation"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PassportFile(i1))
-                self.translation.append(sublist)
+                self.translation.append(PassportFile(i1))
         else:
             self.translation = None
         self.hash = dictionary["hash"] if "hash" in dictionary else None
@@ -3011,10 +2969,7 @@ class PassportElementErrorFiles:
         if "file_hashes" in dictionary:
             self.file_hashes = list()
             for i1 in dictionary["file_hashes"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(i1)
-                self.file_hashes.append(sublist)
+                self.file_hashes.append(i1)
         else:
             self.file_hashes = None
         self.message = dictionary["message"] if "message" in dictionary else None
@@ -3071,10 +3026,7 @@ class PassportElementErrorTranslationFiles:
         if "file_hashes" in dictionary:
             self.file_hashes = list()
             for i1 in dictionary["file_hashes"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(i1)
-                self.file_hashes.append(sublist)
+                self.file_hashes.append(i1)
         else:
             self.file_hashes = None
         self.message = dictionary["message"] if "message" in dictionary else None
@@ -3133,20 +3085,14 @@ class Game:
         if "photo" in dictionary:
             self.photo = list()
             for i1 in dictionary["photo"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PhotoSize(i1))
-                self.photo.append(sublist)
+                self.photo.append(PhotoSize(i1))
         else:
             self.photo = None
         self.text = dictionary["text"] if "text" in dictionary else None
         if "text_entities" in dictionary:
             self.text_entities = list()
             for i1 in dictionary["text_entities"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(MessageEntity(i1))
-                self.text_entities.append(sublist)
+                self.text_entities.append(MessageEntity(i1))
         else:
             self.text_entities = None
         self.animation = Animation(dictionary["animation"]) if "animation" in dictionary else None
