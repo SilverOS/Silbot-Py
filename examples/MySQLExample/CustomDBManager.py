@@ -30,7 +30,7 @@ class MySQLDBManager(database.DatabaseManager):
         """This function opens a new connection to the database if the old connection is not opened
         """
         if not self.db.open:
-            self.reconnect()
+            self.db.ping(reconnect=True)
 
     def reconnect(self):
         """This function opens a new connection to the database
@@ -82,7 +82,7 @@ class MySQLDBManager(database.DatabaseManager):
         last_name = chat.last_name if chat.last_name is not None else ""
         first_name = chat.first_name if chat.first_name is not None else ""
         username = chat.username if chat.username is not None else ""
-        title = chat.title if chat.title is not None else ""
+        title = chat.title if hasattr(chat, "title") else ""
 
         info = self.getInfo(chat)
         if not info:
