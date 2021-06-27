@@ -35,14 +35,11 @@ class BotApi:
 
     def sendRequest(self, method, arguments=None):
         """Sends a GET request to botAPI
-
         Using this function you can send custom requests to botAPI
         - - - - -
         **Args**:
-
         - `method` (`str`): request method, like sendMessage
         - `arguments` (`dict`, *optional*): A `dict` whose keys are request's parameters and the values are parameters values. Defaults to `{}`.
-
         **Returns**
         - `str` botAPI's string response
         """
@@ -54,17 +51,14 @@ class BotApi:
             return json.dumps({"ok": False, "connection_error": True})
         else:
             return r.text
-
+    
     @staticmethod
     def response(raw_json, func):
         """Creates a botAPIResponse object for the given JSON
-
         - - - - -
         **Args**:
-
         - `raw_json` (`str`): Result from botAPI
         - `func` (`silbot.types` class or builtin data value): Expected result from botAPI
-
         **Returns**
         - `tuple` containing the expected result as object as first argument and the `BotAPIResponse` object as second
         """
@@ -80,7 +74,7 @@ class BotApi:
         - `offset` :`int` Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id. The negative offset can be specified to retrieve updates starting from -offset update from the end of the updates queue. All previous updates will forgotten.
         - `limit` :`int` Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
         - `timeout` :`int` Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling. Should be positive, short polling should be used for testing purposes only.
-        - `allowed_updates` :`list` A JSON-serialized list of the update types you want your bot to receive. For example, specify [�message�, �edited_channel_post�, �callback_query�] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all updates regardless of type (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the getUpdates, so unwanted updates may be received for a short period of time.
+        - `allowed_updates` :`list` A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the getUpdates, so unwanted updates may be received for a short period of time.
 
         **Returns:**
 
@@ -95,7 +89,8 @@ class BotApi:
         return self.response(self.sendRequest("getUpdates", data), list)
 
     def setWebhook(self, url: str, certificate: types.InputFile = None, ip_address: str = None, max_connections: int = None, allowed_updates: list = None, drop_pending_updates: bool = None):
-        """Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setwebhook)
+        """Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success.
+        If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/<token>. Since nobody else knows your bot's token, you can be pretty sure it's us. [See Telegram API](https://core.telegram.org/bots/api#setwebhook)
 
         - - - - -
         **Args**:
@@ -104,7 +99,7 @@ class BotApi:
         - `certificate` :`types.InputFile` Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
         - `ip_address` :`str` The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS
         - `max_connections` :`int` Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to increase your bot's throughput.
-        - `allowed_updates` :`list` A JSON-serialized list of the update types you want your bot to receive. For example, specify [�message�, �edited_channel_post�, �callback_query�] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all updates regardless of type (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
+        - `allowed_updates` :`list` A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
         - `drop_pending_updates` :`bool` Pass True to drop all pending updates
 
         **Returns:**
@@ -241,7 +236,7 @@ class BotApi:
         return self.response(self.sendRequest("sendMessage", data), types.Message)
 
     def forwardMessage(self, chat_id: (int, str), message_id: int, from_chat_id: (int, str), disable_notification: bool = None):
-        """Use this method to forward messages of any kind. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#forwardmessage)
+        """Use this method to forward messages of any kind. Service messages can't be forwarded. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#forwardmessage)
 
         - - - - -
         **Args**:
@@ -267,7 +262,7 @@ class BotApi:
         return self.response(self.sendRequest("forwardMessage", data), types.Message)
 
     def copyMessage(self, chat_id: (int, str), message_id: int, from_chat_id: (int, str), caption: str = None, reply_markup: (types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """Use this method to copy messages of any kind. The method is analogous to the method forwardMessages, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. [See Telegram API](https://core.telegram.org/bots/api#copymessage)
+        """Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. [See Telegram API](https://core.telegram.org/bots/api#copymessage)
 
         - - - - -
         **Args**:
@@ -314,7 +309,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `photo` :`(types.InputFile,str,)` Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. More info on Sending Files �
+        - `photo` :`(types.InputFile,str,)` Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More info on Sending Files »
         - `caption` :`str` Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the photo caption. See formatting options for more details.
@@ -347,13 +342,14 @@ class BotApi:
         return self.response(self.sendRequest("sendPhoto", data), types.Message)
 
     def sendAudio(self, chat_id: (int, str), audio: (types.InputFile, str), caption: str = None, reply_markup: (types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply) = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, performer: str = None, title: str = None, thumb: (types.InputFile, str) = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendaudio)
+        """Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
+        For sending voice messages, use the sendVoice method instead. [See Telegram API](https://core.telegram.org/bots/api#sendaudio)
 
         - - - - -
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `audio` :`(types.InputFile,str,)` Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �
+        - `audio` :`(types.InputFile,str,)` Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `caption` :`str` Audio caption, 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the audio caption. See formatting options for more details.
@@ -361,7 +357,7 @@ class BotApi:
         - `duration` :`int` Duration of the audio in seconds
         - `performer` :`str` Performer
         - `title` :`str` Track name
-        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass �attach://<file_attach_name>� if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files �
+        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
@@ -400,11 +396,11 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `document` :`(types.InputFile,str,)` File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �
+        - `document` :`(types.InputFile,str,)` File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `caption` :`str` Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the document caption. See formatting options for more details.
-        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass �attach://<file_attach_name>� if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files �
+        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `caption_entities` :`list` List of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_content_type_detection` :`bool` Disables automatic server-side content type detection for files uploaded using multipart/form-data
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -443,14 +439,14 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `video` :`(types.InputFile,str,)` Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More info on Sending Files �
+        - `video` :`(types.InputFile,str,)` Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More info on Sending Files »
         - `caption` :`str` Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the video caption. See formatting options for more details.
         - `duration` :`int` Duration of sent video in seconds
         - `width` :`int` Video width
         - `height` :`int` Video height
-        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass �attach://<file_attach_name>� if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files �
+        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `caption_entities` :`list` List of special entities that appear in the caption, which can be specified instead of parse_mode
         - `supports_streaming` :`bool` Pass True, if the uploaded video is suitable for streaming
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -492,14 +488,14 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `animation` :`(types.InputFile,str,)` Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More info on Sending Files �
+        - `animation` :`(types.InputFile,str,)` Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More info on Sending Files »
         - `caption` :`str` Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the animation caption. See formatting options for more details.
         - `duration` :`int` Duration of sent animation in seconds
         - `width` :`int` Animation width
         - `height` :`int` Animation height
-        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass �attach://<file_attach_name>� if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files �
+        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `caption_entities` :`list` List of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -539,7 +535,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `voice` :`(types.InputFile,str,)` Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �
+        - `voice` :`(types.InputFile,str,)` Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `caption` :`str` Voice message caption, 0-1024 characters after entities parsing
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the voice message caption. See formatting options for more details.
@@ -580,11 +576,11 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `video_note` :`(types.InputFile,str,)` Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More info on Sending Files �. Sending video notes by a URL is currently unsupported
+        - `video_note` :`(types.InputFile,str,)` Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More info on Sending Files ». Sending video notes by a URL is currently unsupported
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `duration` :`int` Duration of sent video in seconds
         - `length` :`int` Video width and height, i.e. diameter of the video message
-        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass �attach://<file_attach_name>� if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files �
+        - `thumb` :`(types.InputFile,str,)` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
@@ -610,7 +606,7 @@ class BotApi:
         return self.response(self.sendRequest("sendVideoNote", data), types.Message)
 
     def sendMediaGroup(self, chat_id: (int, str), media: list, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only group in an album with messages of the same type. On success, an array of Messages that were sent is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmediagroup)
+        """Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmediagroup)
 
         - - - - -
         **Args**:
@@ -746,7 +742,7 @@ class BotApi:
         - `address` :`str` Address of the venue
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `foursquare_id` :`str` Foursquare identifier of the venue
-        - `foursquare_type` :`str` Foursquare type of the venue, if known. (For example, �arts_entertainment/default�, �arts_entertainment/aquarium� or �food/icecream�.)
+        - `foursquare_type` :`str` Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
         - `google_place_id` :`str` Google Places identifier of the venue
         - `google_place_type` :`str` Google Places type of the venue. (See supported types.)
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -824,7 +820,7 @@ class BotApi:
         - `options` :`list` A JSON-serialized list of answer options, 2-10 strings 1-100 characters each
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `is_anonymous` :`bool` True, if the poll needs to be anonymous, defaults to True
-        - `type` :`str` Poll type, �quiz� or �regular�, defaults to �regular�
+        - `type` :`str` Poll type, “quiz” or “regular”, defaults to “regular”
         - `allows_multiple_answers` :`bool` True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
         - `correct_option_id` :`int` 0-based identifier of the correct answer option, required for polls in quiz mode
         - `explanation` :`str` Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing
@@ -873,7 +869,7 @@ class BotApi:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
-        - `emoji` :`str` Emoji on which the dice throw animation is based. Currently, must be one of ��, ��, ��, ��, or ��. Dice can have values 1-6 for �� and ��, values 1-5 for �� and ��, and values 1-64 for ��. Defaults to ��
+        - `emoji` :`str` Emoji on which the dice throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Dice can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
@@ -896,13 +892,14 @@ class BotApi:
         return self.response(self.sendRequest("sendDice", data), types.Message)
 
     def sendChatAction(self, chat_id: (int, str), action: str):
-        """Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#sendchataction)
+        """Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). Returns True on success.
+        We only recommend using this method when a response from the bot will take a noticeable amount of time to arrive. [See Telegram API](https://core.telegram.org/bots/api#sendchataction)
 
         - - - - -
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `action` :`str` Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_audio or upload_audio for audio files, upload_document for general files, find_location for location data, record_video_note or upload_video_note for video notes.
+        - `action` :`str` Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_voice or upload_voice for voice notes, upload_document for general files, find_location for location data, record_video_note or upload_video_note for video notes.
 
         **Returns:**
 
@@ -952,15 +949,16 @@ class BotApi:
         }
         return self.response(self.sendRequest("getFile", data), types.File)
 
-    def kickChatMember(self, chat_id: (int, str), user_id: int, until_date: int = None):
-        """Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#kickchatmember)
+    def banChatMember(self, chat_id: (int, str), user_id: int, until_date: int = None, revoke_messages: bool = None):
+        """Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#banchatmember)
 
         - - - - -
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
         - `user_id` :`int` Unique identifier of the target user
-        - `until_date` :`int` Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever
+        - `until_date` :`int` Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.
+        - `revoke_messages` :`bool` Pass True to delete all messages from the chat for the user that is being removed. If False, the user will be able to see messages in the group that were sent before the user was removed. Always True for supergroups and channels.
 
         **Returns:**
 
@@ -970,11 +968,12 @@ class BotApi:
             "chat_id": chat_id,
             "user_id": user_id,
             "until_date": until_date,
+            "revoke_messages": revoke_messages,
         }
-        return self.response(self.sendRequest("kickChatMember", data), bool)
+        return self.response(self.sendRequest("banChatMember", data), bool)
 
     def unbanChatMember(self, chat_id: (int, str), user_id: int, only_if_banned: bool = None):
-        """Use this method to unban a previously kicked user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be removed from the chat. If you don't want this, use the parameter only_if_banned. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#unbanchatmember)
+        """Use this method to unban a previously banned user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be removed from the chat. If you don't want this, use the parameter only_if_banned. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#unbanchatmember)
 
         - - - - -
         **Args**:
@@ -1017,7 +1016,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("restrictChatMember", data), bool)
 
-    def promoteChatMember(self, chat_id: (int, str), user_id: int, is_anonymous: bool = None, can_change_info: bool = None, can_post_messages: bool = None, can_edit_messages: bool = None, can_delete_messages: bool = None, can_invite_users: bool = None, can_restrict_members: bool = None, can_pin_messages: bool = None, can_promote_members: bool = None):
+    def promoteChatMember(self, chat_id: (int, str), user_id: int, is_anonymous: bool = None, can_manage_chat: bool = None, can_post_messages: bool = None, can_edit_messages: bool = None, can_delete_messages: bool = None, can_manage_voice_chats: bool = None, can_restrict_members: bool = None, can_promote_members: bool = None, can_change_info: bool = None, can_invite_users: bool = None, can_pin_messages: bool = None):
         """Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Pass False for all boolean parameters to demote a user. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#promotechatmember)
 
         - - - - -
@@ -1026,14 +1025,16 @@ class BotApi:
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `user_id` :`int` Unique identifier of the target user
         - `is_anonymous` :`bool` Pass True, if the administrator's presence in the chat is hidden
-        - `can_change_info` :`bool` Pass True, if the administrator can change chat title, photo and other settings
+        - `can_manage_chat` :`bool` Pass True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
         - `can_post_messages` :`bool` Pass True, if the administrator can create channel posts, channels only
         - `can_edit_messages` :`bool` Pass True, if the administrator can edit messages of other users and can pin messages, channels only
         - `can_delete_messages` :`bool` Pass True, if the administrator can delete messages of other users
-        - `can_invite_users` :`bool` Pass True, if the administrator can invite new users to the chat
+        - `can_manage_voice_chats` :`bool` Pass True, if the administrator can manage voice chats
         - `can_restrict_members` :`bool` Pass True, if the administrator can restrict, ban or unban chat members
-        - `can_pin_messages` :`bool` Pass True, if the administrator can pin messages, supergroups only
         - `can_promote_members` :`bool` Pass True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)
+        - `can_change_info` :`bool` Pass True, if the administrator can change chat title, photo and other settings
+        - `can_invite_users` :`bool` Pass True, if the administrator can invite new users to the chat
+        - `can_pin_messages` :`bool` Pass True, if the administrator can pin messages, supergroups only
 
         **Returns:**
 
@@ -1043,14 +1044,16 @@ class BotApi:
             "chat_id": chat_id,
             "user_id": user_id,
             "is_anonymous": is_anonymous,
-            "can_change_info": can_change_info,
+            "can_manage_chat": can_manage_chat,
             "can_post_messages": can_post_messages,
             "can_edit_messages": can_edit_messages,
             "can_delete_messages": can_delete_messages,
-            "can_invite_users": can_invite_users,
+            "can_manage_voice_chats": can_manage_voice_chats,
             "can_restrict_members": can_restrict_members,
-            "can_pin_messages": can_pin_messages,
             "can_promote_members": can_promote_members,
+            "can_change_info": can_change_info,
+            "can_invite_users": can_invite_users,
+            "can_pin_messages": can_pin_messages,
         }
         return self.response(self.sendRequest("promoteChatMember", data), bool)
 
@@ -1095,7 +1098,7 @@ class BotApi:
         return self.response(self.sendRequest("setChatPermissions", data), bool)
 
     def exportChatInviteLink(self, chat_id: (int, str)):
-        """Use this method to generate a new invite link for a chat; any previously generated link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as String on success. [See Telegram API](https://core.telegram.org/bots/api#exportchatinvitelink)
+        """Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as String on success. [See Telegram API](https://core.telegram.org/bots/api#exportchatinvitelink)
 
         - - - - -
         **Args**:
@@ -1110,6 +1113,69 @@ class BotApi:
             "chat_id": chat_id,
         }
         return self.response(self.sendRequest("exportChatInviteLink", data), str)
+
+    def createChatInviteLink(self, chat_id: (int, str), expire_date: int = None, member_limit: int = None):
+        """Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. The link can be revoked using the method revokeChatInviteLink. Returns the new invite link as ChatInviteLink object. [See Telegram API](https://core.telegram.org/bots/api#createchatinvitelink)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `expire_date` :`int` Point in time (Unix timestamp) when the link will expire
+        - `member_limit` :`int` Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.ChatInviteLink` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "expire_date": expire_date,
+            "member_limit": member_limit,
+        }
+        return self.response(self.sendRequest("createChatInviteLink", data), types.ChatInviteLink)
+
+    def editChatInviteLink(self, chat_id: (int, str), invite_link: str, expire_date: int = None, member_limit: int = None):
+        """Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the edited invite link as a ChatInviteLink object. [See Telegram API](https://core.telegram.org/bots/api#editchatinvitelink)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+        - `invite_link` :`str` The invite link to edit
+        - `expire_date` :`int` Point in time (Unix timestamp) when the link will expire
+        - `member_limit` :`int` Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.ChatInviteLink` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "invite_link": invite_link,
+            "expire_date": expire_date,
+            "member_limit": member_limit,
+        }
+        return self.response(self.sendRequest("editChatInviteLink", data), types.ChatInviteLink)
+
+    def revokeChatInviteLink(self, chat_id: (int, str), invite_link: str):
+        """Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the revoked invite link as ChatInviteLink object. [See Telegram API](https://core.telegram.org/bots/api#revokechatinvitelink)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`(int,str,)` Unique identifier of the target chat or username of the target channel (in the format @channelusername)
+        - `invite_link` :`str` The invite link to revoke
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.ChatInviteLink` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "invite_link": invite_link,
+        }
+        return self.response(self.sendRequest("revokeChatInviteLink", data), types.ChatInviteLink)
 
     def setChatPhoto(self, chat_id: (int, str), photo: types.InputFile):
         """Use this method to set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatphoto)
@@ -1296,8 +1362,8 @@ class BotApi:
         }
         return self.response(self.sendRequest("getChatAdministrators", data), list)
 
-    def getChatMembersCount(self, chat_id: (int, str)):
-        """Use this method to get the number of members in a chat. Returns Int on success. [See Telegram API](https://core.telegram.org/bots/api#getchatmemberscount)
+    def getChatMemberCount(self, chat_id: (int, str)):
+        """Use this method to get the number of members in a chat. Returns Int on success. [See Telegram API](https://core.telegram.org/bots/api#getchatmembercount)
 
         - - - - -
         **Args**:
@@ -1311,7 +1377,7 @@ class BotApi:
         data = {
             "chat_id": chat_id,
         }
-        return self.response(self.sendRequest("getChatMembersCount", data), int)
+        return self.response(self.sendRequest("getChatMemberCount", data), int)
 
     def getChatMember(self, chat_id: (int, str), user_id: int):
         """Use this method to get information about a member of a chat. Returns a ChatMember object on success. [See Telegram API](https://core.telegram.org/bots/api#getchatmember)
@@ -1377,7 +1443,7 @@ class BotApi:
         - `callback_query_id` :`str` Unique identifier for the query to be answered
         - `text` :`str` Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
         - `show_alert` :`bool` If true, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
-        - `url` :`str` URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game � note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
+        - `url` :`str` URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game — note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
         - `cache_time` :`int` The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
 
         **Returns:**
@@ -1393,13 +1459,15 @@ class BotApi:
         }
         return self.response(self.sendRequest("answerCallbackQuery", data), bool)
 
-    def setMyCommands(self, commands: list):
-        """Use this method to change the list of the bot's commands. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setmycommands)
+    def setMyCommands(self, commands: list, scope: types.BotCommandScope = None, language_code: str = None):
+        """Use this method to change the list of the bot's commands. See https://core.telegram.org/bots#commands for more details about bot commands. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setmycommands)
 
         - - - - -
         **Args**:
 
         - `commands` :`list` A JSON-serialized list of bot commands to be set as the list of the bot's commands. At most 100 commands can be specified.
+        - `scope` :`types.BotCommandScope` A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
+        - `language_code` :`str` A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands
 
         **Returns:**
 
@@ -1407,21 +1475,46 @@ class BotApi:
         """
         data = {
             "commands": commands,
+            "scope": helper.toDict(scope, True),
+            "language_code": language_code,
         }
         return self.response(self.sendRequest("setMyCommands", data), bool)
 
-    def getMyCommands(self, ):
-        """Use this method to get the current list of the bot's commands. Requires no parameters. Returns Array of BotCommand on success. [See Telegram API](https://core.telegram.org/bots/api#getmycommands)
+    def deleteMyCommands(self, scope: types.BotCommandScope = None, language_code: str = None):
+        """Use this method to delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletemycommands)
 
         - - - - -
         **Args**:
 
+        - `scope` :`types.BotCommandScope` A JSON-serialized object, describing scope of users for which the commands are relevant. Defaults to BotCommandScopeDefault.
+        - `language_code` :`str` A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given scope, for whose language there are no dedicated commands
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "scope": helper.toDict(scope, True),
+            "language_code": language_code,
+        }
+        return self.response(self.sendRequest("deleteMyCommands", data), bool)
+
+    def getMyCommands(self, scope: types.BotCommandScope = None, language_code: str = None):
+        """Use this method to get the current list of the bot's commands for the given scope and user language. Returns Array of BotCommand on success. If commands aren't set, an empty list is returned. [See Telegram API](https://core.telegram.org/bots/api#getmycommands)
+
+        - - - - -
+        **Args**:
+
+        - `scope` :`types.BotCommandScope` A JSON-serialized object, describing scope of users. Defaults to BotCommandScopeDefault.
+        - `language_code` :`str` A two-letter ISO 639-1 language code or an empty string
 
         **Returns:**
 
         - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
         """
         data = {
+            "scope": helper.toDict(scope, True),
+            "language_code": language_code,
         }
         return self.response(self.sendRequest("getMyCommands", data), list)
 
@@ -1589,7 +1682,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `sticker` :`(types.InputFile,str,)` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �
+        - `sticker` :`(types.InputFile,str,)` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `reply_markup` :`(types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,)` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -1636,7 +1729,7 @@ class BotApi:
         **Args**:
 
         - `user_id` :`int` User identifier of sticker file owner
-        - `png_sticker` :`types.InputFile` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. More info on Sending Files �
+        - `png_sticker` :`types.InputFile` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. More info on Sending Files »
 
         **Returns:**
 
@@ -1655,10 +1748,10 @@ class BotApi:
         **Args**:
 
         - `user_id` :`int` User identifier of created sticker set owner
-        - `name` :`str` Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in �_by_<bot username>�. <bot_username> is case insensitive. 1-64 characters.
+        - `name` :`str` Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in “_by_<bot username>”. <bot_username> is case insensitive. 1-64 characters.
         - `title` :`str` Sticker set title, 1-64 characters
         - `emojis` :`str` One or more emoji corresponding to the sticker
-        - `png_sticker` :`(types.InputFile,str,)` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �
+        - `png_sticker` :`(types.InputFile,str,)` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements
         - `contains_masks` :`bool` Pass True, if a set of mask stickers should be created
         - `mask_position` :`types.MaskPosition` A JSON-serialized object for position where the mask should be placed on faces
@@ -1688,7 +1781,7 @@ class BotApi:
         - `user_id` :`int` User identifier of sticker set owner
         - `name` :`str` Sticker set name
         - `emojis` :`str` One or more emoji corresponding to the sticker
-        - `png_sticker` :`(types.InputFile,str,)` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �
+        - `png_sticker` :`(types.InputFile,str,)` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements
         - `mask_position` :`types.MaskPosition` A JSON-serialized object for position where the mask should be placed on faces
 
@@ -1750,7 +1843,7 @@ class BotApi:
 
         - `user_id` :`int` User identifier of the sticker set owner
         - `name` :`str` Sticker set name
-        - `thumb` :`(types.InputFile,str,)` A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/animated_stickers#technical-requirements for animated sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files �. Animated sticker set thumbnail can't be uploaded via HTTP URL.
+        - `thumb` :`(types.InputFile,str,)` A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/animated_stickers#technical-requirements for animated sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set thumbnail can't be uploaded via HTTP URL.
 
         **Returns:**
 
@@ -1792,21 +1885,23 @@ class BotApi:
         }
         return self.response(self.sendRequest("answerInlineQuery", data), bool)
 
-    def sendInvoice(self, chat_id: int, title: str, description: str, payload: str, provider_token: str, start_parameter: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendInvoice(self, chat_id: (int, str), title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, max_tip_amount: int = None, suggested_tip_amounts: list = None, start_parameter: str = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send invoices. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendinvoice)
 
         - - - - -
         **Args**:
 
-        - `chat_id` :`int` Unique identifier for the target private chat
+        - `chat_id` :`(int,str,)` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `title` :`str` Product name, 1-32 characters
         - `description` :`str` Product description, 1-255 characters
         - `payload` :`str` Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
         - `provider_token` :`str` Payments provider token, obtained via Botfather
-        - `start_parameter` :`str` Unique deep-linking parameter that can be used to generate this invoice when used as a start parameter
         - `currency` :`str` Three-letter ISO 4217 currency code, see more on currencies
         - `prices` :`list` Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
+        - `max_tip_amount` :`int` The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
+        - `suggested_tip_amounts` :`list` A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+        - `start_parameter` :`str` Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter
         - `provider_data` :`str` A JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
         - `photo_url` :`str` URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
         - `photo_size` :`int` Photo size
@@ -1836,9 +1931,11 @@ class BotApi:
             "description": description,
             "payload": payload,
             "provider_token": provider_token,
-            "start_parameter": start_parameter,
             "currency": currency,
             "prices": prices,
+            "max_tip_amount": max_tip_amount,
+            "suggested_tip_amounts": suggested_tip_amounts,
+            "start_parameter": start_parameter,
             "provider_data": provider_data,
             "photo_url": photo_url,
             "photo_size": photo_size,
@@ -1903,7 +2000,8 @@ class BotApi:
         return self.response(self.sendRequest("answerPreCheckoutQuery", data), bool)
 
     def setPassportDataErrors(self, user_id: int, errors: list):
-        """Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setpassportdataerrors)
+        """Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
+        Use this if the data submitted by the user doesn't satisfy the standards your service requires for any reason. For example, if a birthday date seems invalid, a submitted document is blurry, a scan shows evidence of tampering, etc. Supply some details in the error message to make sure the user knows how to correct the issues. [See Telegram API](https://core.telegram.org/bots/api#setpassportdataerrors)
 
         - - - - -
         **Args**:
