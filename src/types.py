@@ -19,6 +19,8 @@ class Update:
     - `pre_checkout_query`: `PreCheckoutQuery` - Optional. New incoming pre-checkout query. Contains full information about checkout
     - `poll`: `Poll` - Optional. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
     - `poll_answer`: `PollAnswer` - Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
+    - `my_chat_member`: `ChatMemberUpdated` - Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
+    - `chat_member`: `ChatMemberUpdated` - Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
     """
 
     def __init__(self, dictionary=None):
@@ -37,6 +39,8 @@ class Update:
         self.pre_checkout_query = PreCheckoutQuery(dictionary["pre_checkout_query"]) if "pre_checkout_query" in dictionary else None
         self.poll = Poll(dictionary["poll"]) if "poll" in dictionary else None
         self.poll_answer = PollAnswer(dictionary["poll_answer"]) if "poll_answer" in dictionary else None
+        self.my_chat_member = ChatMemberUpdated(dictionary["my_chat_member"]) if "my_chat_member" in dictionary else None
+        self.chat_member = ChatMemberUpdated(dictionary["chat_member"]) if "chat_member" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -56,7 +60,7 @@ class WebhookInfo:
     - `last_error_date`: `int` - Optional. Unix time for the most recent error that happened when trying to deliver an update via webhook
     - `last_error_message`: `string` - Optional. Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook
     - `max_connections`: `int` - Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
-    - `allowed_updates`: `string[]` - Optional. A list of update types the bot is subscribed to. Defaults to all update types
+    - `allowed_updates`: `string[]` - Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member
     """
 
     def __init__(self, dictionary=None):
@@ -88,7 +92,7 @@ class User(objects.User):
     - - - - -
     **Fields**:
 
-    - `id`: `int` - Unique identifier for this user or bot
+    - `id`: `int` - Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
     - `is_bot`: `bool` - True, if this user is a bot
     - `first_name`: `string` - User's or bot's first name
     - `last_name`: `string` - Optional. User's or bot's last name
@@ -124,7 +128,7 @@ class Chat(objects.Chat):
     - - - - -
     **Fields**:
 
-    - `id`: `int` - Unique identifier for this chat. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
+    - `id`: `int` - Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
     - `type`: `string` - Type of chat, can be either “private”, “group”, “supergroup” or “channel”
     - `title`: `string` - Optional. Title, for supergroups, channels and group chats
     - `username`: `string` - Optional. Username, for private chats, supergroups and channels if available
@@ -133,10 +137,11 @@ class Chat(objects.Chat):
     - `photo`: `ChatPhoto` - Optional. Chat photo. Returned only in getChat.
     - `bio`: `string` - Optional. Bio of the other party in a private chat. Returned only in getChat.
     - `description`: `string` - Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
-    - `invite_link`: `string` - Optional. Chat invite link, for groups, supergroups and channel chats. Each administrator in a chat generates their own invite links, so the bot must first generate the link using exportChatInviteLink. Returned only in getChat.
+    - `invite_link`: `string` - Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
     - `pinned_message`: `Message` - Optional. The most recent pinned message (by sending date). Returned only in getChat.
     - `permissions`: `ChatPermissions` - Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
     - `slow_mode_delay`: `int` - Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
+    - `message_auto_delete_time`: `int` - Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
     - `sticker_set_name`: `string` - Optional. For supergroups, name of group sticker set. Returned only in getChat.
     - `can_set_sticker_set`: `bool` - Optional. True, if the bot can change the group sticker set. Returned only in getChat.
     - `linked_chat_id`: `int` - Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat.
@@ -160,6 +165,7 @@ class Chat(objects.Chat):
         self.pinned_message = Message(dictionary["pinned_message"]) if "pinned_message" in dictionary else None
         self.permissions = ChatPermissions(dictionary["permissions"]) if "permissions" in dictionary else None
         self.slow_mode_delay = dictionary["slow_mode_delay"] if "slow_mode_delay" in dictionary else None
+        self.message_auto_delete_time = dictionary["message_auto_delete_time"] if "message_auto_delete_time" in dictionary else None
         self.sticker_set_name = dictionary["sticker_set_name"] if "sticker_set_name" in dictionary else None
         self.can_set_sticker_set = dictionary["can_set_sticker_set"] if "can_set_sticker_set" in dictionary else None
         self.linked_chat_id = dictionary["linked_chat_id"] if "linked_chat_id" in dictionary else None
@@ -205,7 +211,7 @@ class Message:
     - `caption`: `string` - Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
     - `caption_entities`: `MessageEntity[]` - Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
     - `contact`: `Contact` - Optional. Message is a shared contact, information about the contact
-    - `dice`: `Dice` - Optional. Message is a dice with random value from 1 to 6
+    - `dice`: `Dice` - Optional. Message is a dice with random value
     - `game`: `Game` - Optional. Message is a game, information about the game. More about games »
     - `poll`: `Poll` - Optional. Message is a native poll, information about the poll
     - `venue`: `Venue` - Optional. Message is a venue, information about the venue. For backward compatibility, when this field is set, the location field will also be set
@@ -214,18 +220,23 @@ class Message:
     - `left_chat_member`: `User` - Optional. A member was removed from the group, information about them (this member may be the bot itself)
     - `new_chat_title`: `string` - Optional. A chat title was changed to this value
     - `new_chat_photo`: `PhotoSize[]` - Optional. A chat photo was change to this value
-    - `delete_chat_photo`: `True` - Optional. Service message: the chat photo was deleted
-    - `group_chat_created`: `True` - Optional. Service message: the group has been created
-    - `supergroup_chat_created`: `True` - Optional. Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup.
-    - `channel_chat_created`: `True` - Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
-    - `migrate_to_chat_id`: `int` - Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
-    - `migrate_from_chat_id`: `int` - Optional. The supergroup has been migrated from a group with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
+    - `delete_chat_photo`: `bool` - Optional. Service message: the chat photo was deleted
+    - `group_chat_created`: `bool` - Optional. Service message: the group has been created
+    - `supergroup_chat_created`: `bool` - Optional. Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup.
+    - `channel_chat_created`: `bool` - Optional. Service message: the channel has been created. This field can't be received in a message coming through updates, because bot can't be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.
+    - `message_auto_delete_timer_changed`: `MessageAutoDeleteTimerChanged` - Optional. Service message: auto-delete timer settings changed in the chat
+    - `migrate_to_chat_id`: `int` - Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+    - `migrate_from_chat_id`: `int` - Optional. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
     - `pinned_message`: `Message` - Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
     - `invoice`: `Invoice` - Optional. Message is an invoice for a payment, information about the invoice. More about payments »
     - `successful_payment`: `SuccessfulPayment` - Optional. Message is a service message about a successful payment, information about the payment. More about payments »
     - `connected_website`: `string` - Optional. The domain name of the website on which the user has logged in. More about Telegram Login »
     - `passport_data`: `PassportData` - Optional. Telegram Passport data
     - `proximity_alert_triggered`: `ProximityAlertTriggered` - Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+    - `voice_chat_scheduled`: `VoiceChatScheduled` - Optional. Service message: voice chat scheduled
+    - `voice_chat_started`: `VoiceChatStarted` - Optional. Service message: voice chat started
+    - `voice_chat_ended`: `VoiceChatEnded` - Optional. Service message: voice chat ended
+    - `voice_chat_participants_invited`: `VoiceChatParticipantsInvited` - Optional. Service message: new participants invited to a voice chat
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
     """
 
@@ -300,6 +311,7 @@ class Message:
         self.group_chat_created = dictionary["group_chat_created"] if "group_chat_created" in dictionary else None
         self.supergroup_chat_created = dictionary["supergroup_chat_created"] if "supergroup_chat_created" in dictionary else None
         self.channel_chat_created = dictionary["channel_chat_created"] if "channel_chat_created" in dictionary else None
+        self.message_auto_delete_timer_changed = MessageAutoDeleteTimerChanged(dictionary["message_auto_delete_timer_changed"]) if "message_auto_delete_timer_changed" in dictionary else None
         self.migrate_to_chat_id = dictionary["migrate_to_chat_id"] if "migrate_to_chat_id" in dictionary else None
         self.migrate_from_chat_id = dictionary["migrate_from_chat_id"] if "migrate_from_chat_id" in dictionary else None
         self.pinned_message = Message(dictionary["pinned_message"]) if "pinned_message" in dictionary else None
@@ -308,6 +320,10 @@ class Message:
         self.connected_website = dictionary["connected_website"] if "connected_website" in dictionary else None
         self.passport_data = PassportData(dictionary["passport_data"]) if "passport_data" in dictionary else None
         self.proximity_alert_triggered = ProximityAlertTriggered(dictionary["proximity_alert_triggered"]) if "proximity_alert_triggered" in dictionary else None
+        self.voice_chat_scheduled = VoiceChatScheduled(dictionary["voice_chat_scheduled"]) if "voice_chat_scheduled" in dictionary else None
+        self.voice_chat_started = VoiceChatStarted(dictionary["voice_chat_started"]) if "voice_chat_started" in dictionary else None
+        self.voice_chat_ended = VoiceChatEnded(dictionary["voice_chat_ended"]) if "voice_chat_ended" in dictionary else None
+        self.voice_chat_participants_invited = VoiceChatParticipantsInvited(dictionary["voice_chat_participants_invited"]) if "voice_chat_participants_invited" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
 
         for index, value in self.dict.items():
@@ -598,7 +614,7 @@ class Contact:
     - `phone_number`: `string` - Contact's phone number
     - `first_name`: `string` - Contact's first name
     - `last_name`: `string` - Optional. Contact's last name
-    - `user_id`: `int` - Optional. Contact's user identifier in Telegram
+    - `user_id`: `int` - Optional. Contact's user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
     - `vcard`: `string` - Optional. Additional data about the contact in the form of a vCard
     """
 
@@ -624,7 +640,7 @@ class Dice:
     **Fields**:
 
     - `emoji`: `string` - Emoji on which the dice throw animation is based
-    - `value`: `int` - Value of the dice, 1-6 for “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji
+    - `value`: `int` - Value of the dice, 1-6 for “”, “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji
     """
 
     def __init__(self, dictionary=None):
@@ -697,7 +713,7 @@ class Poll:
     **Fields**:
 
     - `id`: `string` - Unique poll identifier
-    - `question`: `string` - Poll question, 1-255 characters
+    - `question`: `string` - Poll question, 1-300 characters
     - `options`: `PollOption[]` - List of poll options
     - `total_voter_count`: `int` - Total number of users that voted in the poll
     - `is_closed`: `bool` - True, if the poll is closed
@@ -830,6 +846,109 @@ class ProximityAlertTriggered:
                 setattr(self, index, helper.setBvar(value))
 
 
+class MessageAutoDeleteTimerChanged:
+    """This object represents a service message about a change in auto-delete timer settings.[See on Telegram API](https://core.telegram.org/bots/api#messageautodeletetimerchanged)
+
+    - - - - -
+    **Fields**:
+
+    - `message_auto_delete_time`: `int` - New auto-delete time for messages in the chat
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.message_auto_delete_time = dictionary["message_auto_delete_time"] if "message_auto_delete_time" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class VoiceChatScheduled:
+    """This object represents a service message about a voice chat scheduled in the chat.[See on Telegram API](https://core.telegram.org/bots/api#voicechatscheduled)
+
+    - - - - -
+    **Fields**:
+
+    - `start_date`: `int` - Point in time (Unix timestamp) when the voice chat is supposed to be started by a chat administrator
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.start_date = dictionary["start_date"] if "start_date" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class VoiceChatStarted:
+    """This object represents a service message about a voice chat started in the chat. Currently holds no information.[See on Telegram API](https://core.telegram.org/bots/api#voicechatstarted)
+
+    - - - - -
+    **Fields**:
+
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class VoiceChatEnded:
+    """This object represents a service message about a voice chat ended in the chat.[See on Telegram API](https://core.telegram.org/bots/api#voicechatended)
+
+    - - - - -
+    **Fields**:
+
+    - `duration`: `int` - Voice chat duration; in seconds
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.duration = dictionary["duration"] if "duration" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class VoiceChatParticipantsInvited:
+    """This object represents a service message about new members invited to a voice chat.[See on Telegram API](https://core.telegram.org/bots/api#voicechatparticipantsinvited)
+
+    - - - - -
+    **Fields**:
+
+    - `users`: `User[]` - Optional. New members that were invited to the voice chat
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        if "users" in dictionary:
+            self.users = list()
+            for i1 in dictionary["users"]:
+                self.users.append(User(i1))
+        else:
+            self.users = None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
 class UserProfilePhotos:
     """This object represent a user's profile pictures.[See on Telegram API](https://core.telegram.org/bots/api#userprofilephotos)
 
@@ -895,6 +1014,7 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
     - `keyboard`: `KeyboardButton[][]` - Array of button rows, each represented by an Array of KeyboardButton objects
     - `resize_keyboard`: `bool` - Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
     - `one_time_keyboard`: `bool` - Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+    - `input_field_placeholder`: `string` - Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
     - `selective`: `bool` - Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard.
     """
 
@@ -913,6 +1033,7 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
             self.keyboard = None
         self.resize_keyboard = dictionary["resize_keyboard"] if "resize_keyboard" in dictionary else None
         self.one_time_keyboard = dictionary["one_time_keyboard"] if "one_time_keyboard" in dictionary else None
+        self.input_field_placeholder = dictionary["input_field_placeholder"] if "input_field_placeholder" in dictionary else None
         self.selective = dictionary["selective"] if "selective" in dictionary else None
 
         for index, value in self.dict.items():
@@ -972,7 +1093,7 @@ class ReplyKeyboardRemove:
     - - - - -
     **Fields**:
 
-    - `remove_keyboard`: `True` - Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
+    - `remove_keyboard`: `bool` - Requests clients to remove the custom keyboard (user will not be able to summon this keyboard; if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
     - `selective`: `bool` - Optional. Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven't voted yet.
     """
 
@@ -1051,7 +1172,8 @@ class InlineKeyboardButton:
 
 
 class LoginUrl:
-    """This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:[See on Telegram API](https://core.telegram.org/bots/api#loginurl)
+    """This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:
+Telegram apps support these buttons as of version 5.7.[See on Telegram API](https://core.telegram.org/bots/api#loginurl)
 
     - - - - -
     **Fields**:
@@ -1114,7 +1236,8 @@ class ForceReply:
     - - - - -
     **Fields**:
 
-    - `force_reply`: `True` - Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+    - `force_reply`: `bool` - Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
+    - `input_field_placeholder`: `string` - Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
     - `selective`: `bool` - Optional. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.
     """
 
@@ -1123,6 +1246,7 @@ class ForceReply:
             dictionary = {}
         self.dict = dictionary
         self.force_reply = dictionary["force_reply"] if "force_reply" in dictionary else None
+        self.input_field_placeholder = dictionary["input_field_placeholder"] if "input_field_placeholder" in dictionary else None
         self.selective = dictionary["selective"] if "selective" in dictionary else None
 
         for index, value in self.dict.items():
@@ -1156,58 +1280,262 @@ class ChatPhoto:
                 setattr(self, index, helper.setBvar(value))
 
 
-class ChatMember:
-    """This object contains information about one member of a chat.[See on Telegram API](https://core.telegram.org/bots/api#chatmember)
+class ChatInviteLink:
+    """Represents an invite link for a chat.[See on Telegram API](https://core.telegram.org/bots/api#chatinvitelink)
 
     - - - - -
     **Fields**:
 
-    - `user`: `User` - Information about the user
-    - `status`: `string` - The member's status in the chat. Can be “creator”, “administrator”, “member”, “restricted”, “left” or “kicked”
-    - `custom_title`: `string` - Optional. Owner and administrators only. Custom title for this user
-    - `is_anonymous`: `bool` - Optional. Owner and administrators only. True, if the user's presence in the chat is hidden
-    - `can_be_edited`: `bool` - Optional. Administrators only. True, if the bot is allowed to edit administrator privileges of that user
-    - `can_post_messages`: `bool` - Optional. Administrators only. True, if the administrator can post in the channel; channels only
-    - `can_edit_messages`: `bool` - Optional. Administrators only. True, if the administrator can edit messages of other users and can pin messages; channels only
-    - `can_delete_messages`: `bool` - Optional. Administrators only. True, if the administrator can delete messages of other users
-    - `can_restrict_members`: `bool` - Optional. Administrators only. True, if the administrator can restrict, ban or unban chat members
-    - `can_promote_members`: `bool` - Optional. Administrators only. True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
-    - `can_change_info`: `bool` - Optional. Administrators and restricted only. True, if the user is allowed to change the chat title, photo and other settings
-    - `can_invite_users`: `bool` - Optional. Administrators and restricted only. True, if the user is allowed to invite new users to the chat
-    - `can_pin_messages`: `bool` - Optional. Administrators and restricted only. True, if the user is allowed to pin messages; groups and supergroups only
-    - `is_member`: `bool` - Optional. Restricted only. True, if the user is a member of the chat at the moment of the request
-    - `can_send_messages`: `bool` - Optional. Restricted only. True, if the user is allowed to send text messages, contacts, locations and venues
-    - `can_send_media_messages`: `bool` - Optional. Restricted only. True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
-    - `can_send_polls`: `bool` - Optional. Restricted only. True, if the user is allowed to send polls
-    - `can_send_other_messages`: `bool` - Optional. Restricted only. True, if the user is allowed to send animations, games, stickers and use inline bots
-    - `can_add_web_page_previews`: `bool` - Optional. Restricted only. True, if the user is allowed to add web page previews to their messages
-    - `until_date`: `int` - Optional. Restricted and kicked only. Date when restrictions will be lifted for this user; unix time
+    - `invite_link`: `string` - The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”.
+    - `creator`: `User` - Creator of the link
+    - `is_primary`: `bool` - True, if the link is primary
+    - `is_revoked`: `bool` - True, if the link is revoked
+    - `expire_date`: `int` - Optional. Point in time (Unix timestamp) when the link will expire or has been expired
+    - `member_limit`: `int` - Optional. Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
     """
 
     def __init__(self, dictionary=None):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
-        self.user = User(dictionary["from"]) if "from" in dictionary else None
+        self.invite_link = dictionary["invite_link"] if "invite_link" in dictionary else None
+        self.creator = User(dictionary["creator"]) if "creator" in dictionary else None
+        self.is_primary = dictionary["is_primary"] if "is_primary" in dictionary else None
+        self.is_revoked = dictionary["is_revoked"] if "is_revoked" in dictionary else None
+        self.expire_date = dictionary["expire_date"] if "expire_date" in dictionary else None
+        self.member_limit = dictionary["member_limit"] if "member_limit" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMember:
+    """This object contains information about one member of a chat. Currently, the following 6 types of chat members are supported:[See on Telegram API](https://core.telegram.org/bots/api#chatmember)
+
+    - - - - -
+    **Fields**:
+
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberOwner:
+    """Represents a chat member that owns the chat and has all administrator privileges.[See on Telegram API](https://core.telegram.org/bots/api#chatmemberowner)
+
+    - - - - -
+    **Fields**:
+
+    - `status`: `string` - The member's status in the chat, always “creator”
+    - `user`: `User` - Information about the user
+    - `custom_title`: `string` - Custom title for this user
+    - `is_anonymous`: `bool` - True, if the user's presence in the chat is hidden
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
         self.status = dictionary["status"] if "status" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
         self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberAdministrator:
+    """Represents a chat member that has some additional privileges.[See on Telegram API](https://core.telegram.org/bots/api#chatmemberadministrator)
+
+    - - - - -
+    **Fields**:
+
+    - `status`: `string` - The member's status in the chat, always “administrator”
+    - `user`: `User` - Information about the user
+    - `can_be_edited`: `bool` - True, if the bot is allowed to edit administrator privileges of that user
+    - `custom_title`: `string` - Custom title for this user
+    - `is_anonymous`: `bool` - True, if the user's presence in the chat is hidden
+    - `can_manage_chat`: `bool` - True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
+    - `can_post_messages`: `bool` - True, if the administrator can post in the channel; channels only
+    - `can_edit_messages`: `bool` - True, if the administrator can edit messages of other users and can pin messages; channels only
+    - `can_delete_messages`: `bool` - True, if the administrator can delete messages of other users
+    - `can_manage_voice_chats`: `bool` - True, if the administrator can manage voice chats
+    - `can_restrict_members`: `bool` - True, if the administrator can restrict, ban or unban chat members
+    - `can_promote_members`: `bool` - True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
+    - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
+    - `can_invite_users`: `bool` - True, if the user is allowed to invite new users to the chat
+    - `can_pin_messages`: `bool` - True, if the user is allowed to pin messages; groups and supergroups only
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.status = dictionary["status"] if "status" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.can_be_edited = dictionary["can_be_edited"] if "can_be_edited" in dictionary else None
+        self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
+        self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
+        self.can_manage_chat = dictionary["can_manage_chat"] if "can_manage_chat" in dictionary else None
         self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
         self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
         self.can_delete_messages = dictionary["can_delete_messages"] if "can_delete_messages" in dictionary else None
+        self.can_manage_voice_chats = dictionary["can_manage_voice_chats"] if "can_manage_voice_chats" in dictionary else None
         self.can_restrict_members = dictionary["can_restrict_members"] if "can_restrict_members" in dictionary else None
         self.can_promote_members = dictionary["can_promote_members"] if "can_promote_members" in dictionary else None
         self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
         self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
         self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberMember:
+    """Represents a chat member that has no additional privileges or restrictions.[See on Telegram API](https://core.telegram.org/bots/api#chatmembermember)
+
+    - - - - -
+    **Fields**:
+
+    - `status`: `string` - The member's status in the chat, always “member”
+    - `user`: `User` - Information about the user
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.status = dictionary["status"] if "status" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberRestricted:
+    """Represents a chat member that is under certain restrictions in the chat. Supergroups only.[See on Telegram API](https://core.telegram.org/bots/api#chatmemberrestricted)
+
+    - - - - -
+    **Fields**:
+
+    - `status`: `string` - The member's status in the chat, always “restricted”
+    - `user`: `User` - Information about the user
+    - `is_member`: `bool` - True, if the user is a member of the chat at the moment of the request
+    - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
+    - `can_invite_users`: `bool` - True, if the user is allowed to invite new users to the chat
+    - `can_pin_messages`: `bool` - True, if the user is allowed to pin messages; groups and supergroups only
+    - `can_send_messages`: `bool` - True, if the user is allowed to send text messages, contacts, locations and venues
+    - `can_send_media_messages`: `bool` - True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
+    - `can_send_polls`: `bool` - True, if the user is allowed to send polls
+    - `can_send_other_messages`: `bool` - True, if the user is allowed to send animations, games, stickers and use inline bots
+    - `can_add_web_page_previews`: `bool` - True, if the user is allowed to add web page previews to their messages
+    - `until_date`: `int` - Date when restrictions will be lifted for this user; unix time
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.status = dictionary["status"] if "status" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.is_member = dictionary["is_member"] if "is_member" in dictionary else None
+        self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
+        self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
+        self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
         self.can_send_messages = dictionary["can_send_messages"] if "can_send_messages" in dictionary else None
         self.can_send_media_messages = dictionary["can_send_media_messages"] if "can_send_media_messages" in dictionary else None
         self.can_send_polls = dictionary["can_send_polls"] if "can_send_polls" in dictionary else None
         self.can_send_other_messages = dictionary["can_send_other_messages"] if "can_send_other_messages" in dictionary else None
         self.can_add_web_page_previews = dictionary["can_add_web_page_previews"] if "can_add_web_page_previews" in dictionary else None
         self.until_date = dictionary["until_date"] if "until_date" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberLeft:
+    """Represents a chat member that isn't currently a member of the chat, but may join it themselves.[See on Telegram API](https://core.telegram.org/bots/api#chatmemberleft)
+
+    - - - - -
+    **Fields**:
+
+    - `status`: `string` - The member's status in the chat, always “left”
+    - `user`: `User` - Information about the user
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.status = dictionary["status"] if "status" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberBanned:
+    """Represents a chat member that was banned in the chat and can't return to the chat or view chat messages.[See on Telegram API](https://core.telegram.org/bots/api#chatmemberbanned)
+
+    - - - - -
+    **Fields**:
+
+    - `status`: `string` - The member's status in the chat, always “kicked”
+    - `user`: `User` - Information about the user
+    - `until_date`: `int` - Date when restrictions will be lifted for this user; unix time
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.status = dictionary["status"] if "status" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
+        self.until_date = dictionary["until_date"] if "until_date" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatMemberUpdated:
+    """This object represents changes in the status of a chat member.[See on Telegram API](https://core.telegram.org/bots/api#chatmemberupdated)
+
+    - - - - -
+    **Fields**:
+
+    - `chat`: `Chat` - Chat the user belongs to
+    - `user`: `User` - Performer of the action, which resulted in the change
+    - `date`: `int` - Date the change was done in Unix time
+    - `old_chat_member`: `ChatMember` - Previous information about the chat member
+    - `new_chat_member`: `ChatMember` - New information about the chat member
+    - `invite_link`: `ChatInviteLink` - Optional. Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.chat = Chat(dictionary["chat"]) if "chat" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
+        self.date = dictionary["date"] if "date" in dictionary else None
+        self.old_chat_member = ChatMember(dictionary["old_chat_member"]) if "old_chat_member" in dictionary else None
+        self.new_chat_member = ChatMember(dictionary["new_chat_member"]) if "new_chat_member" in dictionary else None
+        self.invite_link = ChatInviteLink(dictionary["invite_link"]) if "invite_link" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1292,13 +1620,173 @@ class BotCommand:
                 setattr(self, index, helper.setBvar(value))
 
 
+class BotCommandScope:
+    """This object represents the scope to which bot commands are applied. Currently, the following 7 scopes are supported:[See on Telegram API](https://core.telegram.org/bots/api#botcommandscope)
+
+    - - - - -
+    **Fields**:
+
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeDefault:
+    """Represents the default scope of bot commands. Default commands are used if no commands with a narrower scope are specified for the user.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopedefault)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be default
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeAllPrivateChats:
+    """Represents the scope of bot commands, covering all private chats.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopeallprivatechats)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be all_private_chats
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeAllGroupChats:
+    """Represents the scope of bot commands, covering all group and supergroup chats.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopeallgroupchats)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be all_group_chats
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeAllChatAdministrators:
+    """Represents the scope of bot commands, covering all group and supergroup chat administrators.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopeallchatadministrators)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be all_chat_administrators
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeChat:
+    """Represents the scope of bot commands, covering a specific chat.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopechat)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be chat
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeChatAdministrators:
+    """Represents the scope of bot commands, covering all administrators of a specific group or supergroup chat.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopechatadministrators)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be chat_administrators
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class BotCommandScopeChatMember:
+    """Represents the scope of bot commands, covering a specific member of a group or supergroup chat.[See on Telegram API](https://core.telegram.org/bots/api#botcommandscopechatmember)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Scope type, must be chat_member
+    - `user_id`: `int` - Unique identifier of the target user
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.user_id = dictionary["user_id"] if "user_id" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
 class ResponseParameters:
     """Contains information about why a request was unsuccessful.[See on Telegram API](https://core.telegram.org/bots/api#responseparameters)
 
     - - - - -
     **Fields**:
 
-    - `migrate_to_chat_id`: `int` - Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.
+    - `migrate_to_chat_id`: `int` - Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
     - `retry_after`: `int` - Optional. In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
     """
 
@@ -1644,9 +2132,10 @@ class InlineQuery:
 
     - `id`: `string` - Unique identifier for this query
     - `user`: `User` - Sender
-    - `location`: `Location` - Optional. Sender location, only for bots that request user location
     - `query`: `string` - Text of the query (up to 256 characters)
     - `offset`: `string` - Offset of the results to be returned, can be controlled by the bot
+    - `chat_type`: `string` - Optional. Type of the chat, from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat
+    - `location`: `Location` - Optional. Sender location, only for bots that request user location
     """
 
     def __init__(self, dictionary=None):
@@ -1655,9 +2144,10 @@ class InlineQuery:
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
         self.user = User(dictionary["from"]) if "from" in dictionary else None
-        self.location = Location(dictionary["location"]) if "location" in dictionary else None
         self.query = dictionary["query"] if "query" in dictionary else None
         self.offset = dictionary["offset"] if "offset" in dictionary else None
+        self.chat_type = dictionary["chat_type"] if "chat_type" in dictionary else None
+        self.location = Location(dictionary["location"]) if "location" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1665,7 +2155,8 @@ class InlineQuery:
 
 
 class InlineQueryResult:
-    """This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresult)
+    """This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:
+Note: All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresult)
 
     - - - - -
     **Fields**:
@@ -2545,7 +3036,7 @@ class InlineQueryResultCachedAudio:
 
 
 class InputMessageContent:
-    """This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 4 types:[See on Telegram API](https://core.telegram.org/bots/api#inputmessagecontent)
+    """This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:[See on Telegram API](https://core.telegram.org/bots/api#inputmessagecontent)
 
     - - - - -
     **Fields**:
@@ -2677,6 +3168,74 @@ class InputContactMessageContent:
         self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
         self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
         self.vcard = dictionary["vcard"] if "vcard" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class InputInvoiceMessageContent:
+    """Represents the content of an invoice message to be sent as the result of an inline query.[See on Telegram API](https://core.telegram.org/bots/api#inputinvoicemessagecontent)
+
+    - - - - -
+    **Fields**:
+
+    - `title`: `string` - Product name, 1-32 characters
+    - `description`: `string` - Product description, 1-255 characters
+    - `payload`: `string` - Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
+    - `provider_token`: `string` - Payment provider token, obtained via Botfather
+    - `currency`: `string` - Three-letter ISO 4217 currency code, see more on currencies
+    - `prices`: `LabeledPrice[]` - Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
+    - `max_tip_amount`: `int` - Optional. The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
+    - `suggested_tip_amounts`: `int[]` - Optional. A JSON-serialized array of suggested amounts of tip in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+    - `provider_data`: `string` - Optional. A JSON-serialized object for data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider.
+    - `photo_url`: `string` - Optional. URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
+    - `photo_size`: `int` - Optional. Photo size
+    - `photo_width`: `int` - Optional. Photo width
+    - `photo_height`: `int` - Optional. Photo height
+    - `need_name`: `bool` - Optional. Pass True, if you require the user's full name to complete the order
+    - `need_phone_number`: `bool` - Optional. Pass True, if you require the user's phone number to complete the order
+    - `need_email`: `bool` - Optional. Pass True, if you require the user's email address to complete the order
+    - `need_shipping_address`: `bool` - Optional. Pass True, if you require the user's shipping address to complete the order
+    - `send_phone_number_to_provider`: `bool` - Optional. Pass True, if user's phone number should be sent to provider
+    - `send_email_to_provider`: `bool` - Optional. Pass True, if user's email address should be sent to provider
+    - `is_flexible`: `bool` - Optional. Pass True, if the final price depends on the shipping method
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.title = dictionary["title"] if "title" in dictionary else None
+        self.description = dictionary["description"] if "description" in dictionary else None
+        self.payload = dictionary["payload"] if "payload" in dictionary else None
+        self.provider_token = dictionary["provider_token"] if "provider_token" in dictionary else None
+        self.currency = dictionary["currency"] if "currency" in dictionary else None
+        if "prices" in dictionary:
+            self.prices = list()
+            for i1 in dictionary["prices"]:
+                self.prices.append(LabeledPrice(i1))
+        else:
+            self.prices = None
+        self.max_tip_amount = dictionary["max_tip_amount"] if "max_tip_amount" in dictionary else None
+        if "suggested_tip_amounts" in dictionary:
+            self.suggested_tip_amounts = list()
+            for i1 in dictionary["suggested_tip_amounts"]:
+                self.suggested_tip_amounts.append(i1)
+        else:
+            self.suggested_tip_amounts = None
+        self.provider_data = dictionary["provider_data"] if "provider_data" in dictionary else None
+        self.photo_url = dictionary["photo_url"] if "photo_url" in dictionary else None
+        self.photo_size = dictionary["photo_size"] if "photo_size" in dictionary else None
+        self.photo_width = dictionary["photo_width"] if "photo_width" in dictionary else None
+        self.photo_height = dictionary["photo_height"] if "photo_height" in dictionary else None
+        self.need_name = dictionary["need_name"] if "need_name" in dictionary else None
+        self.need_phone_number = dictionary["need_phone_number"] if "need_phone_number" in dictionary else None
+        self.need_email = dictionary["need_email"] if "need_email" in dictionary else None
+        self.need_shipping_address = dictionary["need_shipping_address"] if "need_shipping_address" in dictionary else None
+        self.send_phone_number_to_provider = dictionary["send_phone_number_to_provider"] if "send_phone_number_to_provider" in dictionary else None
+        self.send_email_to_provider = dictionary["send_email_to_provider"] if "send_email_to_provider" in dictionary else None
+        self.is_flexible = dictionary["is_flexible"] if "is_flexible" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -3405,5 +3964,3 @@ class GameHighScore:
         for index, value in self.dict.items():
             if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
-
-
