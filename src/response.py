@@ -15,7 +15,7 @@ class BotAPIResponse:
         This object can handle errors and is passed as second variable by functions
         - - - - -
         **Args**:
-        
+
         - `raw_json` (string): JSON string of the response
         - `expected_object` (any type, optional): Can be any expected result by botApi like types.Message or bool, to generate the object. Defaults to None.
         """

@@ -6,13 +6,13 @@ This is a simple framework for [telegram bot API](https://core.telegram.org/bots
 
 - [__Examples__](https://github.com/SilverOS/Silbot-Py/tree/master/examples)
 - [__Github__](https://github.com/SilverOS/Silbot-Py)
-- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.4.1.zip)
+- [__Download__](https://github.com/SilverOS/Silbot-Py/archive/1.4.2.zip)
 
 """
 from silbot import botapi, update
 
 
-def GetUpdatesLoop(bot: botapi.BotApi, handlefunc, onUpdate=None):
+def GetUpdatesLoop(bot: botapi.BotApi, handlefunc, onUpdate=None, on_getUpdates=None):
     """ This is a builtin function to handle updates with getUpdates
 
     **Args:**
@@ -22,11 +22,14 @@ def GetUpdatesLoop(bot: botapi.BotApi, handlefunc, onUpdate=None):
         - `update` (`silbot.types.update`) : The object that rapresents the update
         - `bot` (`silbot.botapi.BotApi`) : The botApi object for that bot,
     - onUpdate (`function`, optional): a function that is called every update (non async)
+    - on_getUpdates (`function`, optional): a function that is called everytime a getUpdates call is done (non async)
     If this is not clear, check the examples
     """
     offset = -1
     while True:
         response = bot.getUpdates(offset)[1]
+        if on_getUpdates is not None:
+            on_getUpdates()
         js = response.decoded
         if js["ok"]:
             if len(js["result"]) > 0:

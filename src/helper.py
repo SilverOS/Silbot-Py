@@ -196,9 +196,12 @@ def replyKBbutton(text, request_contact=None, request_location=None, request_pol
     - `request_location` (`optional`):
     - `request_poll` (`optional`)
     """
-    return types.KeyboardButton(
+    r = types.KeyboardButton(
         {"text": text, "requests_contact": request_contact, "request_location": request_location,
          "request_poll": request_poll})
+    if request_poll is None:
+        del r.request_poll
+    return r
 
 
 def replyKBRow(*argv) -> list:

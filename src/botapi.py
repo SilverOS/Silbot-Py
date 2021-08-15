@@ -51,7 +51,7 @@ class BotApi:
             return json.dumps({"ok": False, "connection_error": True})
         else:
             return r.text
-    
+
     @staticmethod
     def response(raw_json, func):
         """Creates a botAPIResponse object for the given JSON
@@ -2100,4 +2100,3 @@ class BotApi:
             "inline_message_id": inline_message_id,
         }
         return self.response(self.sendRequest("getGameHighScores", data), list)
-
