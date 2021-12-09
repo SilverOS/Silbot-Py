@@ -21,6 +21,7 @@ class Update:
     - `poll_answer`: `PollAnswer` - Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
     - `my_chat_member`: `ChatMemberUpdated` - Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
     - `chat_member`: `ChatMemberUpdated` - Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
+    - `chat_join_request`: `ChatJoinRequest` - Optional. A request to join the chat has been sent. The bot must have the can_invite_users administrator right in the chat to receive these updates.
     """
 
     def __init__(self, dictionary=None):
@@ -41,6 +42,7 @@ class Update:
         self.poll_answer = PollAnswer(dictionary["poll_answer"]) if "poll_answer" in dictionary else None
         self.my_chat_member = ChatMemberUpdated(dictionary["my_chat_member"]) if "my_chat_member" in dictionary else None
         self.chat_member = ChatMemberUpdated(dictionary["chat_member"]) if "chat_member" in dictionary else None
+        self.chat_join_request = ChatJoinRequest(dictionary["chat_join_request"]) if "chat_join_request" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -60,7 +62,7 @@ class WebhookInfo:
     - `last_error_date`: `int` - Optional. Unix time for the most recent error that happened when trying to deliver an update via webhook
     - `last_error_message`: `string` - Optional. Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook
     - `max_connections`: `int` - Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
-    - `allowed_updates`: `string[]` - Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member
+    - `allowed_updates`: `list` - Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member
     """
 
     def __init__(self, dictionary=None):
@@ -74,12 +76,7 @@ class WebhookInfo:
         self.last_error_date = dictionary["last_error_date"] if "last_error_date" in dictionary else None
         self.last_error_message = dictionary["last_error_message"] if "last_error_message" in dictionary else None
         self.max_connections = dictionary["max_connections"] if "max_connections" in dictionary else None
-        if "allowed_updates" in dictionary:
-            self.allowed_updates = list()
-            for i1 in dictionary["allowed_updates"]:
-                self.allowed_updates.append(i1)
-        else:
-            self.allowed_updates = None
+        self.allowed_updates = list(dictionary["allowed_updates"]) if "allowed_updates" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -136,12 +133,14 @@ class Chat(objects.Chat):
     - `last_name`: `string` - Optional. Last name of the other party in a private chat
     - `photo`: `ChatPhoto` - Optional. Chat photo. Returned only in getChat.
     - `bio`: `string` - Optional. Bio of the other party in a private chat. Returned only in getChat.
+    - `has_private_forwards`: `bool` - Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
     - `description`: `string` - Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
     - `invite_link`: `string` - Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
     - `pinned_message`: `Message` - Optional. The most recent pinned message (by sending date). Returned only in getChat.
     - `permissions`: `ChatPermissions` - Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
-    - `slow_mode_delay`: `int` - Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in getChat.
+    - `slow_mode_delay`: `int` - Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user; in seconds. Returned only in getChat.
     - `message_auto_delete_time`: `int` - Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
+    - `has_protected_content`: `bool` - Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
     - `sticker_set_name`: `string` - Optional. For supergroups, name of group sticker set. Returned only in getChat.
     - `can_set_sticker_set`: `bool` - Optional. True, if the bot can change the group sticker set. Returned only in getChat.
     - `linked_chat_id`: `int` - Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat.
@@ -160,12 +159,14 @@ class Chat(objects.Chat):
         self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
         self.photo = ChatPhoto(dictionary["photo"]) if "photo" in dictionary else None
         self.bio = dictionary["bio"] if "bio" in dictionary else None
+        self.has_private_forwards = dictionary["has_private_forwards"] if "has_private_forwards" in dictionary else None
         self.description = dictionary["description"] if "description" in dictionary else None
         self.invite_link = dictionary["invite_link"] if "invite_link" in dictionary else None
         self.pinned_message = Message(dictionary["pinned_message"]) if "pinned_message" in dictionary else None
         self.permissions = ChatPermissions(dictionary["permissions"]) if "permissions" in dictionary else None
         self.slow_mode_delay = dictionary["slow_mode_delay"] if "slow_mode_delay" in dictionary else None
         self.message_auto_delete_time = dictionary["message_auto_delete_time"] if "message_auto_delete_time" in dictionary else None
+        self.has_protected_content = dictionary["has_protected_content"] if "has_protected_content" in dictionary else None
         self.sticker_set_name = dictionary["sticker_set_name"] if "sticker_set_name" in dictionary else None
         self.can_set_sticker_set = dictionary["can_set_sticker_set"] if "can_set_sticker_set" in dictionary else None
         self.linked_chat_id = dictionary["linked_chat_id"] if "linked_chat_id" in dictionary else None
@@ -193,33 +194,35 @@ class Message:
     - `forward_signature`: `string` - Optional. For messages forwarded from channels, signature of the post author if present
     - `forward_sender_name`: `string` - Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
     - `forward_date`: `int` - Optional. For forwarded messages, date the original message was sent in Unix time
+    - `is_automatic_forward`: `bool` - Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
     - `reply_to_message`: `Message` - Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
     - `via_bot`: `User` - Optional. Bot through which the message was sent
     - `edit_date`: `int` - Optional. Date the message was last edited in Unix time
+    - `has_protected_content`: `bool` - Optional. True, if the message can't be forwarded
     - `media_group_id`: `string` - Optional. The unique identifier of a media message group this message belongs to
     - `author_signature`: `string` - Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
     - `text`: `string` - Optional. For text messages, the actual UTF-8 text of the message, 0-4096 characters
-    - `entities`: `MessageEntity[]` - Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
+    - `entities`: `list` - Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
     - `animation`: `Animation` - Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
     - `audio`: `Audio` - Optional. Message is an audio file, information about the file
     - `document`: `Document` - Optional. Message is a general file, information about the file
-    - `photo`: `PhotoSize[]` - Optional. Message is a photo, available sizes of the photo
+    - `photo`: `list` - Optional. Message is a photo, available sizes of the photo
     - `sticker`: `Sticker` - Optional. Message is a sticker, information about the sticker
     - `video`: `Video` - Optional. Message is a video, information about the video
     - `video_note`: `VideoNote` - Optional. Message is a video note, information about the video message
     - `voice`: `Voice` - Optional. Message is a voice message, information about the file
     - `caption`: `string` - Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
-    - `caption_entities`: `MessageEntity[]` - Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+    - `caption_entities`: `list` - Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
     - `contact`: `Contact` - Optional. Message is a shared contact, information about the contact
     - `dice`: `Dice` - Optional. Message is a dice with random value
     - `game`: `Game` - Optional. Message is a game, information about the game. More about games »
     - `poll`: `Poll` - Optional. Message is a native poll, information about the poll
     - `venue`: `Venue` - Optional. Message is a venue, information about the venue. For backward compatibility, when this field is set, the location field will also be set
     - `location`: `Location` - Optional. Message is a shared location, information about the location
-    - `new_chat_members`: `User[]` - Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
+    - `new_chat_members`: `list` - Optional. New members that were added to the group or supergroup and information about them (the bot itself may be one of these members)
     - `left_chat_member`: `User` - Optional. A member was removed from the group, information about them (this member may be the bot itself)
     - `new_chat_title`: `string` - Optional. A chat title was changed to this value
-    - `new_chat_photo`: `PhotoSize[]` - Optional. A chat photo was change to this value
+    - `new_chat_photo`: `list` - Optional. A chat photo was change to this value
     - `delete_chat_photo`: `bool` - Optional. Service message: the chat photo was deleted
     - `group_chat_created`: `bool` - Optional. Service message: the group has been created
     - `supergroup_chat_created`: `bool` - Optional. Service message: the supergroup has been created. This field can't be received in a message coming through updates, because bot can't be a member of a supergroup when it is created. It can only be found in reply_to_message if someone replies to a very first message in a directly created supergroup.
@@ -255,58 +258,35 @@ class Message:
         self.forward_signature = dictionary["forward_signature"] if "forward_signature" in dictionary else None
         self.forward_sender_name = dictionary["forward_sender_name"] if "forward_sender_name" in dictionary else None
         self.forward_date = dictionary["forward_date"] if "forward_date" in dictionary else None
+        self.is_automatic_forward = dictionary["is_automatic_forward"] if "is_automatic_forward" in dictionary else None
         self.reply_to_message = Message(dictionary["reply_to_message"]) if "reply_to_message" in dictionary else None
         self.via_bot = User(dictionary["via_bot"]) if "via_bot" in dictionary else None
         self.edit_date = dictionary["edit_date"] if "edit_date" in dictionary else None
+        self.has_protected_content = dictionary["has_protected_content"] if "has_protected_content" in dictionary else None
         self.media_group_id = dictionary["media_group_id"] if "media_group_id" in dictionary else None
         self.author_signature = dictionary["author_signature"] if "author_signature" in dictionary else None
         self.text = dictionary["text"] if "text" in dictionary else None
-        if "entities" in dictionary:
-            self.entities = list()
-            for i1 in dictionary["entities"]:
-                self.entities.append(MessageEntity(i1))
-        else:
-            self.entities = None
+        self.entities = list(dictionary["entities"]) if "entities" in dictionary else None
         self.animation = Animation(dictionary["animation"]) if "animation" in dictionary else None
         self.audio = Audio(dictionary["audio"]) if "audio" in dictionary else None
         self.document = Document(dictionary["document"]) if "document" in dictionary else None
-        if "photo" in dictionary:
-            self.photo = list()
-            for i1 in dictionary["photo"]:
-                self.photo.append(PhotoSize(i1))
-        else:
-            self.photo = None
+        self.photo = list(dictionary["photo"]) if "photo" in dictionary else None
         self.sticker = Sticker(dictionary["sticker"]) if "sticker" in dictionary else None
         self.video = Video(dictionary["video"]) if "video" in dictionary else None
         self.video_note = VideoNote(dictionary["video_note"]) if "video_note" in dictionary else None
         self.voice = Voice(dictionary["voice"]) if "voice" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.contact = Contact(dictionary["contact"]) if "contact" in dictionary else None
         self.dice = Dice(dictionary["dice"]) if "dice" in dictionary else None
         self.game = Game(dictionary["game"]) if "game" in dictionary else None
         self.poll = Poll(dictionary["poll"]) if "poll" in dictionary else None
         self.venue = Venue(dictionary["venue"]) if "venue" in dictionary else None
         self.location = Location(dictionary["location"]) if "location" in dictionary else None
-        if "new_chat_members" in dictionary:
-            self.new_chat_members = list()
-            for i1 in dictionary["new_chat_members"]:
-                self.new_chat_members.append(User(i1))
-        else:
-            self.new_chat_members = None
+        self.new_chat_members = list(dictionary["new_chat_members"]) if "new_chat_members" in dictionary else None
         self.left_chat_member = User(dictionary["left_chat_member"]) if "left_chat_member" in dictionary else None
         self.new_chat_title = dictionary["new_chat_title"] if "new_chat_title" in dictionary else None
-        if "new_chat_photo" in dictionary:
-            self.new_chat_photo = list()
-            for i1 in dictionary["new_chat_photo"]:
-                self.new_chat_photo.append(PhotoSize(i1))
-        else:
-            self.new_chat_photo = None
+        self.new_chat_photo = list(dictionary["new_chat_photo"]) if "new_chat_photo" in dictionary else None
         self.delete_chat_photo = dictionary["delete_chat_photo"] if "delete_chat_photo" in dictionary else None
         self.group_chat_created = dictionary["group_chat_created"] if "group_chat_created" in dictionary else None
         self.supergroup_chat_created = dictionary["supergroup_chat_created"] if "supergroup_chat_created" in dictionary else None
@@ -391,7 +371,7 @@ class PhotoSize:
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
     - `width`: `int` - Photo width
     - `height`: `int` - Photo height
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -423,7 +403,7 @@ class Animation:
     - `thumb`: `PhotoSize` - Optional. Animation thumbnail as defined by sender
     - `file_name`: `string` - Optional. Original animation filename as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -458,7 +438,7 @@ class Audio:
     - `title`: `string` - Optional. Title of the audio as defined by sender or by audio tags
     - `file_name`: `string` - Optional. Original filename as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     - `thumb`: `PhotoSize` - Optional. Thumbnail of the album cover to which the music file belongs
     """
 
@@ -492,7 +472,7 @@ class Document:
     - `thumb`: `PhotoSize` - Optional. Document thumbnail as defined by sender
     - `file_name`: `string` - Optional. Original filename as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -525,7 +505,7 @@ class Video:
     - `thumb`: `PhotoSize` - Optional. Video thumbnail
     - `file_name`: `string` - Optional. Original filename as defined by sender
     - `mime_type`: `string` - Optional. Mime type of a file as defined by sender
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -558,7 +538,7 @@ class VideoNote:
     - `length`: `int` - Video width and height (diameter of the video message) as defined by sender
     - `duration`: `int` - Duration of the video in seconds as defined by sender
     - `thumb`: `PhotoSize` - Optional. Video thumbnail
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -587,7 +567,7 @@ class Voice:
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
     - `duration`: `int` - Duration of the audio in seconds as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -685,7 +665,7 @@ class PollAnswer:
 
     - `poll_id`: `string` - Unique poll identifier
     - `user`: `User` - The user, who changed the answer to the poll
-    - `option_ids`: `int[]` - 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.
+    - `option_ids`: `list` - 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.
     """
 
     def __init__(self, dictionary=None):
@@ -694,12 +674,7 @@ class PollAnswer:
         self.dict = dictionary
         self.poll_id = dictionary["poll_id"] if "poll_id" in dictionary else None
         self.user = User(dictionary["from"]) if "from" in dictionary else None
-        if "option_ids" in dictionary:
-            self.option_ids = list()
-            for i1 in dictionary["option_ids"]:
-                self.option_ids.append(i1)
-        else:
-            self.option_ids = None
+        self.option_ids = list(dictionary["option_ids"]) if "option_ids" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -714,7 +689,7 @@ class Poll:
 
     - `id`: `string` - Unique poll identifier
     - `question`: `string` - Poll question, 1-300 characters
-    - `options`: `PollOption[]` - List of poll options
+    - `options`: `list` - List of poll options
     - `total_voter_count`: `int` - Total number of users that voted in the poll
     - `is_closed`: `bool` - True, if the poll is closed
     - `is_anonymous`: `bool` - True, if the poll is anonymous
@@ -722,7 +697,7 @@ class Poll:
     - `allows_multiple_answers`: `bool` - True, if the poll allows multiple answers
     - `correct_option_id`: `int` - Optional. 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.
     - `explanation`: `string` - Optional. Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters
-    - `explanation_entities`: `MessageEntity[]` - Optional. Special entities like usernames, URLs, bot commands, etc. that appear in the explanation
+    - `explanation_entities`: `list` - Optional. Special entities like usernames, URLs, bot commands, etc. that appear in the explanation
     - `open_period`: `int` - Optional. Amount of time in seconds the poll will be active after creation
     - `close_date`: `int` - Optional. Point in time (Unix timestamp) when the poll will be automatically closed
     """
@@ -733,12 +708,7 @@ class Poll:
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
         self.question = dictionary["question"] if "question" in dictionary else None
-        if "options" in dictionary:
-            self.options = list()
-            for i1 in dictionary["options"]:
-                self.options.append(PollOption(i1))
-        else:
-            self.options = None
+        self.options = list(dictionary["options"]) if "options" in dictionary else None
         self.total_voter_count = dictionary["total_voter_count"] if "total_voter_count" in dictionary else None
         self.is_closed = dictionary["is_closed"] if "is_closed" in dictionary else None
         self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
@@ -746,12 +716,7 @@ class Poll:
         self.allows_multiple_answers = dictionary["allows_multiple_answers"] if "allows_multiple_answers" in dictionary else None
         self.correct_option_id = dictionary["correct_option_id"] if "correct_option_id" in dictionary else None
         self.explanation = dictionary["explanation"] if "explanation" in dictionary else None
-        if "explanation_entities" in dictionary:
-            self.explanation_entities = list()
-            for i1 in dictionary["explanation_entities"]:
-                self.explanation_entities.append(MessageEntity(i1))
-        else:
-            self.explanation_entities = None
+        self.explanation_entities = list(dictionary["explanation_entities"]) if "explanation_entities" in dictionary else None
         self.open_period = dictionary["open_period"] if "open_period" in dictionary else None
         self.close_date = dictionary["close_date"] if "close_date" in dictionary else None
 
@@ -769,7 +734,7 @@ class Location:
     - `longitude`: `float` - Longitude as defined by sender
     - `latitude`: `float` - Latitude as defined by sender
     - `horizontal_accuracy`: `float` - Optional. The radius of uncertainty for the location, measured in meters; 0-1500
-    - `live_period`: `int` - Optional. Time relative to the message sending date, during which the location can be updated, in seconds. For active live locations only.
+    - `live_period`: `int` - Optional. Time relative to the message sending date, during which the location can be updated; in seconds. For active live locations only.
     - `heading`: `int` - Optional. The direction in which user is moving, in degrees; 1-360. For active live locations only.
     - `proximity_alert_radius`: `int` - Optional. Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only.
     """
@@ -852,7 +817,7 @@ class MessageAutoDeleteTimerChanged:
     - - - - -
     **Fields**:
 
-    - `message_auto_delete_time`: `int` - New auto-delete time for messages in the chat
+    - `message_auto_delete_time`: `int` - New auto-delete time for messages in the chat; in seconds
     """
 
     def __init__(self, dictionary=None):
@@ -910,7 +875,7 @@ class VoiceChatEnded:
     - - - - -
     **Fields**:
 
-    - `duration`: `int` - Voice chat duration; in seconds
+    - `duration`: `int` - Voice chat duration in seconds
     """
 
     def __init__(self, dictionary=None):
@@ -930,19 +895,14 @@ class VoiceChatParticipantsInvited:
     - - - - -
     **Fields**:
 
-    - `users`: `User[]` - Optional. New members that were invited to the voice chat
+    - `users`: `list` - Optional. New members that were invited to the voice chat
     """
 
     def __init__(self, dictionary=None):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
-        if "users" in dictionary:
-            self.users = list()
-            for i1 in dictionary["users"]:
-                self.users.append(User(i1))
-        else:
-            self.users = None
+        self.users = list(dictionary["users"]) if "users" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -956,7 +916,7 @@ class UserProfilePhotos:
     **Fields**:
 
     - `total_count`: `int` - Total number of profile pictures the target user has
-    - `photos`: `PhotoSize[][]` - Requested profile pictures (in up to 4 sizes each)
+    - `photos`: `list` - Requested profile pictures (in up to 4 sizes each)
     """
 
     def __init__(self, dictionary=None):
@@ -964,15 +924,7 @@ class UserProfilePhotos:
             dictionary = {}
         self.dict = dictionary
         self.total_count = dictionary["total_count"] if "total_count" in dictionary else None
-        if "photos" in dictionary:
-            self.photos = list()
-            for i1 in dictionary["photos"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(PhotoSize(i2))
-                self.photos.append(sublist)
-        else:
-            self.photos = None
+        self.photos = list(dictionary["photos"]) if "photos" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -987,7 +939,7 @@ class File:
 
     - `file_id`: `string` - Identifier for this file, which can be used to download or reuse the file
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-    - `file_size`: `int` - Optional. File size, if known
+    - `file_size`: `int` - Optional. File size in bytes, if known
     - `file_path`: `string` - Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
     """
 
@@ -1011,7 +963,7 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
     - - - - -
     **Fields**:
 
-    - `keyboard`: `KeyboardButton[][]` - Array of button rows, each represented by an Array of KeyboardButton objects
+    - `keyboard`: `list` - Array of button rows, each represented by an Array of KeyboardButton objects
     - `resize_keyboard`: `bool` - Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
     - `one_time_keyboard`: `bool` - Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
     - `input_field_placeholder`: `string` - Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
@@ -1022,15 +974,7 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
-        if "keyboard" in dictionary:
-            self.keyboard = list()
-            for i1 in dictionary["keyboard"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(KeyboardButton(i2))
-                self.keyboard.append(sublist)
-        else:
-            self.keyboard = None
+        self.keyboard = list(dictionary["keyboard"]) if "keyboard" in dictionary else None
         self.resize_keyboard = dictionary["resize_keyboard"] if "resize_keyboard" in dictionary else None
         self.one_time_keyboard = dictionary["one_time_keyboard"] if "one_time_keyboard" in dictionary else None
         self.input_field_placeholder = dictionary["input_field_placeholder"] if "input_field_placeholder" in dictionary else None
@@ -1115,22 +1059,14 @@ class InlineKeyboardMarkup(objects.InlineKeyboardMarkup):
     - - - - -
     **Fields**:
 
-    - `inline_keyboard`: `InlineKeyboardButton[][]` - Array of button rows, each represented by an Array of InlineKeyboardButton objects
+    - `inline_keyboard`: `list` - Array of button rows, each represented by an Array of InlineKeyboardButton objects
     """
 
     def __init__(self, dictionary=None):
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
-        if "inline_keyboard" in dictionary:
-            self.inline_keyboard = list()
-            for i1 in dictionary["inline_keyboard"]:
-                sublist = list()
-                for i2 in i1:
-                    sublist.append(InlineKeyboardButton(i2))
-                self.inline_keyboard.append(sublist)
-        else:
-            self.inline_keyboard = None
+        self.inline_keyboard = list(dictionary["inline_keyboard"]) if "inline_keyboard" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1144,13 +1080,13 @@ class InlineKeyboardButton:
     **Fields**:
 
     - `text`: `string` - Label text on the button
-    - `url`: `string` - Optional. HTTP or tg:// url to be opened when button is pressed
+    - `url`: `string` - Optional. HTTP or tg:// url to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.
     - `login_url`: `LoginUrl` - Optional. An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
     - `callback_data`: `string` - Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
     - `switch_inline_query`: `string` - Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
     - `switch_inline_query_current_chat`: `string` - Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot's username will be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat – good for selecting something from multiple options.
     - `callback_game`: `CallbackGame` - Optional. Description of the game that will be launched when the user presses the button.NOTE: This type of button must always be the first button in the first row.
-    - `pay`: `bool` - Optional. Specify True, to send a Pay button.NOTE: This type of button must always be the first button in the first row.
+    - `pay`: `bool` - Optional. Specify True, to send a Pay button.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
     """
 
     def __init__(self, dictionary=None):
@@ -1288,10 +1224,13 @@ class ChatInviteLink:
 
     - `invite_link`: `string` - The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”.
     - `creator`: `User` - Creator of the link
+    - `creates_join_request`: `bool` - True, if users joining the chat via the link need to be approved by chat administrators
     - `is_primary`: `bool` - True, if the link is primary
     - `is_revoked`: `bool` - True, if the link is revoked
+    - `name`: `string` - Optional. Invite link name
     - `expire_date`: `int` - Optional. Point in time (Unix timestamp) when the link will expire or has been expired
     - `member_limit`: `int` - Optional. Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
+    - `pending_join_request_count`: `int` - Optional. Number of pending join requests created using this link
     """
 
     def __init__(self, dictionary=None):
@@ -1300,10 +1239,13 @@ class ChatInviteLink:
         self.dict = dictionary
         self.invite_link = dictionary["invite_link"] if "invite_link" in dictionary else None
         self.creator = User(dictionary["creator"]) if "creator" in dictionary else None
+        self.creates_join_request = dictionary["creates_join_request"] if "creates_join_request" in dictionary else None
         self.is_primary = dictionary["is_primary"] if "is_primary" in dictionary else None
         self.is_revoked = dictionary["is_revoked"] if "is_revoked" in dictionary else None
+        self.name = dictionary["name"] if "name" in dictionary else None
         self.expire_date = dictionary["expire_date"] if "expire_date" in dictionary else None
         self.member_limit = dictionary["member_limit"] if "member_limit" in dictionary else None
+        self.pending_join_request_count = dictionary["pending_join_request_count"] if "pending_join_request_count" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1336,8 +1278,8 @@ class ChatMemberOwner:
 
     - `status`: `string` - The member's status in the chat, always “creator”
     - `user`: `User` - Information about the user
-    - `custom_title`: `string` - Custom title for this user
     - `is_anonymous`: `bool` - True, if the user's presence in the chat is hidden
+    - `custom_title`: `string` - Optional. Custom title for this user
     """
 
     def __init__(self, dictionary=None):
@@ -1346,8 +1288,8 @@ class ChatMemberOwner:
         self.dict = dictionary
         self.status = dictionary["status"] if "status" in dictionary else None
         self.user = User(dictionary["from"]) if "from" in dictionary else None
-        self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
         self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
+        self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1363,18 +1305,18 @@ class ChatMemberAdministrator:
     - `status`: `string` - The member's status in the chat, always “administrator”
     - `user`: `User` - Information about the user
     - `can_be_edited`: `bool` - True, if the bot is allowed to edit administrator privileges of that user
-    - `custom_title`: `string` - Custom title for this user
     - `is_anonymous`: `bool` - True, if the user's presence in the chat is hidden
     - `can_manage_chat`: `bool` - True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
-    - `can_post_messages`: `bool` - True, if the administrator can post in the channel; channels only
-    - `can_edit_messages`: `bool` - True, if the administrator can edit messages of other users and can pin messages; channels only
     - `can_delete_messages`: `bool` - True, if the administrator can delete messages of other users
     - `can_manage_voice_chats`: `bool` - True, if the administrator can manage voice chats
     - `can_restrict_members`: `bool` - True, if the administrator can restrict, ban or unban chat members
     - `can_promote_members`: `bool` - True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
     - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
     - `can_invite_users`: `bool` - True, if the user is allowed to invite new users to the chat
-    - `can_pin_messages`: `bool` - True, if the user is allowed to pin messages; groups and supergroups only
+    - `can_post_messages`: `bool` - Optional. True, if the administrator can post in the channel; channels only
+    - `can_edit_messages`: `bool` - Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
+    - `can_pin_messages`: `bool` - Optional. True, if the user is allowed to pin messages; groups and supergroups only
+    - `custom_title`: `string` - Optional. Custom title for this user
     """
 
     def __init__(self, dictionary=None):
@@ -1384,18 +1326,18 @@ class ChatMemberAdministrator:
         self.status = dictionary["status"] if "status" in dictionary else None
         self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.can_be_edited = dictionary["can_be_edited"] if "can_be_edited" in dictionary else None
-        self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
         self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
         self.can_manage_chat = dictionary["can_manage_chat"] if "can_manage_chat" in dictionary else None
-        self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
-        self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
         self.can_delete_messages = dictionary["can_delete_messages"] if "can_delete_messages" in dictionary else None
         self.can_manage_voice_chats = dictionary["can_manage_voice_chats"] if "can_manage_voice_chats" in dictionary else None
         self.can_restrict_members = dictionary["can_restrict_members"] if "can_restrict_members" in dictionary else None
         self.can_promote_members = dictionary["can_promote_members"] if "can_promote_members" in dictionary else None
         self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
         self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
+        self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
+        self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
         self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+        self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1435,13 +1377,13 @@ class ChatMemberRestricted:
     - `is_member`: `bool` - True, if the user is a member of the chat at the moment of the request
     - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
     - `can_invite_users`: `bool` - True, if the user is allowed to invite new users to the chat
-    - `can_pin_messages`: `bool` - True, if the user is allowed to pin messages; groups and supergroups only
+    - `can_pin_messages`: `bool` - True, if the user is allowed to pin messages
     - `can_send_messages`: `bool` - True, if the user is allowed to send text messages, contacts, locations and venues
     - `can_send_media_messages`: `bool` - True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
     - `can_send_polls`: `bool` - True, if the user is allowed to send polls
     - `can_send_other_messages`: `bool` - True, if the user is allowed to send animations, games, stickers and use inline bots
     - `can_add_web_page_previews`: `bool` - True, if the user is allowed to add web page previews to their messages
-    - `until_date`: `int` - Date when restrictions will be lifted for this user; unix time
+    - `until_date`: `int` - Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever
     """
 
     def __init__(self, dictionary=None):
@@ -1496,7 +1438,7 @@ class ChatMemberBanned:
 
     - `status`: `string` - The member's status in the chat, always “kicked”
     - `user`: `User` - Information about the user
-    - `until_date`: `int` - Date when restrictions will be lifted for this user; unix time
+    - `until_date`: `int` - Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever
     """
 
     def __init__(self, dictionary=None):
@@ -1535,6 +1477,34 @@ class ChatMemberUpdated:
         self.date = dictionary["date"] if "date" in dictionary else None
         self.old_chat_member = ChatMember(dictionary["old_chat_member"]) if "old_chat_member" in dictionary else None
         self.new_chat_member = ChatMember(dictionary["new_chat_member"]) if "new_chat_member" in dictionary else None
+        self.invite_link = ChatInviteLink(dictionary["invite_link"]) if "invite_link" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ChatJoinRequest:
+    """Represents a join request sent to a chat.[See on Telegram API](https://core.telegram.org/bots/api#chatjoinrequest)
+
+    - - - - -
+    **Fields**:
+
+    - `chat`: `Chat` - Chat to which the request was sent
+    - `user`: `User` - User that sent the join request
+    - `date`: `int` - Date the request was sent in Unix time
+    - `bio`: `string` - Optional. Bio of the user.
+    - `invite_link`: `ChatInviteLink` - Optional. Chat invite link that was used by the user to send the join request
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.chat = Chat(dictionary["chat"]) if "chat" in dictionary else None
+        self.user = User(dictionary["from"]) if "from" in dictionary else None
+        self.date = dictionary["date"] if "date" in dictionary else None
+        self.bio = dictionary["bio"] if "bio" in dictionary else None
         self.invite_link = ChatInviteLink(dictionary["invite_link"]) if "invite_link" in dictionary else None
 
         for index, value in self.dict.items():
@@ -1830,7 +1800,7 @@ class InputMediaPhoto:
     - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
     - `caption`: `string` - Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the photo caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     """
 
     def __init__(self, dictionary=None):
@@ -1841,12 +1811,7 @@ class InputMediaPhoto:
         self.media = dictionary["media"] if "media" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1863,10 +1828,10 @@ class InputMediaVideo:
     - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
     - `caption`: `string` - Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the video caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `width`: `int` - Optional. Video width
     - `height`: `int` - Optional. Video height
-    - `duration`: `int` - Optional. Video duration
+    - `duration`: `int` - Optional. Video duration in seconds
     - `supports_streaming`: `bool` - Optional. Pass True, if the uploaded video is suitable for streaming
     """
 
@@ -1878,12 +1843,7 @@ class InputMediaVideo:
         self.media = dictionary["media"] if "media" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.width = dictionary["width"] if "width" in dictionary else None
         self.height = dictionary["height"] if "height" in dictionary else None
         self.duration = dictionary["duration"] if "duration" in dictionary else None
@@ -1904,10 +1864,10 @@ class InputMediaAnimation:
     - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
     - `caption`: `string` - Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the animation caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `width`: `int` - Optional. Animation width
     - `height`: `int` - Optional. Animation height
-    - `duration`: `int` - Optional. Animation duration
+    - `duration`: `int` - Optional. Animation duration in seconds
     """
 
     def __init__(self, dictionary=None):
@@ -1918,12 +1878,7 @@ class InputMediaAnimation:
         self.media = dictionary["media"] if "media" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.width = dictionary["width"] if "width" in dictionary else None
         self.height = dictionary["height"] if "height" in dictionary else None
         self.duration = dictionary["duration"] if "duration" in dictionary else None
@@ -1943,7 +1898,7 @@ class InputMediaAudio:
     - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
     - `caption`: `string` - Optional. Caption of the audio to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the audio caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `duration`: `int` - Optional. Duration of the audio in seconds
     - `performer`: `string` - Optional. Performer of the audio
     - `title`: `string` - Optional. Title of the audio
@@ -1957,12 +1912,7 @@ class InputMediaAudio:
         self.media = dictionary["media"] if "media" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.duration = dictionary["duration"] if "duration" in dictionary else None
         self.performer = dictionary["performer"] if "performer" in dictionary else None
         self.title = dictionary["title"] if "title" in dictionary else None
@@ -1982,8 +1932,8 @@ class InputMediaDocument:
     - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
     - `caption`: `string` - Optional. Caption of the document to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the document caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-    - `disable_content_type_detection`: `bool` - Optional. Disables automatic server-side content type detection for files uploaded using multipart/form-data. Always true, if the document is sent as part of an album.
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `disable_content_type_detection`: `bool` - Optional. Disables automatic server-side content type detection for files uploaded using multipart/form-data. Always True, if the document is sent as part of an album.
     """
 
     def __init__(self, dictionary=None):
@@ -1994,12 +1944,7 @@ class InputMediaDocument:
         self.media = dictionary["media"] if "media" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.disable_content_type_detection = dictionary["disable_content_type_detection"] if "disable_content_type_detection" in dictionary else None
 
         for index, value in self.dict.items():
@@ -2040,7 +1985,7 @@ class Sticker:
     - `emoji`: `string` - Optional. Emoji associated with the sticker
     - `set_name`: `string` - Optional. Name of the sticker set to which the sticker belongs
     - `mask_position`: `MaskPosition` - Optional. For mask stickers, the position where the mask should be placed
-    - `file_size`: `int` - Optional. File size
+    - `file_size`: `int` - Optional. File size in bytes
     """
 
     def __init__(self, dictionary=None):
@@ -2073,7 +2018,7 @@ class StickerSet:
     - `title`: `string` - Sticker set title
     - `is_animated`: `bool` - True, if the sticker set contains animated stickers
     - `contains_masks`: `bool` - True, if the sticker set contains masks
-    - `stickers`: `Sticker[]` - List of all set stickers
+    - `stickers`: `list` - List of all set stickers
     - `thumb`: `PhotoSize` - Optional. Sticker set thumbnail in the .WEBP or .TGS format
     """
 
@@ -2085,12 +2030,7 @@ class StickerSet:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
         self.contains_masks = dictionary["contains_masks"] if "contains_masks" in dictionary else None
-        if "stickers" in dictionary:
-            self.stickers = list()
-            for i1 in dictionary["stickers"]:
-                self.stickers.append(Sticker(i1))
-        else:
-            self.stickers = None
+        self.stickers = list(dictionary["stickers"]) if "stickers" in dictionary else None
         self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
 
         for index, value in self.dict.items():
@@ -2155,8 +2095,7 @@ class InlineQuery:
 
 
 class InlineQueryResult:
-    """This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:
-Note: All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresult)
+    """This object represents one result of an inline query. Telegram clients currently support results of the following 20 types:[See on Telegram API](https://core.telegram.org/bots/api#inlinequeryresult)
 
     - - - - -
     **Fields**:
@@ -2221,7 +2160,7 @@ class InlineQueryResultPhoto:
 
     - `type`: `string` - Type of the result, must be photo
     - `id`: `string` - Unique identifier for this result, 1-64 bytes
-    - `photo_url`: `string` - A valid URL of the photo. Photo must be in jpeg format. Photo size must not exceed 5MB
+    - `photo_url`: `string` - A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB
     - `thumb_url`: `string` - URL of the thumbnail for the photo
     - `photo_width`: `int` - Optional. Width of the photo
     - `photo_height`: `int` - Optional. Height of the photo
@@ -2229,7 +2168,7 @@ class InlineQueryResultPhoto:
     - `description`: `string` - Optional. Short description of the result
     - `caption`: `string` - Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the photo caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the photo
     """
@@ -2248,12 +2187,7 @@ class InlineQueryResultPhoto:
         self.description = dictionary["description"] if "description" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2273,13 +2207,13 @@ class InlineQueryResultGif:
     - `gif_url`: `string` - A valid URL for the GIF file. File size must not exceed 1MB
     - `gif_width`: `int` - Optional. Width of the GIF
     - `gif_height`: `int` - Optional. Height of the GIF
-    - `gif_duration`: `int` - Optional. Duration of the GIF
+    - `gif_duration`: `int` - Optional. Duration of the GIF in seconds
     - `thumb_url`: `string` - URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
     - `thumb_mime_type`: `string` - Optional. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
     - `title`: `string` - Optional. Title for the result
     - `caption`: `string` - Optional. Caption of the GIF file to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the GIF animation
     """
@@ -2299,12 +2233,7 @@ class InlineQueryResultGif:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2324,13 +2253,13 @@ class InlineQueryResultMpeg4Gif:
     - `mpeg4_url`: `string` - A valid URL for the MP4 file. File size must not exceed 1MB
     - `mpeg4_width`: `int` - Optional. Video width
     - `mpeg4_height`: `int` - Optional. Video height
-    - `mpeg4_duration`: `int` - Optional. Video duration
+    - `mpeg4_duration`: `int` - Optional. Video duration in seconds
     - `thumb_url`: `string` - URL of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
     - `thumb_mime_type`: `string` - Optional. MIME type of the thumbnail, must be one of “image/jpeg”, “image/gif”, or “video/mp4”. Defaults to “image/jpeg”
     - `title`: `string` - Optional. Title for the result
     - `caption`: `string` - Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video animation
     """
@@ -2350,12 +2279,7 @@ class InlineQueryResultMpeg4Gif:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2374,11 +2298,11 @@ class InlineQueryResultVideo:
     - `id`: `string` - Unique identifier for this result, 1-64 bytes
     - `video_url`: `string` - A valid URL for the embedded video player or video file
     - `mime_type`: `string` - Mime type of the content of video url, “text/html” or “video/mp4”
-    - `thumb_url`: `string` - URL of the thumbnail (jpeg only) for the video
+    - `thumb_url`: `string` - URL of the thumbnail (JPEG only) for the video
     - `title`: `string` - Title for the result
     - `caption`: `string` - Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the video caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `video_width`: `int` - Optional. Video width
     - `video_height`: `int` - Optional. Video height
     - `video_duration`: `int` - Optional. Video duration in seconds
@@ -2399,12 +2323,7 @@ class InlineQueryResultVideo:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.video_width = dictionary["video_width"] if "video_width" in dictionary else None
         self.video_height = dictionary["video_height"] if "video_height" in dictionary else None
         self.video_duration = dictionary["video_duration"] if "video_duration" in dictionary else None
@@ -2429,7 +2348,7 @@ class InlineQueryResultAudio:
     - `title`: `string` - Title
     - `caption`: `string` - Optional. Caption, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the audio caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `performer`: `string` - Optional. Performer
     - `audio_duration`: `int` - Optional. Audio duration in seconds
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
@@ -2446,12 +2365,7 @@ class InlineQueryResultAudio:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.performer = dictionary["performer"] if "performer" in dictionary else None
         self.audio_duration = dictionary["audio_duration"] if "audio_duration" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
@@ -2474,7 +2388,7 @@ class InlineQueryResultVoice:
     - `title`: `string` - Recording title
     - `caption`: `string` - Optional. Caption, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the voice message caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `voice_duration`: `int` - Optional. Recording duration in seconds
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the voice recording
@@ -2490,12 +2404,7 @@ class InlineQueryResultVoice:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.voice_duration = dictionary["voice_duration"] if "voice_duration" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
@@ -2516,13 +2425,13 @@ class InlineQueryResultDocument:
     - `title`: `string` - Title for the result
     - `caption`: `string` - Optional. Caption of the document to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the document caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `document_url`: `string` - A valid URL for the file
     - `mime_type`: `string` - Mime type of the content of the file, either “application/pdf” or “application/zip”
     - `description`: `string` - Optional. Short description of the result
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the file
-    - `thumb_url`: `string` - Optional. URL of the thumbnail (jpeg only) for the file
+    - `thumb_url`: `string` - Optional. URL of the thumbnail (JPEG only) for the file
     - `thumb_width`: `int` - Optional. Thumbnail width
     - `thumb_height`: `int` - Optional. Thumbnail height
     """
@@ -2536,12 +2445,7 @@ class InlineQueryResultDocument:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.document_url = dictionary["document_url"] if "document_url" in dictionary else None
         self.mime_type = dictionary["mime_type"] if "mime_type" in dictionary else None
         self.description = dictionary["description"] if "description" in dictionary else None
@@ -2729,7 +2633,7 @@ class InlineQueryResultCachedPhoto:
     - `description`: `string` - Optional. Short description of the result
     - `caption`: `string` - Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the photo caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the photo
     """
@@ -2745,12 +2649,7 @@ class InlineQueryResultCachedPhoto:
         self.description = dictionary["description"] if "description" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2771,7 +2670,7 @@ class InlineQueryResultCachedGif:
     - `title`: `string` - Optional. Title for the result
     - `caption`: `string` - Optional. Caption of the GIF file to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the GIF animation
     """
@@ -2786,12 +2685,7 @@ class InlineQueryResultCachedGif:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2812,7 +2706,7 @@ class InlineQueryResultCachedMpeg4Gif:
     - `title`: `string` - Optional. Title for the result
     - `caption`: `string` - Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video animation
     """
@@ -2827,12 +2721,7 @@ class InlineQueryResultCachedMpeg4Gif:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2882,7 +2771,7 @@ class InlineQueryResultCachedDocument:
     - `description`: `string` - Optional. Short description of the result
     - `caption`: `string` - Optional. Caption of the document to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the document caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the file
     """
@@ -2898,12 +2787,7 @@ class InlineQueryResultCachedDocument:
         self.description = dictionary["description"] if "description" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2925,7 +2809,7 @@ class InlineQueryResultCachedVideo:
     - `description`: `string` - Optional. Short description of the result
     - `caption`: `string` - Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the video caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the video
     """
@@ -2941,12 +2825,7 @@ class InlineQueryResultCachedVideo:
         self.description = dictionary["description"] if "description" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -2967,7 +2846,7 @@ class InlineQueryResultCachedVoice:
     - `title`: `string` - Voice message title
     - `caption`: `string` - Optional. Caption, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the voice message caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the voice message
     """
@@ -2982,12 +2861,7 @@ class InlineQueryResultCachedVoice:
         self.title = dictionary["title"] if "title" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -3007,7 +2881,7 @@ class InlineQueryResultCachedAudio:
     - `audio_file_id`: `string` - A valid file identifier for the audio file
     - `caption`: `string` - Optional. Caption, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the audio caption. See formatting options for more details.
-    - `caption_entities`: `MessageEntity[]` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+    - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the audio
     """
@@ -3021,12 +2895,7 @@ class InlineQueryResultCachedAudio:
         self.audio_file_id = dictionary["audio_file_id"] if "audio_file_id" in dictionary else None
         self.caption = dictionary["caption"] if "caption" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "caption_entities" in dictionary:
-            self.caption_entities = list()
-            for i1 in dictionary["caption_entities"]:
-                self.caption_entities.append(MessageEntity(i1))
-        else:
-            self.caption_entities = None
+        self.caption_entities = list(dictionary["caption_entities"]) if "caption_entities" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
         self.input_message_content = InputMessageContent(dictionary["input_message_content"]) if "input_message_content" in dictionary else None
 
@@ -3061,7 +2930,7 @@ class InputTextMessageContent:
 
     - `message_text`: `string` - Text of the message to be sent, 1-4096 characters
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the message text. See formatting options for more details.
-    - `entities`: `MessageEntity[]` - Optional. List of special entities that appear in message text, which can be specified instead of parse_mode
+    - `entities`: `list` - Optional. List of special entities that appear in message text, which can be specified instead of parse_mode
     - `disable_web_page_preview`: `bool` - Optional. Disables link previews for links in the sent message
     """
 
@@ -3071,12 +2940,7 @@ class InputTextMessageContent:
         self.dict = dictionary
         self.message_text = dictionary["message_text"] if "message_text" in dictionary else None
         self.parse_mode = dictionary["parse_mode"] if "parse_mode" in dictionary else None
-        if "entities" in dictionary:
-            self.entities = list()
-            for i1 in dictionary["entities"]:
-                self.entities.append(MessageEntity(i1))
-        else:
-            self.entities = None
+        self.entities = list(dictionary["entities"]) if "entities" in dictionary else None
         self.disable_web_page_preview = dictionary["disable_web_page_preview"] if "disable_web_page_preview" in dictionary else None
 
         for index, value in self.dict.items():
@@ -3185,9 +3049,9 @@ class InputInvoiceMessageContent:
     - `payload`: `string` - Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
     - `provider_token`: `string` - Payment provider token, obtained via Botfather
     - `currency`: `string` - Three-letter ISO 4217 currency code, see more on currencies
-    - `prices`: `LabeledPrice[]` - Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
+    - `prices`: `list` - Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
     - `max_tip_amount`: `int` - Optional. The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
-    - `suggested_tip_amounts`: `int[]` - Optional. A JSON-serialized array of suggested amounts of tip in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+    - `suggested_tip_amounts`: `list` - Optional. A JSON-serialized array of suggested amounts of tip in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
     - `provider_data`: `string` - Optional. A JSON-serialized object for data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider.
     - `photo_url`: `string` - Optional. URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
     - `photo_size`: `int` - Optional. Photo size
@@ -3211,19 +3075,9 @@ class InputInvoiceMessageContent:
         self.payload = dictionary["payload"] if "payload" in dictionary else None
         self.provider_token = dictionary["provider_token"] if "provider_token" in dictionary else None
         self.currency = dictionary["currency"] if "currency" in dictionary else None
-        if "prices" in dictionary:
-            self.prices = list()
-            for i1 in dictionary["prices"]:
-                self.prices.append(LabeledPrice(i1))
-        else:
-            self.prices = None
+        self.prices = list(dictionary["prices"]) if "prices" in dictionary else None
         self.max_tip_amount = dictionary["max_tip_amount"] if "max_tip_amount" in dictionary else None
-        if "suggested_tip_amounts" in dictionary:
-            self.suggested_tip_amounts = list()
-            for i1 in dictionary["suggested_tip_amounts"]:
-                self.suggested_tip_amounts.append(i1)
-        else:
-            self.suggested_tip_amounts = None
+        self.suggested_tip_amounts = list(dictionary["suggested_tip_amounts"]) if "suggested_tip_amounts" in dictionary else None
         self.provider_data = dictionary["provider_data"] if "provider_data" in dictionary else None
         self.photo_url = dictionary["photo_url"] if "photo_url" in dictionary else None
         self.photo_size = dictionary["photo_size"] if "photo_size" in dictionary else None
@@ -3384,7 +3238,7 @@ class ShippingOption:
 
     - `id`: `string` - Shipping option identifier
     - `title`: `string` - Option title
-    - `prices`: `LabeledPrice[]` - List of price portions
+    - `prices`: `list` - List of price portions
     """
 
     def __init__(self, dictionary=None):
@@ -3393,12 +3247,7 @@ class ShippingOption:
         self.dict = dictionary
         self.id = dictionary["id"] if "id" in dictionary else None
         self.title = dictionary["title"] if "title" in dictionary else None
-        if "prices" in dictionary:
-            self.prices = list()
-            for i1 in dictionary["prices"]:
-                self.prices.append(LabeledPrice(i1))
-        else:
-            self.prices = None
+        self.prices = list(dictionary["prices"]) if "prices" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -3501,7 +3350,7 @@ class PassportData:
     - - - - -
     **Fields**:
 
-    - `data`: `EncryptedPassportElement[]` - Array with information about documents and other Telegram Passport elements that was shared with the bot
+    - `data`: `list` - Array with information about documents and other Telegram Passport elements that was shared with the bot
     - `credentials`: `EncryptedCredentials` - Encrypted credentials required to decrypt the data
     """
 
@@ -3509,12 +3358,7 @@ class PassportData:
         if dictionary is None:
             dictionary = {}
         self.dict = dictionary
-        if "data" in dictionary:
-            self.data = list()
-            for i1 in dictionary["data"]:
-                self.data.append(EncryptedPassportElement(i1))
-        else:
-            self.data = None
+        self.data = list(dictionary["data"]) if "data" in dictionary else None
         self.credentials = EncryptedCredentials(dictionary["credentials"]) if "credentials" in dictionary else None
 
         for index, value in self.dict.items():
@@ -3530,7 +3374,7 @@ class PassportFile:
 
     - `file_id`: `string` - Identifier for this file, which can be used to download or reuse the file
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-    - `file_size`: `int` - File size
+    - `file_size`: `int` - File size in bytes
     - `file_date`: `int` - Unix time when the file was uploaded
     """
 
@@ -3558,11 +3402,11 @@ class EncryptedPassportElement:
     - `data`: `string` - Optional. Base64-encoded encrypted Telegram Passport element data provided by the user, available for “personal_details”, “passport”, “driver_license”, “identity_card”, “internal_passport” and “address” types. Can be decrypted and verified using the accompanying EncryptedCredentials.
     - `phone_number`: `string` - Optional. User's verified phone number, available only for “phone_number” type
     - `email`: `string` - Optional. User's verified email address, available only for “email” type
-    - `files`: `PassportFile[]` - Optional. Array of encrypted files with documents provided by the user, available for “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
+    - `files`: `list` - Optional. Array of encrypted files with documents provided by the user, available for “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
     - `front_side`: `PassportFile` - Optional. Encrypted file with the front side of the document, provided by the user. Available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.
     - `reverse_side`: `PassportFile` - Optional. Encrypted file with the reverse side of the document, provided by the user. Available for “driver_license” and “identity_card”. The file can be decrypted and verified using the accompanying EncryptedCredentials.
     - `selfie`: `PassportFile` - Optional. Encrypted file with the selfie of the user holding a document, provided by the user; available for “passport”, “driver_license”, “identity_card” and “internal_passport”. The file can be decrypted and verified using the accompanying EncryptedCredentials.
-    - `translation`: `PassportFile[]` - Optional. Array of encrypted files with translated versions of documents provided by the user. Available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
+    - `translation`: `list` - Optional. Array of encrypted files with translated versions of documents provided by the user. Available if requested for “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration” and “temporary_registration” types. Files can be decrypted and verified using the accompanying EncryptedCredentials.
     - `hash`: `string` - Base64-encoded element hash for using in PassportElementErrorUnspecified
     """
 
@@ -3574,21 +3418,11 @@ class EncryptedPassportElement:
         self.data = dictionary["data"] if "data" in dictionary else None
         self.phone_number = dictionary["phone_number"] if "phone_number" in dictionary else None
         self.email = dictionary["email"] if "email" in dictionary else None
-        if "files" in dictionary:
-            self.files = list()
-            for i1 in dictionary["files"]:
-                self.files.append(PassportFile(i1))
-        else:
-            self.files = None
+        self.files = list(dictionary["files"]) if "files" in dictionary else None
         self.front_side = PassportFile(dictionary["front_side"]) if "front_side" in dictionary else None
         self.reverse_side = PassportFile(dictionary["reverse_side"]) if "reverse_side" in dictionary else None
         self.selfie = PassportFile(dictionary["selfie"]) if "selfie" in dictionary else None
-        if "translation" in dictionary:
-            self.translation = list()
-            for i1 in dictionary["translation"]:
-                self.translation.append(PassportFile(i1))
-        else:
-            self.translation = None
+        self.translation = list(dictionary["translation"]) if "translation" in dictionary else None
         self.hash = dictionary["hash"] if "hash" in dictionary else None
 
         for index, value in self.dict.items():
@@ -3778,7 +3612,7 @@ class PassportElementErrorFiles:
 
     - `source`: `string` - Error source, must be files
     - `type`: `string` - The section of the user's Telegram Passport which has the issue, one of “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”
-    - `file_hashes`: `string[]` - List of base64-encoded file hashes
+    - `file_hashes`: `list` - List of base64-encoded file hashes
     - `message`: `string` - Error message
     """
 
@@ -3788,12 +3622,7 @@ class PassportElementErrorFiles:
         self.dict = dictionary
         self.source = dictionary["source"] if "source" in dictionary else None
         self.type = dictionary["type"] if "type" in dictionary else None
-        if "file_hashes" in dictionary:
-            self.file_hashes = list()
-            for i1 in dictionary["file_hashes"]:
-                self.file_hashes.append(i1)
-        else:
-            self.file_hashes = None
+        self.file_hashes = list(dictionary["file_hashes"]) if "file_hashes" in dictionary else None
         self.message = dictionary["message"] if "message" in dictionary else None
 
         for index, value in self.dict.items():
@@ -3835,7 +3664,7 @@ class PassportElementErrorTranslationFiles:
 
     - `source`: `string` - Error source, must be translation_files
     - `type`: `string` - Type of element of the user's Telegram Passport which has the issue, one of “passport”, “driver_license”, “identity_card”, “internal_passport”, “utility_bill”, “bank_statement”, “rental_agreement”, “passport_registration”, “temporary_registration”
-    - `file_hashes`: `string[]` - List of base64-encoded file hashes
+    - `file_hashes`: `list` - List of base64-encoded file hashes
     - `message`: `string` - Error message
     """
 
@@ -3845,12 +3674,7 @@ class PassportElementErrorTranslationFiles:
         self.dict = dictionary
         self.source = dictionary["source"] if "source" in dictionary else None
         self.type = dictionary["type"] if "type" in dictionary else None
-        if "file_hashes" in dictionary:
-            self.file_hashes = list()
-            for i1 in dictionary["file_hashes"]:
-                self.file_hashes.append(i1)
-        else:
-            self.file_hashes = None
+        self.file_hashes = list(dictionary["file_hashes"]) if "file_hashes" in dictionary else None
         self.message = dictionary["message"] if "message" in dictionary else None
 
         for index, value in self.dict.items():
@@ -3892,9 +3716,9 @@ class Game:
 
     - `title`: `string` - Title of the game
     - `description`: `string` - Description of the game
-    - `photo`: `PhotoSize[]` - Photo that will be displayed in the game message in chats.
+    - `photo`: `list` - Photo that will be displayed in the game message in chats.
     - `text`: `string` - Optional. Brief description of the game or high scores included in the game message. Can be automatically edited to include current high scores for the game when the bot calls setGameScore, or manually edited using editMessageText. 0-4096 characters.
-    - `text_entities`: `MessageEntity[]` - Optional. Special entities that appear in text, such as usernames, URLs, bot commands, etc.
+    - `text_entities`: `list` - Optional. Special entities that appear in text, such as usernames, URLs, bot commands, etc.
     - `animation`: `Animation` - Optional. Animation that will be displayed in the game message in chats. Upload via BotFather
     """
 
@@ -3904,19 +3728,9 @@ class Game:
         self.dict = dictionary
         self.title = dictionary["title"] if "title" in dictionary else None
         self.description = dictionary["description"] if "description" in dictionary else None
-        if "photo" in dictionary:
-            self.photo = list()
-            for i1 in dictionary["photo"]:
-                self.photo.append(PhotoSize(i1))
-        else:
-            self.photo = None
+        self.photo = list(dictionary["photo"]) if "photo" in dictionary else None
         self.text = dictionary["text"] if "text" in dictionary else None
-        if "text_entities" in dictionary:
-            self.text_entities = list()
-            for i1 in dictionary["text_entities"]:
-                self.text_entities.append(MessageEntity(i1))
-        else:
-            self.text_entities = None
+        self.text_entities = list(dictionary["text_entities"]) if "text_entities" in dictionary else None
         self.animation = Animation(dictionary["animation"]) if "animation" in dictionary else None
 
         for index, value in self.dict.items():
@@ -3964,3 +3778,5 @@ class GameHighScore:
         for index, value in self.dict.items():
             if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
+
+
