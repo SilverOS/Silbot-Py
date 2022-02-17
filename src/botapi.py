@@ -193,7 +193,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("close", data), bool)
 
-    def sendMessage(self, chat_id: Union[int, str, ], text: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, entities: list = None, disable_web_page_preview: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendMessage(self, chat_id: Union[int, str, ], text: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, entities: list = None, disable_web_page_preview: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send text messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmessage)
 
         - - - - -
@@ -206,6 +206,7 @@ class BotApi:
         - `entities` :`list` A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
         - `disable_web_page_preview` :`bool` Disables link previews for links in this message
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -229,13 +230,14 @@ class BotApi:
             "entities": entities,
             "disable_web_page_preview": disable_web_page_preview,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendMessage", data), types.Message)
 
-    def forwardMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], disable_notification: bool = None):
+    def forwardMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], disable_notification: bool = None, protect_content: bool = None):
         """Use this method to forward messages of any kind. Service messages can't be forwarded. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#forwardmessage)
 
         - - - - -
@@ -245,6 +247,7 @@ class BotApi:
         - `message_id` :`int` Message identifier in the chat specified in from_chat_id
         - `from_chat_id` :`Union[int,str,]` Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the forwarded message from forwarding and saving
 
         **Returns:**
 
@@ -257,11 +260,12 @@ class BotApi:
             "chat_id": chat_id,
             "from_chat_id": from_chat_id,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "message_id": message_id,
         }
         return self.response(self.sendRequest("forwardMessage", data), types.Message)
 
-    def copyMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def copyMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. [See Telegram API](https://core.telegram.org/bots/api#copymessage)
 
         - - - - -
@@ -275,6 +279,7 @@ class BotApi:
         - `parse_mode` :`str` Mode for parsing entities in the new caption. See formatting options for more details.
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the new caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -296,13 +301,14 @@ class BotApi:
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("copyMessage", data), types.MessageId)
 
-    def sendPhoto(self, chat_id: Union[int, str, ], photo: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendPhoto(self, chat_id: Union[int, str, ], photo: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send photos. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendphoto)
 
         - - - - -
@@ -315,6 +321,7 @@ class BotApi:
         - `parse_mode` :`str` Mode for parsing entities in the photo caption. See formatting options for more details.
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -335,13 +342,14 @@ class BotApi:
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendPhoto", data), types.Message)
 
-    def sendAudio(self, chat_id: Union[int, str, ], audio: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, performer: str = None, title: str = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendAudio(self, chat_id: Union[int, str, ], audio: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, performer: str = None, title: str = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
         For sending voice messages, use the sendVoice method instead. [See Telegram API](https://core.telegram.org/bots/api#sendaudio)
 
@@ -359,6 +367,7 @@ class BotApi:
         - `title` :`str` Track name
         - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -383,13 +392,14 @@ class BotApi:
             "title": title,
             "thumb": helper.toDict(thumb, True),
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendAudio", data), types.Message)
 
-    def sendDocument(self, chat_id: Union[int, str, ], document: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_content_type_detection: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendDocument(self, chat_id: Union[int, str, ], document: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_content_type_detection: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#senddocument)
 
         - - - - -
@@ -404,6 +414,7 @@ class BotApi:
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_content_type_detection` :`bool` Disables automatic server-side content type detection for files uploaded using multipart/form-data
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -426,13 +437,14 @@ class BotApi:
             "caption_entities": caption_entities,
             "disable_content_type_detection": disable_content_type_detection,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendDocument", data), types.Message)
 
-    def sendVideo(self, chat_id: Union[int, str, ], video: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, supports_streaming: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVideo(self, chat_id: Union[int, str, ], video: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, supports_streaming: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvideo)
 
         - - - - -
@@ -450,6 +462,7 @@ class BotApi:
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `supports_streaming` :`bool` Pass True, if the uploaded video is suitable for streaming
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -475,13 +488,14 @@ class BotApi:
             "caption_entities": caption_entities,
             "supports_streaming": supports_streaming,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendVideo", data), types.Message)
 
-    def sendAnimation(self, chat_id: Union[int, str, ], animation: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendAnimation(self, chat_id: Union[int, str, ], animation: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendanimation)
 
         - - - - -
@@ -498,6 +512,7 @@ class BotApi:
         - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -522,13 +537,14 @@ class BotApi:
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendAnimation", data), types.Message)
 
-    def sendVoice(self, chat_id: Union[int, str, ], voice: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVoice(self, chat_id: Union[int, str, ], voice: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvoice)
 
         - - - - -
@@ -542,6 +558,7 @@ class BotApi:
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `duration` :`int` Duration of the voice message in seconds
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -563,13 +580,14 @@ class BotApi:
             "caption_entities": caption_entities,
             "duration": duration,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendVoice", data), types.Message)
 
-    def sendVideoNote(self, chat_id: Union[int, str, ], video_note: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, duration: int = None, length: int = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVideoNote(self, chat_id: Union[int, str, ], video_note: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, duration: int = None, length: int = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvideonote)
 
         - - - - -
@@ -582,6 +600,7 @@ class BotApi:
         - `length` :`int` Video width and height, i.e. diameter of the video message
         - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -599,13 +618,14 @@ class BotApi:
             "length": length,
             "thumb": helper.toDict(thumb, True),
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendVideoNote", data), types.Message)
 
-    def sendMediaGroup(self, chat_id: Union[int, str, ], media: list, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendMediaGroup(self, chat_id: Union[int, str, ], media: list, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmediagroup)
 
         - - - - -
@@ -614,6 +634,7 @@ class BotApi:
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `media` :`list` A JSON-serialized array describing messages to be sent, must include 2-10 items
         - `disable_notification` :`bool` Sends messages silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent messages from forwarding and saving
         - `reply_to_message_id` :`int` If the messages are a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -628,12 +649,13 @@ class BotApi:
             "chat_id": chat_id,
             "media": media,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
         }
         return self.response(self.sendRequest("sendMediaGroup", data), list)
 
-    def sendLocation(self, chat_id: Union[int, str, ], latitude: float, longitude: float, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, horizontal_accuracy: float = None, live_period: int = None, heading: int = None, proximity_alert_radius: int = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendLocation(self, chat_id: Union[int, str, ], latitude: float, longitude: float, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, horizontal_accuracy: float = None, live_period: int = None, heading: int = None, proximity_alert_radius: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send point on the map. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendlocation)
 
         - - - - -
@@ -648,6 +670,7 @@ class BotApi:
         - `heading` :`int` For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
         - `proximity_alert_radius` :`int` For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -667,6 +690,7 @@ class BotApi:
             "heading": heading,
             "proximity_alert_radius": proximity_alert_radius,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
@@ -729,7 +753,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("stopMessageLiveLocation", data), None)
 
-    def sendVenue(self, chat_id: Union[int, str, ], latitude: float, longitude: float, title: str, address: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, foursquare_id: str = None, foursquare_type: str = None, google_place_id: str = None, google_place_type: str = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVenue(self, chat_id: Union[int, str, ], latitude: float, longitude: float, title: str, address: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, foursquare_id: str = None, foursquare_type: str = None, google_place_id: str = None, google_place_type: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send information about a venue. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvenue)
 
         - - - - -
@@ -746,6 +770,7 @@ class BotApi:
         - `google_place_id` :`str` Google Places identifier of the venue
         - `google_place_type` :`str` Google Places type of the venue. (See supported types.)
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -767,13 +792,14 @@ class BotApi:
             "google_place_id": google_place_id,
             "google_place_type": google_place_type,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendVenue", data), types.Message)
 
-    def sendContact(self, chat_id: Union[int, str, ], phone_number: str, first_name: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, last_name: str = None, vcard: str = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendContact(self, chat_id: Union[int, str, ], phone_number: str, first_name: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, last_name: str = None, vcard: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send phone contacts. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendcontact)
 
         - - - - -
@@ -786,6 +812,7 @@ class BotApi:
         - `last_name` :`str` Contact's last name
         - `vcard` :`str` Additional data about the contact in the form of a vCard, 0-2048 bytes
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -803,13 +830,14 @@ class BotApi:
             "last_name": last_name,
             "vcard": vcard,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendContact", data), types.Message)
 
-    def sendPoll(self, chat_id: Union[int, str, ], question: str, options: list, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, is_anonymous: bool = None, type: str = None, allows_multiple_answers: bool = None, correct_option_id: int = None, explanation: str = None, explanation_parse_mode: str = None, explanation_entities: list = None, open_period: int = None, close_date: int = None, is_closed: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendPoll(self, chat_id: Union[int, str, ], question: str, options: list, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, is_anonymous: bool = None, type: str = None, allows_multiple_answers: bool = None, correct_option_id: int = None, explanation: str = None, explanation_parse_mode: str = None, explanation_entities: list = None, open_period: int = None, close_date: int = None, is_closed: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send a native poll. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendpoll)
 
         - - - - -
@@ -830,6 +858,7 @@ class BotApi:
         - `close_date` :`int` Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
         - `is_closed` :`bool` Pass True, if the poll needs to be immediately closed. This can be useful for poll preview.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -855,13 +884,14 @@ class BotApi:
             "close_date": close_date,
             "is_closed": is_closed,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendPoll", data), types.Message)
 
-    def sendDice(self, chat_id: Union[int, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, emoji: str = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendDice(self, chat_id: Union[int, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, emoji: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#senddice)
 
         - - - - -
@@ -871,6 +901,7 @@ class BotApi:
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `emoji` :`str` Emoji on which the dice throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Dice can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -885,6 +916,7 @@ class BotApi:
             "chat_id": chat_id,
             "emoji": emoji,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
@@ -978,7 +1010,7 @@ class BotApi:
         - - - - -
         **Args**:
 
-        - `chat_id` :`Union[int,str,]` Unique identifier for the target group or username of the target supergroup or channel (in the format @username)
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target group or username of the target supergroup or channel (in the format @channelusername)
         - `user_id` :`int` Unique identifier of the target user
         - `only_if_banned` :`bool` Do nothing if the user is not banned
 
@@ -1078,15 +1110,14 @@ class BotApi:
         }
         return self.response(self.sendRequest("setChatAdministratorCustomTitle", data), bool)
 
-    def banChatSenderChat(self, chat_id: Union[int, str, ], sender_chat_id: int, until_date: int = None):
-        """Use this method to ban a channel chat in a supergroup or a channel. The owner of the chat will not be able to send messages and join live streams on behalf of the chat, unless it is unbanned first. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#banchatsenderchat)
+    def banChatSenderChat(self, chat_id: Union[int, str, ], sender_chat_id: int):
+        """Use this method to ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#banchatsenderchat)
 
         - - - - -
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `sender_chat_id` :`int` Unique identifier of the target sender chat
-        - `until_date` :`int` Date when the sender chat will be unbanned, unix time. If the chat is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever.
 
         **Returns:**
 
@@ -1095,7 +1126,6 @@ class BotApi:
         data = {
             "chat_id": chat_id,
             "sender_chat_id": sender_chat_id,
-            "until_date": until_date,
         }
         return self.response(self.sendRequest("banChatSenderChat", data), bool)
 
@@ -1761,8 +1791,8 @@ class BotApi:
         }
         return self.response(self.sendRequest("deleteMessage", data), bool)
 
-    def sendSticker(self, chat_id: Union[int, str, ], sticker: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """Use this method to send static .WEBP or animated .TGS stickers. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendsticker)
+    def sendSticker(self, chat_id: Union[int, str, ], sticker: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+        """Use this method to send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendsticker)
 
         - - - - -
         **Args**:
@@ -1771,6 +1801,7 @@ class BotApi:
         - `sticker` :`Union[types.InputFile,str,]` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -1785,6 +1816,7 @@ class BotApi:
             "chat_id": chat_id,
             "sticker": helper.toDict(sticker, True),
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
@@ -1827,8 +1859,8 @@ class BotApi:
         }
         return self.response(self.sendRequest("uploadStickerFile", data), types.File)
 
-    def createNewStickerSet(self, user_id: int, name: str, title: str, emojis: str, png_sticker: Union[types.InputFile, str, ] = None, tgs_sticker: types.InputFile = None, contains_masks: bool = None, mask_position: types.MaskPosition = None):
-        """Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker or tgs_sticker. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#createnewstickerset)
+    def createNewStickerSet(self, user_id: int, name: str, title: str, emojis: str, png_sticker: Union[types.InputFile, str, ] = None, tgs_sticker: types.InputFile = None, webm_sticker: types.InputFile = None, contains_masks: bool = None, mask_position: types.MaskPosition = None):
+        """Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#createnewstickerset)
 
         - - - - -
         **Args**:
@@ -1838,7 +1870,8 @@ class BotApi:
         - `title` :`str` Sticker set title, 1-64 characters
         - `emojis` :`str` One or more emoji corresponding to the sticker
         - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
-        - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements
+        - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#animated-sticker-requirements for technical requirements
+        - `webm_sticker` :`types.InputFile` WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#video-sticker-requirements for technical requirements
         - `contains_masks` :`bool` Pass True, if a set of mask stickers should be created
         - `mask_position` :`types.MaskPosition` A JSON-serialized object for position where the mask should be placed on faces
 
@@ -1852,14 +1885,15 @@ class BotApi:
             "title": title,
             "png_sticker": helper.toDict(png_sticker, True),
             "tgs_sticker": helper.toDict(tgs_sticker, True),
+            "webm_sticker": helper.toDict(webm_sticker, True),
             "emojis": emojis,
             "contains_masks": contains_masks,
             "mask_position": helper.toDict(mask_position, True),
         }
         return self.response(self.sendRequest("createNewStickerSet", data), bool)
 
-    def addStickerToSet(self, user_id: int, name: str, emojis: str, png_sticker: Union[types.InputFile, str, ] = None, tgs_sticker: types.InputFile = None, mask_position: types.MaskPosition = None):
-        """Use this method to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker or tgs_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#addstickertoset)
+    def addStickerToSet(self, user_id: int, name: str, emojis: str, png_sticker: Union[types.InputFile, str, ] = None, tgs_sticker: types.InputFile = None, webm_sticker: types.InputFile = None, mask_position: types.MaskPosition = None):
+        """Use this method to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#addstickertoset)
 
         - - - - -
         **Args**:
@@ -1868,7 +1902,8 @@ class BotApi:
         - `name` :`str` Sticker set name
         - `emojis` :`str` One or more emoji corresponding to the sticker
         - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
-        - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/animated_stickers#technical-requirements for technical requirements
+        - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#animated-sticker-requirements for technical requirements
+        - `webm_sticker` :`types.InputFile` WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#video-sticker-requirements for technical requirements
         - `mask_position` :`types.MaskPosition` A JSON-serialized object for position where the mask should be placed on faces
 
         **Returns:**
@@ -1880,6 +1915,7 @@ class BotApi:
             "name": name,
             "png_sticker": helper.toDict(png_sticker, True),
             "tgs_sticker": helper.toDict(tgs_sticker, True),
+            "webm_sticker": helper.toDict(webm_sticker, True),
             "emojis": emojis,
             "mask_position": helper.toDict(mask_position, True),
         }
@@ -1922,14 +1958,14 @@ class BotApi:
         return self.response(self.sendRequest("deleteStickerFromSet", data), bool)
 
     def setStickerSetThumb(self, user_id: int, name: str, thumb: Union[types.InputFile, str, ] = None):
-        """Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setstickersetthumb)
+        """Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setstickersetthumb)
 
         - - - - -
         **Args**:
 
         - `user_id` :`int` User identifier of the sticker set owner
         - `name` :`str` Sticker set name
-        - `thumb` :`Union[types.InputFile,str,]` A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/animated_stickers#technical-requirements for animated sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set thumbnail can't be uploaded via HTTP URL.
+        - `thumb` :`Union[types.InputFile,str,]` A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#animated-sticker-requirements for animated sticker technical requirements, or a WEBM video with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#video-sticker-requirements for video sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set thumbnails can't be uploaded via HTTP URL.
 
         **Returns:**
 
@@ -1971,7 +2007,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("answerInlineQuery", data), bool)
 
-    def sendInvoice(self, chat_id: Union[int, str, ], title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, max_tip_amount: int = None, suggested_tip_amounts: list = None, start_parameter: str = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendInvoice(self, chat_id: Union[int, str, ], title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, max_tip_amount: int = None, suggested_tip_amounts: list = None, start_parameter: str = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send invoices. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendinvoice)
 
         - - - - -
@@ -2001,6 +2037,7 @@ class BotApi:
         - `send_email_to_provider` :`bool` Pass True, if user's email address should be sent to provider
         - `is_flexible` :`bool` Pass True, if the final price depends on the shipping method
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -2035,6 +2072,7 @@ class BotApi:
             "send_email_to_provider": send_email_to_provider,
             "is_flexible": is_flexible,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
@@ -2105,7 +2143,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("setPassportDataErrors", data), bool)
 
-    def sendGame(self, chat_id: int, game_short_name: str, reply_markup: types.InlineKeyboardMarkup = None, disable_notification: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendGame(self, chat_id: int, game_short_name: str, reply_markup: types.InlineKeyboardMarkup = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send a game. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendgame)
 
         - - - - -
@@ -2115,6 +2153,7 @@ class BotApi:
         - `game_short_name` :`str` Short name of the game, serves as the unique identifier for the game. Set up your games via Botfather.
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
+        - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
         - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
 
@@ -2129,6 +2168,7 @@ class BotApi:
             "chat_id": chat_id,
             "game_short_name": game_short_name,
             "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
             "reply_markup": helper.toDict(reply_markup, True),
