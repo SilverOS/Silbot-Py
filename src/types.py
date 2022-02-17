@@ -1,6 +1,3 @@
-from silbot import helper, objects
-
-
 class Update:
     """This object represents an incoming update.At most one of the optional parameters can be present in any given update.[See on Telegram API](https://core.telegram.org/bots/api#update)
 
@@ -184,14 +181,14 @@ class Message:
     **Fields**:
 
     - `message_id`: `int` - Unique message identifier inside this chat
-    - `user`: `User` - Optional. Sender, empty for messages sent to channels
-    - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group
+    - `user`: `User` - Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
+    - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
     - `date`: `int` - Date the message was sent in Unix time
     - `chat`: `Chat` - Conversation the message belongs to
     - `forward_from`: `User` - Optional. For forwarded messages, sender of the original message
     - `forward_from_chat`: `Chat` - Optional. For messages forwarded from channels or from anonymous administrators, information about the original sender chat
     - `forward_from_message_id`: `int` - Optional. For messages forwarded from channels, identifier of the original message in the channel
-    - `forward_signature`: `string` - Optional. For messages forwarded from channels, signature of the post author if present
+    - `forward_signature`: `string` - Optional. For forwarded messages that were originally sent in channels or by an anonymous chat administrator, signature of the message sender if present
     - `forward_sender_name`: `string` - Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
     - `forward_date`: `int` - Optional. For forwarded messages, date the original message was sent in Unix time
     - `is_automatic_forward`: `bool` - Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
@@ -337,7 +334,7 @@ class MessageEntity:
     - - - - -
     **Fields**:
 
-    - `type`: `string` - Type of the entity. Can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)
+    - `type`: `string` - Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)
     - `offset`: `int` - Offset in UTF-16 code units to the start of the entity
     - `length`: `int` - Length of the entity in UTF-16 code units
     - `url`: `string` - Optional. For “text_link” only, url that will be opened after user taps on the text
@@ -1574,8 +1571,8 @@ class BotCommand:
     - - - - -
     **Fields**:
 
-    - `command`: `string` - Text of the command, 1-32 characters. Can contain only lowercase English letters, digits and underscores.
-    - `description`: `string` - Description of the command, 3-256 characters.
+    - `command`: `string` - Text of the command; 1-32 characters. Can contain only lowercase English letters, digits and underscores.
+    - `description`: `string` - Description of the command; 1-256 characters.
     """
 
     def __init__(self, dictionary=None):
@@ -1981,6 +1978,7 @@ class Sticker:
     - `width`: `int` - Sticker width
     - `height`: `int` - Sticker height
     - `is_animated`: `bool` - True, if the sticker is animated
+    - `is_video`: `bool` - True, if the sticker is a video sticker
     - `thumb`: `PhotoSize` - Optional. Sticker thumbnail in the .WEBP or .JPG format
     - `emoji`: `string` - Optional. Emoji associated with the sticker
     - `set_name`: `string` - Optional. Name of the sticker set to which the sticker belongs
@@ -1997,6 +1995,7 @@ class Sticker:
         self.width = dictionary["width"] if "width" in dictionary else None
         self.height = dictionary["height"] if "height" in dictionary else None
         self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
+        self.is_video = dictionary["is_video"] if "is_video" in dictionary else None
         self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
         self.emoji = dictionary["emoji"] if "emoji" in dictionary else None
         self.set_name = dictionary["set_name"] if "set_name" in dictionary else None
@@ -2017,9 +2016,10 @@ class StickerSet:
     - `name`: `string` - Sticker set name
     - `title`: `string` - Sticker set title
     - `is_animated`: `bool` - True, if the sticker set contains animated stickers
+    - `is_video`: `bool` - True, if the sticker set contains video stickers
     - `contains_masks`: `bool` - True, if the sticker set contains masks
     - `stickers`: `list` - List of all set stickers
-    - `thumb`: `PhotoSize` - Optional. Sticker set thumbnail in the .WEBP or .TGS format
+    - `thumb`: `PhotoSize` - Optional. Sticker set thumbnail in the .WEBP, .TGS, or .WEBM format
     """
 
     def __init__(self, dictionary=None):
@@ -2029,6 +2029,7 @@ class StickerSet:
         self.name = dictionary["name"] if "name" in dictionary else None
         self.title = dictionary["title"] if "title" in dictionary else None
         self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
+        self.is_video = dictionary["is_video"] if "is_video" in dictionary else None
         self.contains_masks = dictionary["contains_masks"] if "contains_masks" in dictionary else None
         self.stickers = list(dictionary["stickers"]) if "stickers" in dictionary else None
         self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
