@@ -1,3 +1,6 @@
+from silbot import helper, objects
+
+
 class Update:
     """This object represents an incoming update.At most one of the optional parameters can be present in any given update.[See on Telegram API](https://core.telegram.org/bots/api#update)
 
@@ -58,6 +61,7 @@ class WebhookInfo:
     - `ip_address`: `string` - Optional. Currently used webhook IP address
     - `last_error_date`: `int` - Optional. Unix time for the most recent error that happened when trying to deliver an update via webhook
     - `last_error_message`: `string` - Optional. Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook
+    - `last_synchronization_error_date`: `int` - Optional. Unix time of the most recent error that happened when trying to synchronize available updates with Telegram datacenters
     - `max_connections`: `int` - Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
     - `allowed_updates`: `list` - Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member
     """
@@ -72,6 +76,7 @@ class WebhookInfo:
         self.ip_address = dictionary["ip_address"] if "ip_address" in dictionary else None
         self.last_error_date = dictionary["last_error_date"] if "last_error_date" in dictionary else None
         self.last_error_message = dictionary["last_error_message"] if "last_error_message" in dictionary else None
+        self.last_synchronization_error_date = dictionary["last_synchronization_error_date"] if "last_synchronization_error_date" in dictionary else None
         self.max_connections = dictionary["max_connections"] if "max_connections" in dictionary else None
         self.allowed_updates = list(dictionary["allowed_updates"]) if "allowed_updates" in dictionary else None
 
@@ -182,7 +187,7 @@ class Message:
 
     - `message_id`: `int` - Unique message identifier inside this chat
     - `user`: `User` - Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
-    - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
+    - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group.  For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
     - `date`: `int` - Date the message was sent in Unix time
     - `chat`: `Chat` - Conversation the message belongs to
     - `forward_from`: `User` - Optional. For forwarded messages, sender of the original message
@@ -233,10 +238,11 @@ class Message:
     - `connected_website`: `string` - Optional. The domain name of the website on which the user has logged in. More about Telegram Login »
     - `passport_data`: `PassportData` - Optional. Telegram Passport data
     - `proximity_alert_triggered`: `ProximityAlertTriggered` - Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
-    - `voice_chat_scheduled`: `VoiceChatScheduled` - Optional. Service message: voice chat scheduled
-    - `voice_chat_started`: `VoiceChatStarted` - Optional. Service message: voice chat started
-    - `voice_chat_ended`: `VoiceChatEnded` - Optional. Service message: voice chat ended
-    - `voice_chat_participants_invited`: `VoiceChatParticipantsInvited` - Optional. Service message: new participants invited to a voice chat
+    - `video_chat_scheduled`: `VideoChatScheduled` - Optional. Service message: video chat scheduled
+    - `video_chat_started`: `VideoChatStarted` - Optional. Service message: video chat started
+    - `video_chat_ended`: `VideoChatEnded` - Optional. Service message: video chat ended
+    - `video_chat_participants_invited`: `VideoChatParticipantsInvited` - Optional. Service message: new participants invited to a video chat
+    - `web_app_data`: `WebAppData` - Optional. Service message: data sent by a Web App
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
     """
 
@@ -297,10 +303,11 @@ class Message:
         self.connected_website = dictionary["connected_website"] if "connected_website" in dictionary else None
         self.passport_data = PassportData(dictionary["passport_data"]) if "passport_data" in dictionary else None
         self.proximity_alert_triggered = ProximityAlertTriggered(dictionary["proximity_alert_triggered"]) if "proximity_alert_triggered" in dictionary else None
-        self.voice_chat_scheduled = VoiceChatScheduled(dictionary["voice_chat_scheduled"]) if "voice_chat_scheduled" in dictionary else None
-        self.voice_chat_started = VoiceChatStarted(dictionary["voice_chat_started"]) if "voice_chat_started" in dictionary else None
-        self.voice_chat_ended = VoiceChatEnded(dictionary["voice_chat_ended"]) if "voice_chat_ended" in dictionary else None
-        self.voice_chat_participants_invited = VoiceChatParticipantsInvited(dictionary["voice_chat_participants_invited"]) if "voice_chat_participants_invited" in dictionary else None
+        self.video_chat_scheduled = VideoChatScheduled(dictionary["video_chat_scheduled"]) if "video_chat_scheduled" in dictionary else None
+        self.video_chat_started = VideoChatStarted(dictionary["video_chat_started"]) if "video_chat_started" in dictionary else None
+        self.video_chat_ended = VideoChatEnded(dictionary["video_chat_ended"]) if "video_chat_ended" in dictionary else None
+        self.video_chat_participants_invited = VideoChatParticipantsInvited(dictionary["video_chat_participants_invited"]) if "video_chat_participants_invited" in dictionary else None
+        self.web_app_data = WebAppData(dictionary["web_app_data"]) if "web_app_data" in dictionary else None
         self.reply_markup = InlineKeyboardMarkup(dictionary["reply_markup"]) if "reply_markup" in dictionary else None
 
         for index, value in self.dict.items():
@@ -617,7 +624,7 @@ class Dice:
     **Fields**:
 
     - `emoji`: `string` - Emoji on which the dice throw animation is based
-    - `value`: `int` - Value of the dice, 1-6 for “”, “” and “” base emoji, 1-5 for “” and “” base emoji, 1-64 for “” base emoji
+    - `value`: `int` - Value of the dice, 1-6 for “🎲”, “🎯” and “🎳” base emoji, 1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
     """
 
     def __init__(self, dictionary=None):
@@ -784,6 +791,28 @@ class Venue:
                 setattr(self, index, helper.setBvar(value))
 
 
+class WebAppData:
+    """Contains data sent from a Web App to the bot.[See on Telegram API](https://core.telegram.org/bots/api#webappdata)
+
+    - - - - -
+    **Fields**:
+
+    - `data`: `string` - The data. Be aware that a bad client can send arbitrary data in this field.
+    - `button_text`: `string` - Text of the web_app keyboard button, from which the Web App was opened. Be aware that a bad client can send arbitrary data in this field.
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.data = dictionary["data"] if "data" in dictionary else None
+        self.button_text = dictionary["button_text"] if "button_text" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
 class ProximityAlertTriggered:
     """This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.[See on Telegram API](https://core.telegram.org/bots/api#proximityalerttriggered)
 
@@ -828,13 +857,13 @@ class MessageAutoDeleteTimerChanged:
                 setattr(self, index, helper.setBvar(value))
 
 
-class VoiceChatScheduled:
-    """This object represents a service message about a voice chat scheduled in the chat.[See on Telegram API](https://core.telegram.org/bots/api#voicechatscheduled)
+class VideoChatScheduled:
+    """This object represents a service message about a video chat scheduled in the chat.[See on Telegram API](https://core.telegram.org/bots/api#videochatscheduled)
 
     - - - - -
     **Fields**:
 
-    - `start_date`: `int` - Point in time (Unix timestamp) when the voice chat is supposed to be started by a chat administrator
+    - `start_date`: `int` - Point in time (Unix timestamp) when the video chat is supposed to be started by a chat administrator
     """
 
     def __init__(self, dictionary=None):
@@ -848,8 +877,8 @@ class VoiceChatScheduled:
                 setattr(self, index, helper.setBvar(value))
 
 
-class VoiceChatStarted:
-    """This object represents a service message about a voice chat started in the chat. Currently holds no information.[See on Telegram API](https://core.telegram.org/bots/api#voicechatstarted)
+class VideoChatStarted:
+    """This object represents a service message about a video chat started in the chat. Currently holds no information.[See on Telegram API](https://core.telegram.org/bots/api#videochatstarted)
 
     - - - - -
     **Fields**:
@@ -866,13 +895,13 @@ class VoiceChatStarted:
                 setattr(self, index, helper.setBvar(value))
 
 
-class VoiceChatEnded:
-    """This object represents a service message about a voice chat ended in the chat.[See on Telegram API](https://core.telegram.org/bots/api#voicechatended)
+class VideoChatEnded:
+    """This object represents a service message about a video chat ended in the chat.[See on Telegram API](https://core.telegram.org/bots/api#videochatended)
 
     - - - - -
     **Fields**:
 
-    - `duration`: `int` - Voice chat duration in seconds
+    - `duration`: `int` - Video chat duration in seconds
     """
 
     def __init__(self, dictionary=None):
@@ -886,13 +915,13 @@ class VoiceChatEnded:
                 setattr(self, index, helper.setBvar(value))
 
 
-class VoiceChatParticipantsInvited:
-    """This object represents a service message about new members invited to a voice chat.[See on Telegram API](https://core.telegram.org/bots/api#voicechatparticipantsinvited)
+class VideoChatParticipantsInvited:
+    """This object represents a service message about new members invited to a video chat.[See on Telegram API](https://core.telegram.org/bots/api#videochatparticipantsinvited)
 
     - - - - -
     **Fields**:
 
-    - `users`: `list` - Optional. New members that were invited to the voice chat
+    - `users`: `list` - New members that were invited to the video chat
     """
 
     def __init__(self, dictionary=None):
@@ -954,6 +983,26 @@ class File:
                 setattr(self, index, helper.setBvar(value))
 
 
+class WebAppInfo:
+    """Contains information about a Web App.[See on Telegram API](https://core.telegram.org/bots/api#webappinfo)
+
+    - - - - -
+    **Fields**:
+
+    - `url`: `string` - An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.url = dictionary["url"] if "url" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
 class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
     """This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).[See on Telegram API](https://core.telegram.org/bots/api#replykeyboardmarkup)
 
@@ -983,15 +1032,16 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
 
 
 class KeyboardButton:
-    """This object represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields request_contact, request_location, and request_poll are mutually exclusive.[See on Telegram API](https://core.telegram.org/bots/api#keyboardbutton)
+    """This object represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields web_app, request_contact, request_location, and request_poll are mutually exclusive.[See on Telegram API](https://core.telegram.org/bots/api#keyboardbutton)
 
     - - - - -
     **Fields**:
 
     - `text`: `string` - Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed
-    - `request_contact`: `bool` - Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only
-    - `request_location`: `bool` - Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only
-    - `request_poll`: `KeyboardButtonPollType` - Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only
+    - `request_contact`: `bool` - Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only.
+    - `request_location`: `bool` - Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only.
+    - `request_poll`: `KeyboardButtonPollType` - Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only.
+    - `web_app`: `WebAppInfo` - Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
     """
 
     def __init__(self, dictionary=None):
@@ -1002,6 +1052,7 @@ class KeyboardButton:
         self.request_contact = dictionary["request_contact"] if "request_contact" in dictionary else None
         self.request_location = dictionary["request_location"] if "request_location" in dictionary else None
         self.request_poll = KeyboardButtonPollType(dictionary["request_poll"]) if "request_poll" in dictionary else None
+        self.web_app = WebAppInfo(dictionary["web_app"]) if "web_app" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1078,8 +1129,9 @@ class InlineKeyboardButton:
 
     - `text`: `string` - Label text on the button
     - `url`: `string` - Optional. HTTP or tg:// url to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.
-    - `login_url`: `LoginUrl` - Optional. An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
     - `callback_data`: `string` - Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
+    - `web_app`: `WebAppInfo` - Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot.
+    - `login_url`: `LoginUrl` - Optional. An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
     - `switch_inline_query`: `string` - Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
     - `switch_inline_query_current_chat`: `string` - Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot's username will be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat – good for selecting something from multiple options.
     - `callback_game`: `CallbackGame` - Optional. Description of the game that will be launched when the user presses the button.NOTE: This type of button must always be the first button in the first row.
@@ -1092,8 +1144,9 @@ class InlineKeyboardButton:
         self.dict = dictionary
         self.text = dictionary["text"] if "text" in dictionary else None
         self.url = dictionary["url"] if "url" in dictionary else None
-        self.login_url = LoginUrl(dictionary["login_url"]) if "login_url" in dictionary else None
         self.callback_data = dictionary["callback_data"] if "callback_data" in dictionary else None
+        self.web_app = WebAppInfo(dictionary["web_app"]) if "web_app" in dictionary else None
+        self.login_url = LoginUrl(dictionary["login_url"]) if "login_url" in dictionary else None
         self.switch_inline_query = dictionary["switch_inline_query"] if "switch_inline_query" in dictionary else None
         self.switch_inline_query_current_chat = dictionary["switch_inline_query_current_chat"] if "switch_inline_query_current_chat" in dictionary else None
         self.callback_game = CallbackGame(dictionary["callback_game"]) if "callback_game" in dictionary else None
@@ -1249,6 +1302,46 @@ class ChatInviteLink:
                 setattr(self, index, helper.setBvar(value))
 
 
+class ChatAdministratorRights:
+    """Represents the rights of an administrator in a chat.[See on Telegram API](https://core.telegram.org/bots/api#chatadministratorrights)
+
+    - - - - -
+    **Fields**:
+
+    - `is_anonymous`: `bool` - True, if the user's presence in the chat is hidden
+    - `can_manage_chat`: `bool` - True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
+    - `can_delete_messages`: `bool` - True, if the administrator can delete messages of other users
+    - `can_manage_video_chats`: `bool` - True, if the administrator can manage video chats
+    - `can_restrict_members`: `bool` - True, if the administrator can restrict, ban or unban chat members
+    - `can_promote_members`: `bool` - True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
+    - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
+    - `can_invite_users`: `bool` - True, if the user is allowed to invite new users to the chat
+    - `can_post_messages`: `bool` - Optional. True, if the administrator can post in the channel; channels only
+    - `can_edit_messages`: `bool` - Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
+    - `can_pin_messages`: `bool` - Optional. True, if the user is allowed to pin messages; groups and supergroups only
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
+        self.can_manage_chat = dictionary["can_manage_chat"] if "can_manage_chat" in dictionary else None
+        self.can_delete_messages = dictionary["can_delete_messages"] if "can_delete_messages" in dictionary else None
+        self.can_manage_video_chats = dictionary["can_manage_video_chats"] if "can_manage_video_chats" in dictionary else None
+        self.can_restrict_members = dictionary["can_restrict_members"] if "can_restrict_members" in dictionary else None
+        self.can_promote_members = dictionary["can_promote_members"] if "can_promote_members" in dictionary else None
+        self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
+        self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
+        self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
+        self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
+        self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
 class ChatMember:
     """This object contains information about one member of a chat. Currently, the following 6 types of chat members are supported:[See on Telegram API](https://core.telegram.org/bots/api#chatmember)
 
@@ -1305,7 +1398,7 @@ class ChatMemberAdministrator:
     - `is_anonymous`: `bool` - True, if the user's presence in the chat is hidden
     - `can_manage_chat`: `bool` - True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
     - `can_delete_messages`: `bool` - True, if the administrator can delete messages of other users
-    - `can_manage_voice_chats`: `bool` - True, if the administrator can manage voice chats
+    - `can_manage_video_chats`: `bool` - True, if the administrator can manage video chats
     - `can_restrict_members`: `bool` - True, if the administrator can restrict, ban or unban chat members
     - `can_promote_members`: `bool` - True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
     - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
@@ -1326,7 +1419,7 @@ class ChatMemberAdministrator:
         self.is_anonymous = dictionary["is_anonymous"] if "is_anonymous" in dictionary else None
         self.can_manage_chat = dictionary["can_manage_chat"] if "can_manage_chat" in dictionary else None
         self.can_delete_messages = dictionary["can_delete_messages"] if "can_delete_messages" in dictionary else None
-        self.can_manage_voice_chats = dictionary["can_manage_voice_chats"] if "can_manage_voice_chats" in dictionary else None
+        self.can_manage_video_chats = dictionary["can_manage_video_chats"] if "can_manage_video_chats" in dictionary else None
         self.can_restrict_members = dictionary["can_restrict_members"] if "can_restrict_members" in dictionary else None
         self.can_promote_members = dictionary["can_promote_members"] if "can_promote_members" in dictionary else None
         self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
@@ -1741,6 +1834,88 @@ class BotCommandScopeChatMember:
         self.dict = dictionary
         self.type = dictionary["type"] if "type" in dictionary else None
         self.user_id = dictionary["user_id"] if "user_id" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class MenuButton:
+    """This object describes the bot's menu button in a private chat. It should be one of[See on Telegram API](https://core.telegram.org/bots/api#menubutton)
+
+    - - - - -
+    **Fields**:
+
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class MenuButtonCommands:
+    """Represents a menu button, which opens the bot's list of commands.[See on Telegram API](https://core.telegram.org/bots/api#menubuttoncommands)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Type of the button, must be commands
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class MenuButtonWebApp:
+    """Represents a menu button, which launches a Web App.[See on Telegram API](https://core.telegram.org/bots/api#menubuttonwebapp)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Type of the button, must be web_app
+    - `text`: `string` - Text on the button
+    - `web_app`: `WebAppInfo` - Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery.
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
+        self.text = dictionary["text"] if "text" in dictionary else None
+        self.web_app = WebAppInfo(dictionary["web_app"]) if "web_app" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class MenuButtonDefault:
+    """Describes that no specific value for the menu button was set.[See on Telegram API](https://core.telegram.org/bots/api#menubuttondefault)
+
+    - - - - -
+    **Fields**:
+
+    - `type`: `string` - Type of the button, must be default
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.type = dictionary["type"] if "type" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -3119,6 +3294,26 @@ class ChosenInlineResult:
         self.location = Location(dictionary["location"]) if "location" in dictionary else None
         self.inline_message_id = dictionary["inline_message_id"] if "inline_message_id" in dictionary else None
         self.query = dictionary["query"] if "query" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class SentWebAppMessage:
+    """Contains information about an inline message sent by a Web App on behalf of a user.[See on Telegram API](https://core.telegram.org/bots/api#sentwebappmessage)
+
+    - - - - -
+    **Fields**:
+
+    - `inline_message_id`: `string` - Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached to the message.
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.inline_message_id = dictionary["inline_message_id"] if "inline_message_id" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
