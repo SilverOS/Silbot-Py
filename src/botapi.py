@@ -899,7 +899,7 @@ class BotApi:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
-        - `emoji` :`str` Emoji on which the dice throw animation is based. Currently, must be one of “”, “”, “”, “”, “”, or “”. Dice can have values 1-6 for “”, “” and “”, values 1-5 for “” and “”, and values 1-64 for “”. Defaults to “”
+        - `emoji` :`str` Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -1048,7 +1048,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("restrictChatMember", data), bool)
 
-    def promoteChatMember(self, chat_id: Union[int, str, ], user_id: int, is_anonymous: bool = None, can_manage_chat: bool = None, can_post_messages: bool = None, can_edit_messages: bool = None, can_delete_messages: bool = None, can_manage_voice_chats: bool = None, can_restrict_members: bool = None, can_promote_members: bool = None, can_change_info: bool = None, can_invite_users: bool = None, can_pin_messages: bool = None):
+    def promoteChatMember(self, chat_id: Union[int, str, ], user_id: int, is_anonymous: bool = None, can_manage_chat: bool = None, can_post_messages: bool = None, can_edit_messages: bool = None, can_delete_messages: bool = None, can_manage_video_chats: bool = None, can_restrict_members: bool = None, can_promote_members: bool = None, can_change_info: bool = None, can_invite_users: bool = None, can_pin_messages: bool = None):
         """Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass False for all boolean parameters to demote a user. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#promotechatmember)
 
         - - - - -
@@ -1061,7 +1061,7 @@ class BotApi:
         - `can_post_messages` :`bool` Pass True, if the administrator can create channel posts, channels only
         - `can_edit_messages` :`bool` Pass True, if the administrator can edit messages of other users and can pin messages, channels only
         - `can_delete_messages` :`bool` Pass True, if the administrator can delete messages of other users
-        - `can_manage_voice_chats` :`bool` Pass True, if the administrator can manage voice chats
+        - `can_manage_video_chats` :`bool` Pass True, if the administrator can manage video chats
         - `can_restrict_members` :`bool` Pass True, if the administrator can restrict, ban or unban chat members
         - `can_promote_members` :`bool` Pass True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)
         - `can_change_info` :`bool` Pass True, if the administrator can change chat title, photo and other settings
@@ -1080,7 +1080,7 @@ class BotApi:
             "can_post_messages": can_post_messages,
             "can_edit_messages": can_edit_messages,
             "can_delete_messages": can_delete_messages,
-            "can_manage_voice_chats": can_manage_voice_chats,
+            "can_manage_video_chats": can_manage_video_chats,
             "can_restrict_members": can_restrict_members,
             "can_promote_members": can_promote_members,
             "can_change_info": can_change_info,
@@ -1634,6 +1634,78 @@ class BotApi:
         }
         return self.response(self.sendRequest("getMyCommands", data), list)
 
+    def setChatMenuButton(self, chat_id: int = None, menu_button: types.MenuButton = None):
+        """Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setchatmenubutton)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`int` Unique identifier for the target private chat. If not specified, default bot's menu button will be changed
+        - `menu_button` :`types.MenuButton` A JSON-serialized object for the new bot's menu button. Defaults to MenuButtonDefault
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "menu_button": helper.toDict(menu_button, True),
+        }
+        return self.response(self.sendRequest("setChatMenuButton", data), bool)
+
+    def getChatMenuButton(self, chat_id: int = None):
+        """Use this method to get the current value of the bot's menu button in a private chat, or the default menu button. Returns MenuButton on success. [See Telegram API](https://core.telegram.org/bots/api#getchatmenubutton)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`int` Unique identifier for the target private chat. If not specified, default bot's menu button will be returned
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.MenuButton` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+        }
+        return self.response(self.sendRequest("getChatMenuButton", data), types.MenuButton)
+
+    def setMyDefaultAdministratorRights(self, rights: types.ChatAdministratorRights = None, for_channels: bool = None):
+        """Use this method to change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setmydefaultadministratorrights)
+
+        - - - - -
+        **Args**:
+
+        - `rights` :`types.ChatAdministratorRights` A JSON-serialized object describing new default administrator rights. If not specified, the default administrator rights will be cleared.
+        - `for_channels` :`bool` Pass True to change the default administrator rights of the bot in channels. Otherwise, the default administrator rights of the bot for groups and supergroups will be changed.
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "rights": helper.toDict(rights, True),
+            "for_channels": for_channels,
+        }
+        return self.response(self.sendRequest("setMyDefaultAdministratorRights", data), bool)
+
+    def getMyDefaultAdministratorRights(self, for_channels: bool = None):
+        """Use this method to get the current default administrator rights of the bot. Returns ChatAdministratorRights on success. [See Telegram API](https://core.telegram.org/bots/api#getmydefaultadministratorrights)
+
+        - - - - -
+        **Args**:
+
+        - `for_channels` :`bool` Pass True to get default administrator rights of the bot in channels. Otherwise, default administrator rights of the bot for groups and supergroups will be returned.
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.ChatAdministratorRights` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "for_channels": for_channels,
+        }
+        return self.response(self.sendRequest("getMyDefaultAdministratorRights", data), types.ChatAdministratorRights)
+
     def editMessageText(self, text: str, chat_id: Union[int, str, ] = None, message_id: int = None, inline_message_id: str = None, reply_markup: types.InlineKeyboardMarkup = None, parse_mode: str = None, entities: list = None, disable_web_page_preview: bool = None):
         """Use this method to edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned. [See Telegram API](https://core.telegram.org/bots/api#editmessagetext)
 
@@ -1866,7 +1938,7 @@ class BotApi:
         **Args**:
 
         - `user_id` :`int` User identifier of created sticker set owner
-        - `name` :`str` Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in “_by_<bot username>”. <bot_username> is case insensitive. 1-64 characters.
+        - `name` :`str` Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in "_by_<bot_username>". <bot_username> is case insensitive. 1-64 characters.
         - `title` :`str` Sticker set title, 1-64 characters
         - `emojis` :`str` One or more emoji corresponding to the sticker
         - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
@@ -2006,6 +2078,25 @@ class BotApi:
             "switch_pm_parameter": switch_pm_parameter,
         }
         return self.response(self.sendRequest("answerInlineQuery", data), bool)
+
+    def answerWebAppQuery(self, web_app_query_id: str, result: types.InlineQueryResult):
+        """Use this method to set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned. [See Telegram API](https://core.telegram.org/bots/api#answerwebappquery)
+
+        - - - - -
+        **Args**:
+
+        - `web_app_query_id` :`str` Unique identifier for the query to be answered
+        - `result` :`types.InlineQueryResult` A JSON-serialized object describing the message to be sent
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.SentWebAppMessage` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "web_app_query_id": web_app_query_id,
+            "result": helper.toDict(result, True),
+        }
+        return self.response(self.sendRequest("answerWebAppQuery", data), types.SentWebAppMessage)
 
     def sendInvoice(self, chat_id: Union[int, str, ], title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, max_tip_amount: int = None, suggested_tip_amounts: list = None, start_parameter: str = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send invoices. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendinvoice)
