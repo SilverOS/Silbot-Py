@@ -7,10 +7,10 @@ class Update:
     - - - - -
     **Fields**:
 
-    - `update_id`: `int` - The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using Webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.
-    - `message`: `Message` - Optional. New incoming message of any kind — text, photo, sticker, etc.
+    - `update_id`: `int` - The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.
+    - `message`: `Message` - Optional. New incoming message of any kind - text, photo, sticker, etc.
     - `edited_message`: `Message` - Optional. New version of a message that is known to the bot and was edited
-    - `channel_post`: `Message` - Optional. New incoming channel post of any kind — text, photo, sticker, etc.
+    - `channel_post`: `Message` - Optional. New incoming channel post of any kind - text, photo, sticker, etc.
     - `edited_channel_post`: `Message` - Optional. New version of a channel post that is known to the bot and was edited
     - `inline_query`: `InlineQuery` - Optional. New incoming inline query
     - `chosen_inline_result`: `ChosenInlineResult` - Optional. The result of an inline query that was chosen by a user and sent to their chat partner. Please see our documentation on the feedback collecting for details on how to enable these updates for your bot.
@@ -50,7 +50,7 @@ class Update:
 
 
 class WebhookInfo:
-    """Contains information about the current status of a webhook.[See on Telegram API](https://core.telegram.org/bots/api#webhookinfo)
+    """Describes the current status of a webhook.[See on Telegram API](https://core.telegram.org/bots/api#webhookinfo)
 
     - - - - -
     **Fields**:
@@ -62,7 +62,7 @@ class WebhookInfo:
     - `last_error_date`: `int` - Optional. Unix time for the most recent error that happened when trying to deliver an update via webhook
     - `last_error_message`: `string` - Optional. Error message in human-readable format for the most recent error that happened when trying to deliver an update via webhook
     - `last_synchronization_error_date`: `int` - Optional. Unix time of the most recent error that happened when trying to synchronize available updates with Telegram datacenters
-    - `max_connections`: `int` - Optional. Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
+    - `max_connections`: `int` - Optional. The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery
     - `allowed_updates`: `list` - Optional. A list of update types the bot is subscribed to. Defaults to all update types except chat_member
     """
 
@@ -97,6 +97,8 @@ class User(objects.User):
     - `last_name`: `string` - Optional. User's or bot's last name
     - `username`: `string` - Optional. User's or bot's username
     - `language_code`: `string` - Optional. IETF language tag of the user's language
+    - `is_premium`: `bool` - Optional. True, if this user is a Telegram Premium user
+    - `added_to_attachment_menu`: `bool` - Optional. True, if this user added the bot to the attachment menu
     - `can_join_groups`: `bool` - Optional. True, if the bot can be invited to groups. Returned only in getMe.
     - `can_read_all_group_messages`: `bool` - Optional. True, if privacy mode is disabled for the bot. Returned only in getMe.
     - `supports_inline_queries`: `bool` - Optional. True, if the bot supports inline queries. Returned only in getMe.
@@ -112,6 +114,8 @@ class User(objects.User):
         self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
         self.username = dictionary["username"] if "username" in dictionary else None
         self.language_code = dictionary["language_code"] if "language_code" in dictionary else None
+        self.is_premium = dictionary["is_premium"] if "is_premium" in dictionary else None
+        self.added_to_attachment_menu = dictionary["added_to_attachment_menu"] if "added_to_attachment_menu" in dictionary else None
         self.can_join_groups = dictionary["can_join_groups"] if "can_join_groups" in dictionary else None
         self.can_read_all_group_messages = dictionary["can_read_all_group_messages"] if "can_read_all_group_messages" in dictionary else None
         self.supports_inline_queries = dictionary["supports_inline_queries"] if "supports_inline_queries" in dictionary else None
@@ -136,6 +140,8 @@ class Chat(objects.Chat):
     - `photo`: `ChatPhoto` - Optional. Chat photo. Returned only in getChat.
     - `bio`: `string` - Optional. Bio of the other party in a private chat. Returned only in getChat.
     - `has_private_forwards`: `bool` - Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
+    - `join_to_send_messages`: `bool` - Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
+    - `join_by_request`: `bool` - Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
     - `description`: `string` - Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
     - `invite_link`: `string` - Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
     - `pinned_message`: `Message` - Optional. The most recent pinned message (by sending date). Returned only in getChat.
@@ -162,6 +168,8 @@ class Chat(objects.Chat):
         self.photo = ChatPhoto(dictionary["photo"]) if "photo" in dictionary else None
         self.bio = dictionary["bio"] if "bio" in dictionary else None
         self.has_private_forwards = dictionary["has_private_forwards"] if "has_private_forwards" in dictionary else None
+        self.join_to_send_messages = dictionary["join_to_send_messages"] if "join_to_send_messages" in dictionary else None
+        self.join_by_request = dictionary["join_by_request"] if "join_by_request" in dictionary else None
         self.description = dictionary["description"] if "description" in dictionary else None
         self.invite_link = dictionary["invite_link"] if "invite_link" in dictionary else None
         self.pinned_message = Message(dictionary["pinned_message"]) if "pinned_message" in dictionary else None
@@ -187,7 +195,7 @@ class Message:
 
     - `message_id`: `int` - Unique message identifier inside this chat
     - `user`: `User` - Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
-    - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group.  For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
+    - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
     - `date`: `int` - Date the message was sent in Unix time
     - `chat`: `Chat` - Conversation the message belongs to
     - `forward_from`: `User` - Optional. For forwarded messages, sender of the original message
@@ -203,7 +211,7 @@ class Message:
     - `has_protected_content`: `bool` - Optional. True, if the message can't be forwarded
     - `media_group_id`: `string` - Optional. The unique identifier of a media message group this message belongs to
     - `author_signature`: `string` - Optional. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator
-    - `text`: `string` - Optional. For text messages, the actual UTF-8 text of the message, 0-4096 characters
+    - `text`: `string` - Optional. For text messages, the actual UTF-8 text of the message
     - `entities`: `list` - Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
     - `animation`: `Animation` - Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
     - `audio`: `Audio` - Optional. Message is an audio file, information about the file
@@ -213,7 +221,7 @@ class Message:
     - `video`: `Video` - Optional. Message is a video, information about the video
     - `video_note`: `VideoNote` - Optional. Message is a video note, information about the video message
     - `voice`: `Voice` - Optional. Message is a voice message, information about the file
-    - `caption`: `string` - Optional. Caption for the animation, audio, document, photo, video or voice, 0-1024 characters
+    - `caption`: `string` - Optional. Caption for the animation, audio, document, photo, video or voice
     - `caption_entities`: `list` - Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
     - `contact`: `Contact` - Optional. Message is a shared contact, information about the contact
     - `dice`: `Dice` - Optional. Message is a dice with random value
@@ -344,7 +352,7 @@ class MessageEntity:
     - `type`: `string` - Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)
     - `offset`: `int` - Offset in UTF-16 code units to the start of the entity
     - `length`: `int` - Length of the entity in UTF-16 code units
-    - `url`: `string` - Optional. For “text_link” only, url that will be opened after user taps on the text
+    - `url`: `string` - Optional. For “text_link” only, URL that will be opened after user taps on the text
     - `user`: `User` - Optional. For “text_mention” only, the mentioned user
     - `language`: `string` - Optional. For “pre” only, the programming language of the entity text
     """
@@ -407,7 +415,7 @@ class Animation:
     - `thumb`: `PhotoSize` - Optional. Animation thumbnail as defined by sender
     - `file_name`: `string` - Optional. Original animation filename as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size in bytes
+    - `file_size`: `int` - Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
     """
 
     def __init__(self, dictionary=None):
@@ -442,7 +450,7 @@ class Audio:
     - `title`: `string` - Optional. Title of the audio as defined by sender or by audio tags
     - `file_name`: `string` - Optional. Original filename as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size in bytes
+    - `file_size`: `int` - Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
     - `thumb`: `PhotoSize` - Optional. Thumbnail of the album cover to which the music file belongs
     """
 
@@ -476,7 +484,7 @@ class Document:
     - `thumb`: `PhotoSize` - Optional. Document thumbnail as defined by sender
     - `file_name`: `string` - Optional. Original filename as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size in bytes
+    - `file_size`: `int` - Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
     """
 
     def __init__(self, dictionary=None):
@@ -508,8 +516,8 @@ class Video:
     - `duration`: `int` - Duration of the video in seconds as defined by sender
     - `thumb`: `PhotoSize` - Optional. Video thumbnail
     - `file_name`: `string` - Optional. Original filename as defined by sender
-    - `mime_type`: `string` - Optional. Mime type of a file as defined by sender
-    - `file_size`: `int` - Optional. File size in bytes
+    - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
+    - `file_size`: `int` - Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
     """
 
     def __init__(self, dictionary=None):
@@ -571,7 +579,7 @@ class Voice:
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
     - `duration`: `int` - Duration of the audio in seconds as defined by sender
     - `mime_type`: `string` - Optional. MIME type of the file as defined by sender
-    - `file_size`: `int` - Optional. File size in bytes
+    - `file_size`: `int` - Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
     """
 
     def __init__(self, dictionary=None):
@@ -624,7 +632,7 @@ class Dice:
     **Fields**:
 
     - `emoji`: `string` - Emoji on which the dice throw animation is based
-    - `value`: `int` - Value of the dice, 1-6 for “🎲”, “🎯” and “🎳” base emoji, 1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
+    - `value`: `int` - ____simple_html_dom__voku__html_wrapper____>Value of the dice, 1-6 for “🎲”, “🎯” and “🎳” base emoji, 1-5 for “🏀” and “⚽” base emoji, 1-64 for “🎰” base emoji
     """
 
     def __init__(self, dictionary=None):
@@ -740,7 +748,7 @@ class Location:
     - `horizontal_accuracy`: `float` - Optional. The radius of uncertainty for the location, measured in meters; 0-1500
     - `live_period`: `int` - Optional. Time relative to the message sending date, during which the location can be updated; in seconds. For active live locations only.
     - `heading`: `int` - Optional. The direction in which user is moving, in degrees; 1-360. For active live locations only.
-    - `proximity_alert_radius`: `int` - Optional. Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only.
+    - `proximity_alert_radius`: `int` - Optional. The maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only.
     """
 
     def __init__(self, dictionary=None):
@@ -792,13 +800,13 @@ class Venue:
 
 
 class WebAppData:
-    """Contains data sent from a Web App to the bot.[See on Telegram API](https://core.telegram.org/bots/api#webappdata)
+    """Describes data sent from a Web App to the bot.[See on Telegram API](https://core.telegram.org/bots/api#webappdata)
 
     - - - - -
     **Fields**:
 
     - `data`: `string` - The data. Be aware that a bad client can send arbitrary data in this field.
-    - `button_text`: `string` - Text of the web_app keyboard button, from which the Web App was opened. Be aware that a bad client can send arbitrary data in this field.
+    - `button_text`: `string` - Text of the web_app keyboard button from which the Web App was opened. Be aware that a bad client can send arbitrary data in this field.
     """
 
     def __init__(self, dictionary=None):
@@ -965,7 +973,7 @@ class File:
 
     - `file_id`: `string` - Identifier for this file, which can be used to download or reuse the file
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-    - `file_size`: `int` - Optional. File size in bytes, if known
+    - `file_size`: `int` - Optional. File size in bytes. It can be bigger than 2^31 and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this value.
     - `file_path`: `string` - Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
     """
 
@@ -984,7 +992,7 @@ class File:
 
 
 class WebAppInfo:
-    """Contains information about a Web App.[See on Telegram API](https://core.telegram.org/bots/api#webappinfo)
+    """Describes a Web App.[See on Telegram API](https://core.telegram.org/bots/api#webappinfo)
 
     - - - - -
     **Fields**:
@@ -1011,7 +1019,7 @@ class ReplyKeyboardMarkup(objects.ReplyKeyboardMarkup):
 
     - `keyboard`: `list` - Array of button rows, each represented by an Array of KeyboardButton objects
     - `resize_keyboard`: `bool` - Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
-    - `one_time_keyboard`: `bool` - Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+    - `one_time_keyboard`: `bool` - Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
     - `input_field_placeholder`: `string` - Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
     - `selective`: `bool` - Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard.
     """
@@ -1128,12 +1136,12 @@ class InlineKeyboardButton:
     **Fields**:
 
     - `text`: `string` - Label text on the button
-    - `url`: `string` - Optional. HTTP or tg:// url to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.
+    - `url`: `string` - Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.
     - `callback_data`: `string` - Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
     - `web_app`: `WebAppInfo` - Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot.
-    - `login_url`: `LoginUrl` - Optional. An HTTP URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
-    - `switch_inline_query`: `string` - Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. Can be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
-    - `switch_inline_query_current_chat`: `string` - Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. Can be empty, in which case only the bot's username will be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat – good for selecting something from multiple options.
+    - `login_url`: `LoginUrl` - Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
+    - `switch_inline_query`: `string` - Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. May be empty, in which case just the bot's username will be inserted.Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions - in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
+    - `switch_inline_query_current_chat`: `string` - Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. May be empty, in which case only the bot's username will be inserted.This offers a quick way for the user to open your bot in inline mode in the same chat - good for selecting something from multiple options.
     - `callback_game`: `CallbackGame` - Optional. Description of the game that will be launched when the user presses the button.NOTE: This type of button must always be the first button in the first row.
     - `pay`: `bool` - Optional. Specify True, to send a Pay button.NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
     """
@@ -1195,7 +1203,7 @@ class CallbackQuery(objects.CallbackQuery):
     - `message`: `Message` - Optional. Message with the callback button that originated the query. Note that message content and message date will not be available if the message is too old
     - `inline_message_id`: `string` - Optional. Identifier of the message sent via the bot in inline mode, that originated the query.
     - `chat_instance`: `string` - Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent. Useful for high scores in games.
-    - `data`: `string` - Optional. Data associated with the callback button. Be aware that a bad client can send arbitrary data in this field.
+    - `data`: `string` - Optional. Data associated with the callback button. Be aware that the message originated the query can contain no callback buttons with this data.
     - `game_short_name`: `string` - Optional. Short name of a Game to be returned, serves as the unique identifier for the game
     """
 
@@ -1279,7 +1287,7 @@ class ChatInviteLink:
     - `is_revoked`: `bool` - True, if the link is revoked
     - `name`: `string` - Optional. Invite link name
     - `expire_date`: `int` - Optional. Point in time (Unix timestamp) when the link will expire or has been expired
-    - `member_limit`: `int` - Optional. Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
+    - `member_limit`: `int` - Optional. The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
     - `pending_join_request_count`: `int` - Optional. Number of pending join requests created using this link
     """
 
@@ -1923,7 +1931,7 @@ class MenuButtonDefault:
 
 
 class ResponseParameters:
-    """Contains information about why a request was unsuccessful.[See on Telegram API](https://core.telegram.org/bots/api#responseparameters)
+    """Describes why a request was unsuccessful.[See on Telegram API](https://core.telegram.org/bots/api#responseparameters)
 
     - - - - -
     **Fields**:
@@ -1969,7 +1977,7 @@ class InputMediaPhoto:
     **Fields**:
 
     - `type`: `string` - Type of the result, must be photo
-    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
+    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
     - `caption`: `string` - Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the photo caption. See formatting options for more details.
     - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -1997,7 +2005,7 @@ class InputMediaVideo:
     **Fields**:
 
     - `type`: `string` - Type of the result, must be video
-    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
+    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
     - `caption`: `string` - Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the video caption. See formatting options for more details.
     - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -2033,7 +2041,7 @@ class InputMediaAnimation:
     **Fields**:
 
     - `type`: `string` - Type of the result, must be animation
-    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
+    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
     - `caption`: `string` - Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the animation caption. See formatting options for more details.
     - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -2067,7 +2075,7 @@ class InputMediaAudio:
     **Fields**:
 
     - `type`: `string` - Type of the result, must be audio
-    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
+    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
     - `caption`: `string` - Optional. Caption of the audio to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the audio caption. See formatting options for more details.
     - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -2101,7 +2109,7 @@ class InputMediaDocument:
     **Fields**:
 
     - `type`: `string` - Type of the result, must be document
-    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More info on Sending Files »
+    - `media`: `string` - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name. More information on Sending Files »
     - `caption`: `string` - Optional. Caption of the document to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the document caption. See formatting options for more details.
     - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -2157,6 +2165,7 @@ class Sticker:
     - `thumb`: `PhotoSize` - Optional. Sticker thumbnail in the .WEBP or .JPG format
     - `emoji`: `string` - Optional. Emoji associated with the sticker
     - `set_name`: `string` - Optional. Name of the sticker set to which the sticker belongs
+    - `premium_animation`: `File` - Optional. Premium animation for the sticker, if the sticker is premium
     - `mask_position`: `MaskPosition` - Optional. For mask stickers, the position where the mask should be placed
     - `file_size`: `int` - Optional. File size in bytes
     """
@@ -2174,6 +2183,7 @@ class Sticker:
         self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
         self.emoji = dictionary["emoji"] if "emoji" in dictionary else None
         self.set_name = dictionary["set_name"] if "set_name" in dictionary else None
+        self.premium_animation = File(dictionary["premium_animation"]) if "premium_animation" in dictionary else None
         self.mask_position = MaskPosition(dictionary["mask_position"]) if "mask_position" in dictionary else None
         self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
 
@@ -2250,7 +2260,7 @@ class InlineQuery:
     - `user`: `User` - Sender
     - `query`: `string` - Text of the query (up to 256 characters)
     - `offset`: `string` - Offset of the results to be returned, can be controlled by the bot
-    - `chat_type`: `string` - Optional. Type of the chat, from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat
+    - `chat_type`: `string` - Optional. Type of the chat from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat
     - `location`: `Location` - Optional. Sender location, only for bots that request user location
     """
 
@@ -2426,7 +2436,7 @@ class InlineQueryResultMpeg4Gif:
 
     - `type`: `string` - Type of the result, must be mpeg4_gif
     - `id`: `string` - Unique identifier for this result, 1-64 bytes
-    - `mpeg4_url`: `string` - A valid URL for the MP4 file. File size must not exceed 1MB
+    - `mpeg4_url`: `string` - A valid URL for the MPEG4 file. File size must not exceed 1MB
     - `mpeg4_width`: `int` - Optional. Video width
     - `mpeg4_height`: `int` - Optional. Video height
     - `mpeg4_duration`: `int` - Optional. Video duration in seconds
@@ -2473,7 +2483,7 @@ class InlineQueryResultVideo:
     - `type`: `string` - Type of the result, must be video
     - `id`: `string` - Unique identifier for this result, 1-64 bytes
     - `video_url`: `string` - A valid URL for the embedded video player or video file
-    - `mime_type`: `string` - Mime type of the content of video url, “text/html” or “video/mp4”
+    - `mime_type`: `string` - MIME type of the content of the video URL, “text/html” or “video/mp4”
     - `thumb_url`: `string` - URL of the thumbnail (JPEG only) for the video
     - `title`: `string` - Title for the result
     - `caption`: `string` - Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
@@ -2603,7 +2613,7 @@ class InlineQueryResultDocument:
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the document caption. See formatting options for more details.
     - `caption_entities`: `list` - Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
     - `document_url`: `string` - A valid URL for the file
-    - `mime_type`: `string` - Mime type of the content of the file, either “application/pdf” or “application/zip”
+    - `mime_type`: `string` - MIME type of the content of the file, either “application/pdf” or “application/zip”
     - `description`: `string` - Optional. Short description of the result
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `input_message_content`: `InputMessageContent` - Optional. Content of the message to be sent instead of the file
@@ -2878,7 +2888,7 @@ class InlineQueryResultCachedMpeg4Gif:
 
     - `type`: `string` - Type of the result, must be mpeg4_gif
     - `id`: `string` - Unique identifier for this result, 1-64 bytes
-    - `mpeg4_file_id`: `string` - A valid file identifier for the MP4 file
+    - `mpeg4_file_id`: `string` - A valid file identifier for the MPEG4 file
     - `title`: `string` - Optional. Title for the result
     - `caption`: `string` - Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
     - `parse_mode`: `string` - Optional. Mode for parsing entities in the caption. See formatting options for more details.
@@ -3223,22 +3233,22 @@ class InputInvoiceMessageContent:
     - `title`: `string` - Product name, 1-32 characters
     - `description`: `string` - Product description, 1-255 characters
     - `payload`: `string` - Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
-    - `provider_token`: `string` - Payment provider token, obtained via Botfather
+    - `provider_token`: `string` - Payment provider token, obtained via @BotFather
     - `currency`: `string` - Three-letter ISO 4217 currency code, see more on currencies
     - `prices`: `list` - Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
     - `max_tip_amount`: `int` - Optional. The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
     - `suggested_tip_amounts`: `list` - Optional. A JSON-serialized array of suggested amounts of tip in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
     - `provider_data`: `string` - Optional. A JSON-serialized object for data about the invoice, which will be shared with the payment provider. A detailed description of the required fields should be provided by the payment provider.
-    - `photo_url`: `string` - Optional. URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
-    - `photo_size`: `int` - Optional. Photo size
+    - `photo_url`: `string` - Optional. URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service.
+    - `photo_size`: `int` - Optional. Photo size in bytes
     - `photo_width`: `int` - Optional. Photo width
     - `photo_height`: `int` - Optional. Photo height
     - `need_name`: `bool` - Optional. Pass True, if you require the user's full name to complete the order
     - `need_phone_number`: `bool` - Optional. Pass True, if you require the user's phone number to complete the order
     - `need_email`: `bool` - Optional. Pass True, if you require the user's email address to complete the order
     - `need_shipping_address`: `bool` - Optional. Pass True, if you require the user's shipping address to complete the order
-    - `send_phone_number_to_provider`: `bool` - Optional. Pass True, if user's phone number should be sent to provider
-    - `send_email_to_provider`: `bool` - Optional. Pass True, if user's email address should be sent to provider
+    - `send_phone_number_to_provider`: `bool` - Optional. Pass True, if the user's phone number should be sent to provider
+    - `send_email_to_provider`: `bool` - Optional. Pass True, if the user's email address should be sent to provider
     - `is_flexible`: `bool` - Optional. Pass True, if the final price depends on the shipping method
     """
 
@@ -3301,7 +3311,7 @@ class ChosenInlineResult:
 
 
 class SentWebAppMessage:
-    """Contains information about an inline message sent by a Web App on behalf of a user.[See on Telegram API](https://core.telegram.org/bots/api#sentwebappmessage)
+    """Describes an inline message sent by a Web App on behalf of a user.[See on Telegram API](https://core.telegram.org/bots/api#sentwebappmessage)
 
     - - - - -
     **Fields**:
@@ -3376,7 +3386,7 @@ class ShippingAddress:
     - - - - -
     **Fields**:
 
-    - `country_code`: `string` - ISO 3166-1 alpha-2 country code
+    - `country_code`: `string` - Two-letter ISO 3166-1 alpha-2 country code
     - `state`: `string` - State, if applicable
     - `city`: `string` - City
     - `street_line1`: `string` - First line for the address
@@ -3460,7 +3470,7 @@ class SuccessfulPayment:
     - `total_amount`: `int` - Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
     - `invoice_payload`: `string` - Bot specified invoice payload
     - `shipping_option_id`: `string` - Optional. Identifier of the shipping option chosen by the user
-    - `order_info`: `OrderInfo` - Optional. Order info provided by the user
+    - `order_info`: `OrderInfo` - Optional. Order information provided by the user
     - `telegram_payment_charge_id`: `string` - Telegram payment identifier
     - `provider_payment_charge_id`: `string` - Provider payment identifier
     """
@@ -3520,7 +3530,7 @@ class PreCheckoutQuery:
     - `total_amount`: `int` - Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
     - `invoice_payload`: `string` - Bot specified invoice payload
     - `shipping_option_id`: `string` - Optional. Identifier of the shipping option chosen by the user
-    - `order_info`: `OrderInfo` - Optional. Order info provided by the user
+    - `order_info`: `OrderInfo` - Optional. Order information provided by the user
     """
 
     def __init__(self, dictionary=None):
@@ -3541,7 +3551,7 @@ class PreCheckoutQuery:
 
 
 class PassportData:
-    """Contains information about Telegram Passport data shared with the bot by the user.[See on Telegram API](https://core.telegram.org/bots/api#passportdata)
+    """Describes Telegram Passport data shared with the bot by the user.[See on Telegram API](https://core.telegram.org/bots/api#passportdata)
 
     - - - - -
     **Fields**:
@@ -3589,7 +3599,7 @@ class PassportFile:
 
 
 class EncryptedPassportElement:
-    """Contains information about documents or other Telegram Passport elements shared with the bot by the user.[See on Telegram API](https://core.telegram.org/bots/api#encryptedpassportelement)
+    """Describes documents or other Telegram Passport elements shared with the bot by the user.[See on Telegram API](https://core.telegram.org/bots/api#encryptedpassportelement)
 
     - - - - -
     **Fields**:
@@ -3627,7 +3637,7 @@ class EncryptedPassportElement:
 
 
 class EncryptedCredentials:
-    """Contains data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.[See on Telegram API](https://core.telegram.org/bots/api#encryptedcredentials)
+    """Describes data required for decrypting and authenticating EncryptedPassportElement. See the Telegram Passport Documentation for a complete description of the data decryption and authentication processes.[See on Telegram API](https://core.telegram.org/bots/api#encryptedcredentials)
 
     - - - - -
     **Fields**:
