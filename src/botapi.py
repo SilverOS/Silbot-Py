@@ -88,19 +88,20 @@ class BotApi:
         }
         return self.response(self.sendRequest("getUpdates", data), list)
 
-    def setWebhook(self, url: str, certificate: types.InputFile = None, ip_address: str = None, max_connections: int = None, allowed_updates: list = None, drop_pending_updates: bool = None):
-        """Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success.
-        If you'd like to make sure that the Webhook request comes from Telegram, we recommend using a secret path in the URL, e.g. https://www.example.com/<token>. Since nobody else knows your bot's token, you can be pretty sure it's us. [See Telegram API](https://core.telegram.org/bots/api#setwebhook)
+    def setWebhook(self, url: str, certificate: types.InputFile = None, ip_address: str = None, max_connections: int = None, allowed_updates: list = None, drop_pending_updates: bool = None, secret_token: str = None):
+        """Use this method to specify a URL and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified URL, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success.
+        If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter secret_token. If specified, the request will contain a header “X-Telegram-Bot-Api-Secret-Token” with the secret token as content. [See Telegram API](https://core.telegram.org/bots/api#setwebhook)
 
         - - - - -
         **Args**:
 
-        - `url` :`str` HTTPS url to send updates to. Use an empty string to remove webhook integration
+        - `url` :`str` HTTPS URL to send updates to. Use an empty string to remove webhook integration
         - `certificate` :`types.InputFile` Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
         - `ip_address` :`str` The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS
-        - `max_connections` :`int` Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to increase your bot's throughput.
+        - `max_connections` :`int` The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to increase your bot's throughput.
         - `allowed_updates` :`list` A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member (default). If not specified, the previous setting will be used.Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
         - `drop_pending_updates` :`bool` Pass True to drop all pending updates
+        - `secret_token` :`str` A secret token to be sent in a header “X-Telegram-Bot-Api-Secret-Token” in every webhook request, 1-256 characters. Only characters A-Z, a-z, 0-9, _ and - are allowed. The header is useful to ensure that the request comes from a webhook set by you.
 
         **Returns:**
 
@@ -113,6 +114,7 @@ class BotApi:
             "max_connections": max_connections,
             "allowed_updates": allowed_updates,
             "drop_pending_updates": drop_pending_updates,
+            "secret_token": secret_token,
         }
         return self.response(self.sendRequest("setWebhook", data), bool)
 
@@ -315,7 +317,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `photo` :`Union[types.InputFile,str,]` Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More info on Sending Files »
+        - `photo` :`Union[types.InputFile,str,]` Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20. More information on Sending Files »
         - `caption` :`str` Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the photo caption. See formatting options for more details.
@@ -357,7 +359,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `audio` :`Union[types.InputFile,str,]` Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+        - `audio` :`Union[types.InputFile,str,]` Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `caption` :`str` Audio caption, 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the audio caption. See formatting options for more details.
@@ -365,7 +367,7 @@ class BotApi:
         - `duration` :`int` Duration of the audio in seconds
         - `performer` :`str` Performer
         - `title` :`str` Track name
-        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
+        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -406,11 +408,11 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `document` :`Union[types.InputFile,str,]` File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+        - `document` :`Union[types.InputFile,str,]` File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `caption` :`str` Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the document caption. See formatting options for more details.
-        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
+        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_content_type_detection` :`bool` Disables automatic server-side content type detection for files uploaded using multipart/form-data
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -445,20 +447,20 @@ class BotApi:
         return self.response(self.sendRequest("sendDocument", data), types.Message)
 
     def sendVideo(self, chat_id: Union[int, str, ], video: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, supports_streaming: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvideo)
+        """Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvideo)
 
         - - - - -
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `video` :`Union[types.InputFile,str,]` Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More info on Sending Files »
+        - `video` :`Union[types.InputFile,str,]` Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. More information on Sending Files »
         - `caption` :`str` Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the video caption. See formatting options for more details.
         - `duration` :`int` Duration of sent video in seconds
         - `width` :`int` Video width
         - `height` :`int` Video height
-        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
+        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `supports_streaming` :`bool` Pass True, if the uploaded video is suitable for streaming
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -502,14 +504,14 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `animation` :`Union[types.InputFile,str,]` Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More info on Sending Files »
+        - `animation` :`Union[types.InputFile,str,]` Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. More information on Sending Files »
         - `caption` :`str` Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the animation caption. See formatting options for more details.
         - `duration` :`int` Duration of sent animation in seconds
         - `width` :`int` Animation width
         - `height` :`int` Animation height
-        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
+        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
@@ -551,7 +553,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `voice` :`Union[types.InputFile,str,]` Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+        - `voice` :`Union[types.InputFile,str,]` Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `caption` :`str` Voice message caption, 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the voice message caption. See formatting options for more details.
@@ -588,17 +590,17 @@ class BotApi:
         return self.response(self.sendRequest("sendVoice", data), types.Message)
 
     def sendVideoNote(self, chat_id: Union[int, str, ], video_note: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, duration: int = None, length: int = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvideonote)
+        """As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvideonote)
 
         - - - - -
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `video_note` :`Union[types.InputFile,str,]` Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More info on Sending Files ». Sending video notes by a URL is currently unsupported
+        - `video_note` :`Union[types.InputFile,str,]` Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `duration` :`int` Duration of sent video in seconds
         - `length` :`int` Video width and height, i.e. diameter of the video message
-        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More info on Sending Files »
+        - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -711,7 +713,7 @@ class BotApi:
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for a new inline keyboard.
         - `horizontal_accuracy` :`float` The radius of uncertainty for the location, measured in meters; 0-1500
         - `heading` :`int` Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
-        - `proximity_alert_radius` :`int` Maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
+        - `proximity_alert_radius` :`int` The maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.
 
         **Returns:**
 
@@ -899,7 +901,7 @@ class BotApi:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
-        - `emoji` :`str` Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
+        - `emoji` :`str` ____simple_html_dom__voku__html_wrapper____>Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -965,12 +967,12 @@ class BotApi:
         return self.response(self.sendRequest("getUserProfilePhotos", data), types.UserProfilePhotos)
 
     def getFile(self, file_id: str):
-        """Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again. [See Telegram API](https://core.telegram.org/bots/api#getfile)
+        """Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again. [See Telegram API](https://core.telegram.org/bots/api#getfile)
 
         - - - - -
         **Args**:
 
-        - `file_id` :`str` File identifier to get info about
+        - `file_id` :`str` File identifier to get information about
 
         **Returns:**
 
@@ -1193,7 +1195,7 @@ class BotApi:
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `name` :`str` Invite link name; 0-32 characters
         - `expire_date` :`int` Point in time (Unix timestamp) when the link will expire
-        - `member_limit` :`int` Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
+        - `member_limit` :`int` The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
         - `creates_join_request` :`bool` True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified
 
         **Returns:**
@@ -1219,7 +1221,7 @@ class BotApi:
         - `invite_link` :`str` The invite link to edit
         - `name` :`str` Invite link name; 0-32 characters
         - `expire_date` :`int` Point in time (Unix timestamp) when the link will expire
-        - `member_limit` :`int` Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
+        - `member_limit` :`int` The maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999
         - `creates_join_request` :`bool` True, if users joining the chat via the link need to be approved by chat administrators. If True, member_limit can't be specified
 
         **Returns:**
@@ -1559,7 +1561,7 @@ class BotApi:
         - `callback_query_id` :`str` Unique identifier for the query to be answered
         - `text` :`str` Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters
         - `show_alert` :`bool` If True, an alert will be shown by the client instead of a notification at the top of the chat screen. Defaults to false.
-        - `url` :`str` URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @Botfather, specify the URL that opens your game — note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
+        - `url` :`str` URL that will be opened by the user's client. If you have created a Game and accepted the conditions via @BotFather, specify the URL that opens your game - note that this will only work if the query comes from a callback_game button.Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
         - `cache_time` :`int` The maximum amount of time in seconds that the result of the callback query may be cached client-side. Telegram apps will support caching starting in version 3.14. Defaults to 0.
 
         **Returns:**
@@ -1641,7 +1643,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`int` Unique identifier for the target private chat. If not specified, default bot's menu button will be changed
-        - `menu_button` :`types.MenuButton` A JSON-serialized object for the new bot's menu button. Defaults to MenuButtonDefault
+        - `menu_button` :`types.MenuButton` A JSON-serialized object for the bot's new menu button. Defaults to MenuButtonDefault
 
         **Returns:**
 
@@ -1870,7 +1872,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `sticker` :`Union[types.InputFile,str,]` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+        - `sticker` :`Union[types.InputFile,str,]` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
@@ -1919,7 +1921,7 @@ class BotApi:
         **Args**:
 
         - `user_id` :`int` User identifier of sticker file owner
-        - `png_sticker` :`types.InputFile` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. More info on Sending Files »
+        - `png_sticker` :`types.InputFile` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. More information on Sending Files »
 
         **Returns:**
 
@@ -1938,10 +1940,10 @@ class BotApi:
         **Args**:
 
         - `user_id` :`int` User identifier of created sticker set owner
-        - `name` :`str` Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only english letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in "_by_<bot_username>". <bot_username> is case insensitive. 1-64 characters.
+        - `name` :`str` Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals). Can contain only English letters, digits and underscores. Must begin with a letter, can't contain consecutive underscores and must end in "_by_<bot_username>". <bot_username> is case insensitive. 1-64 characters.
         - `title` :`str` Sticker set title, 1-64 characters
         - `emojis` :`str` One or more emoji corresponding to the sticker
-        - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+        - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#animated-sticker-requirements for technical requirements
         - `webm_sticker` :`types.InputFile` WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#video-sticker-requirements for technical requirements
         - `contains_masks` :`bool` Pass True, if a set of mask stickers should be created
@@ -1973,7 +1975,7 @@ class BotApi:
         - `user_id` :`int` User identifier of sticker set owner
         - `name` :`str` Sticker set name
         - `emojis` :`str` One or more emoji corresponding to the sticker
-        - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files »
+        - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#animated-sticker-requirements for technical requirements
         - `webm_sticker` :`types.InputFile` WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#video-sticker-requirements for technical requirements
         - `mask_position` :`types.MaskPosition` A JSON-serialized object for position where the mask should be placed on faces
@@ -2037,7 +2039,7 @@ class BotApi:
 
         - `user_id` :`int` User identifier of the sticker set owner
         - `name` :`str` Sticker set name
-        - `thumb` :`Union[types.InputFile,str,]` A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#animated-sticker-requirements for animated sticker technical requirements, or a WEBM video with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#video-sticker-requirements for video sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More info on Sending Files ». Animated sticker set thumbnails can't be uploaded via HTTP URL.
+        - `thumb` :`Union[types.InputFile,str,]` A PNG image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a TGS animation with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#animated-sticker-requirements for animated sticker technical requirements, or a WEBM video with the thumbnail up to 32 kilobytes in size; see https://core.telegram.org/stickers#video-sticker-requirements for video sticker technical requirements. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files ». Animated sticker set thumbnails can't be uploaded via HTTP URL.
 
         **Returns:**
 
@@ -2108,24 +2110,24 @@ class BotApi:
         - `title` :`str` Product name, 1-32 characters
         - `description` :`str` Product description, 1-255 characters
         - `payload` :`str` Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
-        - `provider_token` :`str` Payments provider token, obtained via Botfather
+        - `provider_token` :`str` Payment provider token, obtained via @BotFather
         - `currency` :`str` Three-letter ISO 4217 currency code, see more on currencies
         - `prices` :`list` Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
         - `max_tip_amount` :`int` The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
         - `suggested_tip_amounts` :`list` A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
         - `start_parameter` :`str` Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter
-        - `provider_data` :`str` A JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
+        - `provider_data` :`str` JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
         - `photo_url` :`str` URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service. People like it better when they see what they are paying for.
-        - `photo_size` :`int` Photo size
+        - `photo_size` :`int` Photo size in bytes
         - `photo_width` :`int` Photo width
         - `photo_height` :`int` Photo height
         - `need_name` :`bool` Pass True, if you require the user's full name to complete the order
         - `need_phone_number` :`bool` Pass True, if you require the user's phone number to complete the order
         - `need_email` :`bool` Pass True, if you require the user's email address to complete the order
         - `need_shipping_address` :`bool` Pass True, if you require the user's shipping address to complete the order
-        - `send_phone_number_to_provider` :`bool` Pass True, if user's phone number should be sent to provider
-        - `send_email_to_provider` :`bool` Pass True, if user's email address should be sent to provider
+        - `send_phone_number_to_provider` :`bool` Pass True, if the user's phone number should be sent to provider
+        - `send_email_to_provider` :`bool` Pass True, if the user's email address should be sent to provider
         - `is_flexible` :`bool` Pass True, if the final price depends on the shipping method
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
@@ -2169,6 +2171,61 @@ class BotApi:
             "reply_markup": helper.toDict(reply_markup, True),
         }
         return self.response(self.sendRequest("sendInvoice", data), types.Message)
+
+    def createInvoiceLink(self, title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, max_tip_amount: int = None, suggested_tip_amounts: list = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None):
+        """Use this method to create a link for an invoice. Returns the created invoice link as String on success. [See Telegram API](https://core.telegram.org/bots/api#createinvoicelink)
+
+        - - - - -
+        **Args**:
+
+        - `title` :`str` Product name, 1-32 characters
+        - `description` :`str` Product description, 1-255 characters
+        - `payload` :`str` Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use for your internal processes.
+        - `provider_token` :`str` Payment provider token, obtained via BotFather
+        - `currency` :`str` Three-letter ISO 4217 currency code, see more on currencies
+        - `prices` :`list` Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
+        - `max_tip_amount` :`int` The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
+        - `suggested_tip_amounts` :`list` A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
+        - `provider_data` :`str` JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.
+        - `photo_url` :`str` URL of the product photo for the invoice. Can be a photo of the goods or a marketing image for a service.
+        - `photo_size` :`int` Photo size in bytes
+        - `photo_width` :`int` Photo width
+        - `photo_height` :`int` Photo height
+        - `need_name` :`bool` Pass True, if you require the user's full name to complete the order
+        - `need_phone_number` :`bool` Pass True, if you require the user's phone number to complete the order
+        - `need_email` :`bool` Pass True, if you require the user's email address to complete the order
+        - `need_shipping_address` :`bool` Pass True, if you require the user's shipping address to complete the order
+        - `send_phone_number_to_provider` :`bool` Pass True, if the user's phone number should be sent to the provider
+        - `send_email_to_provider` :`bool` Pass True, if the user's email address should be sent to the provider
+        - `is_flexible` :`bool` Pass True, if the final price depends on the shipping method
+
+        **Returns:**
+
+        - A `tuple`, on success a `str` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "title": title,
+            "description": description,
+            "payload": payload,
+            "provider_token": provider_token,
+            "currency": currency,
+            "prices": prices,
+            "max_tip_amount": max_tip_amount,
+            "suggested_tip_amounts": suggested_tip_amounts,
+            "provider_data": provider_data,
+            "photo_url": photo_url,
+            "photo_size": photo_size,
+            "photo_width": photo_width,
+            "photo_height": photo_height,
+            "need_name": need_name,
+            "need_phone_number": need_phone_number,
+            "need_email": need_email,
+            "need_shipping_address": need_shipping_address,
+            "send_phone_number_to_provider": send_phone_number_to_provider,
+            "send_email_to_provider": send_email_to_provider,
+            "is_flexible": is_flexible,
+        }
+        return self.response(self.sendRequest("createInvoiceLink", data), str)
 
     def answerShippingQuery(self, shipping_query_id: str, ok: bool, shipping_options: list = None, error_message: str = None):
         """If you sent an invoice requesting a shipping address and the parameter is_flexible was specified, the Bot API will send an Update with a shipping_query field to the bot. Use this method to reply to shipping queries. On success, True is returned. [See Telegram API](https://core.telegram.org/bots/api#answershippingquery)
@@ -2241,7 +2298,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`int` Unique identifier for the target chat
-        - `game_short_name` :`str` Short name of the game, serves as the unique identifier for the game. Set up your games via Botfather.
+        - `game_short_name` :`str` Short name of the game, serves as the unique identifier for the game. Set up your games via @BotFather.
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
