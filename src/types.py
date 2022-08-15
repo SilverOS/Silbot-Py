@@ -1,6 +1,5 @@
 from silbot import helper, objects
 
-
 class Update:
     """This object represents an incoming update.At most one of the optional parameters can be present in any given update.[See on Telegram API](https://core.telegram.org/bots/api#update)
 
@@ -140,6 +139,7 @@ class Chat(objects.Chat):
     - `photo`: `ChatPhoto` - Optional. Chat photo. Returned only in getChat.
     - `bio`: `string` - Optional. Bio of the other party in a private chat. Returned only in getChat.
     - `has_private_forwards`: `bool` - Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
+    - `has_restricted_voice_and_video_messages`: `bool` - Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
     - `join_to_send_messages`: `bool` - Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
     - `join_by_request`: `bool` - Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
     - `description`: `string` - Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
@@ -168,6 +168,7 @@ class Chat(objects.Chat):
         self.photo = ChatPhoto(dictionary["photo"]) if "photo" in dictionary else None
         self.bio = dictionary["bio"] if "bio" in dictionary else None
         self.has_private_forwards = dictionary["has_private_forwards"] if "has_private_forwards" in dictionary else None
+        self.has_restricted_voice_and_video_messages = dictionary["has_restricted_voice_and_video_messages"] if "has_restricted_voice_and_video_messages" in dictionary else None
         self.join_to_send_messages = dictionary["join_to_send_messages"] if "join_to_send_messages" in dictionary else None
         self.join_by_request = dictionary["join_by_request"] if "join_by_request" in dictionary else None
         self.description = dictionary["description"] if "description" in dictionary else None
@@ -349,12 +350,13 @@ class MessageEntity:
     - - - - -
     **Fields**:
 
-    - `type`: `string` - Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)
+    - `type`: `string` - Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames), “custom_emoji” (for inline custom emoji stickers)
     - `offset`: `int` - Offset in UTF-16 code units to the start of the entity
     - `length`: `int` - Length of the entity in UTF-16 code units
     - `url`: `string` - Optional. For “text_link” only, URL that will be opened after user taps on the text
     - `user`: `User` - Optional. For “text_mention” only, the mentioned user
     - `language`: `string` - Optional. For “pre” only, the programming language of the entity text
+    - `custom_emoji_id`: `string` - Optional. For “custom_emoji” only, unique identifier of the custom emoji. Use getCustomEmojiStickers to get full information about the sticker
     """
 
     def __init__(self, dictionary=None):
@@ -367,6 +369,7 @@ class MessageEntity:
         self.url = dictionary["url"] if "url" in dictionary else None
         self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.language = dictionary["language"] if "language" in dictionary else None
+        self.custom_emoji_id = dictionary["custom_emoji_id"] if "custom_emoji_id" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1172,7 +1175,7 @@ Telegram apps support these buttons as of version 5.7.[See on Telegram API](http
     - - - - -
     **Fields**:
 
-    - `url`: `string` - An HTTP URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization.
+    - `url`: `string` - An HTTPS URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in Receiving authorization data.NOTE: You must always check the hash of the received data to verify the authentication and the integrity of the data as described in Checking authorization.
     - `forward_text`: `string` - Optional. New text of the button in forwarded messages.
     - `bot_username`: `string` - Optional. Username of a bot, which will be used for user authorization. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the bot. See Linking your domain to the bot for more details.
     - `request_write_access`: `bool` - Optional. Pass True to request the permission for your bot to send messages to the user.
@@ -2012,7 +2015,7 @@ class InputMediaVideo:
     - `width`: `int` - Optional. Video width
     - `height`: `int` - Optional. Video height
     - `duration`: `int` - Optional. Video duration in seconds
-    - `supports_streaming`: `bool` - Optional. Pass True, if the uploaded video is suitable for streaming
+    - `supports_streaming`: `bool` - Optional. Pass True if the uploaded video is suitable for streaming
     """
 
     def __init__(self, dictionary=None):
@@ -2158,6 +2161,7 @@ class Sticker:
 
     - `file_id`: `string` - Identifier for this file, which can be used to download or reuse the file
     - `file_unique_id`: `string` - Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+    - `type`: `string` - Type of the sticker, currently one of “regular”, “mask”, “custom_emoji”. The type of the sticker is independent from its format, which is determined by the fields is_animated and is_video.
     - `width`: `int` - Sticker width
     - `height`: `int` - Sticker height
     - `is_animated`: `bool` - True, if the sticker is animated
@@ -2165,8 +2169,9 @@ class Sticker:
     - `thumb`: `PhotoSize` - Optional. Sticker thumbnail in the .WEBP or .JPG format
     - `emoji`: `string` - Optional. Emoji associated with the sticker
     - `set_name`: `string` - Optional. Name of the sticker set to which the sticker belongs
-    - `premium_animation`: `File` - Optional. Premium animation for the sticker, if the sticker is premium
+    - `premium_animation`: `File` - Optional. For premium regular stickers, premium animation for the sticker
     - `mask_position`: `MaskPosition` - Optional. For mask stickers, the position where the mask should be placed
+    - `custom_emoji_id`: `string` - Optional. For custom emoji stickers, unique identifier of the custom emoji
     - `file_size`: `int` - Optional. File size in bytes
     """
 
@@ -2176,6 +2181,7 @@ class Sticker:
         self.dict = dictionary
         self.file_id = dictionary["file_id"] if "file_id" in dictionary else None
         self.file_unique_id = dictionary["file_unique_id"] if "file_unique_id" in dictionary else None
+        self.type = dictionary["type"] if "type" in dictionary else None
         self.width = dictionary["width"] if "width" in dictionary else None
         self.height = dictionary["height"] if "height" in dictionary else None
         self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
@@ -2185,6 +2191,7 @@ class Sticker:
         self.set_name = dictionary["set_name"] if "set_name" in dictionary else None
         self.premium_animation = File(dictionary["premium_animation"]) if "premium_animation" in dictionary else None
         self.mask_position = MaskPosition(dictionary["mask_position"]) if "mask_position" in dictionary else None
+        self.custom_emoji_id = dictionary["custom_emoji_id"] if "custom_emoji_id" in dictionary else None
         self.file_size = dictionary["file_size"] if "file_size" in dictionary else None
 
         for index, value in self.dict.items():
@@ -2200,9 +2207,9 @@ class StickerSet:
 
     - `name`: `string` - Sticker set name
     - `title`: `string` - Sticker set title
+    - `sticker_type`: `string` - Type of stickers in the set, currently one of “regular”, “mask”, “custom_emoji”
     - `is_animated`: `bool` - True, if the sticker set contains animated stickers
     - `is_video`: `bool` - True, if the sticker set contains video stickers
-    - `contains_masks`: `bool` - True, if the sticker set contains masks
     - `stickers`: `list` - List of all set stickers
     - `thumb`: `PhotoSize` - Optional. Sticker set thumbnail in the .WEBP, .TGS, or .WEBM format
     """
@@ -2213,9 +2220,9 @@ class StickerSet:
         self.dict = dictionary
         self.name = dictionary["name"] if "name" in dictionary else None
         self.title = dictionary["title"] if "title" in dictionary else None
+        self.sticker_type = dictionary["sticker_type"] if "sticker_type" in dictionary else None
         self.is_animated = dictionary["is_animated"] if "is_animated" in dictionary else None
         self.is_video = dictionary["is_video"] if "is_video" in dictionary else None
-        self.contains_masks = dictionary["contains_masks"] if "contains_masks" in dictionary else None
         self.stickers = list(dictionary["stickers"]) if "stickers" in dictionary else None
         self.thumb = PhotoSize(dictionary["thumb"]) if "thumb" in dictionary else None
 
@@ -2310,7 +2317,7 @@ class InlineQueryResultArticle:
     - `input_message_content`: `InputMessageContent` - Content of the message to be sent
     - `reply_markup`: `InlineKeyboardMarkup` - Optional. Inline keyboard attached to the message
     - `url`: `string` - Optional. URL of the result
-    - `hide_url`: `bool` - Optional. Pass True, if you don't want the URL to be shown in the message
+    - `hide_url`: `bool` - Optional. Pass True if you don't want the URL to be shown in the message
     - `description`: `string` - Optional. Short description of the result
     - `thumb_url`: `string` - Optional. Url of the thumbnail for the result
     - `thumb_width`: `int` - Optional. Thumbnail width
@@ -3243,13 +3250,13 @@ class InputInvoiceMessageContent:
     - `photo_size`: `int` - Optional. Photo size in bytes
     - `photo_width`: `int` - Optional. Photo width
     - `photo_height`: `int` - Optional. Photo height
-    - `need_name`: `bool` - Optional. Pass True, if you require the user's full name to complete the order
-    - `need_phone_number`: `bool` - Optional. Pass True, if you require the user's phone number to complete the order
-    - `need_email`: `bool` - Optional. Pass True, if you require the user's email address to complete the order
-    - `need_shipping_address`: `bool` - Optional. Pass True, if you require the user's shipping address to complete the order
-    - `send_phone_number_to_provider`: `bool` - Optional. Pass True, if the user's phone number should be sent to provider
-    - `send_email_to_provider`: `bool` - Optional. Pass True, if the user's email address should be sent to provider
-    - `is_flexible`: `bool` - Optional. Pass True, if the final price depends on the shipping method
+    - `need_name`: `bool` - Optional. Pass True if you require the user's full name to complete the order
+    - `need_phone_number`: `bool` - Optional. Pass True if you require the user's phone number to complete the order
+    - `need_email`: `bool` - Optional. Pass True if you require the user's email address to complete the order
+    - `need_shipping_address`: `bool` - Optional. Pass True if you require the user's shipping address to complete the order
+    - `send_phone_number_to_provider`: `bool` - Optional. Pass True if the user's phone number should be sent to provider
+    - `send_email_to_provider`: `bool` - Optional. Pass True if the user's email address should be sent to provider
+    - `is_flexible`: `bool` - Optional. Pass True if the final price depends on the shipping method
     """
 
     def __init__(self, dictionary=None):
