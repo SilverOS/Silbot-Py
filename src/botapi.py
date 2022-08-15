@@ -66,7 +66,7 @@ class BotApi:
         return response.getObject(), response
 
     def getUpdates(self, offset: int = None, limit: int = None, timeout: int = None, allowed_updates: list = None):
-        """Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned. [See Telegram API](https://core.telegram.org/bots/api#getupdates)
+        """Use this method to receive incoming updates using long polling (wiki). Returns an Array of Update objects. [See Telegram API](https://core.telegram.org/bots/api#getupdates)
 
         - - - - -
         **Args**:
@@ -210,7 +210,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -268,7 +268,7 @@ class BotApi:
         return self.response(self.sendRequest("forwardMessage", data), types.Message)
 
     def copyMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
-        """Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. [See Telegram API](https://core.telegram.org/bots/api#copymessage)
+        """Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. [See Telegram API](https://core.telegram.org/bots/api#copymessage)
 
         - - - - -
         **Args**:
@@ -283,7 +283,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -325,7 +325,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -371,7 +371,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -418,7 +418,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -462,11 +462,11 @@ class BotApi:
         - `height` :`int` Video height
         - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
-        - `supports_streaming` :`bool` Pass True, if the uploaded video is suitable for streaming
+        - `supports_streaming` :`bool` Pass True if the uploaded video is suitable for streaming
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -516,7 +516,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -562,7 +562,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -604,7 +604,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -638,7 +638,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends messages silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent messages from forwarding and saving
         - `reply_to_message_id` :`int` If the messages are a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -674,7 +674,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -774,7 +774,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -816,7 +816,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -858,11 +858,11 @@ class BotApi:
         - `explanation_entities` :`list` A JSON-serialized list of special entities that appear in the poll explanation, which can be specified instead of parse_mode
         - `open_period` :`int` Amount of time in seconds the poll will be active after creation, 5-600. Can't be used together with close_date.
         - `close_date` :`int` Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can't be used together with open_period.
-        - `is_closed` :`bool` Pass True, if the poll needs to be immediately closed. This can be useful for poll preview.
+        - `is_closed` :`bool` Pass True if the poll needs to be immediately closed. This can be useful for poll preview.
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -905,7 +905,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -1058,17 +1058,17 @@ class BotApi:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `user_id` :`int` Unique identifier of the target user
-        - `is_anonymous` :`bool` Pass True, if the administrator's presence in the chat is hidden
-        - `can_manage_chat` :`bool` Pass True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
-        - `can_post_messages` :`bool` Pass True, if the administrator can create channel posts, channels only
-        - `can_edit_messages` :`bool` Pass True, if the administrator can edit messages of other users and can pin messages, channels only
-        - `can_delete_messages` :`bool` Pass True, if the administrator can delete messages of other users
-        - `can_manage_video_chats` :`bool` Pass True, if the administrator can manage video chats
-        - `can_restrict_members` :`bool` Pass True, if the administrator can restrict, ban or unban chat members
-        - `can_promote_members` :`bool` Pass True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)
-        - `can_change_info` :`bool` Pass True, if the administrator can change chat title, photo and other settings
-        - `can_invite_users` :`bool` Pass True, if the administrator can invite new users to the chat
-        - `can_pin_messages` :`bool` Pass True, if the administrator can pin messages, supergroups only
+        - `is_anonymous` :`bool` Pass True if the administrator's presence in the chat is hidden
+        - `can_manage_chat` :`bool` Pass True if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
+        - `can_post_messages` :`bool` Pass True if the administrator can create channel posts, channels only
+        - `can_edit_messages` :`bool` Pass True if the administrator can edit messages of other users and can pin messages, channels only
+        - `can_delete_messages` :`bool` Pass True if the administrator can delete messages of other users
+        - `can_manage_video_chats` :`bool` Pass True if the administrator can manage video chats
+        - `can_restrict_members` :`bool` Pass True if the administrator can restrict, ban or unban chat members
+        - `can_promote_members` :`bool` Pass True if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)
+        - `can_change_info` :`bool` Pass True if the administrator can change chat title, photo and other settings
+        - `can_invite_users` :`bool` Pass True if the administrator can invite new users to the chat
+        - `can_pin_messages` :`bool` Pass True if the administrator can pin messages, supergroups only
 
         **Returns:**
 
@@ -1377,7 +1377,7 @@ class BotApi:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `message_id` :`int` Identifier of a message to pin
-        - `disable_notification` :`bool` Pass True, if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels and private chats.
+        - `disable_notification` :`bool` Pass True if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels and private chats.
 
         **Returns:**
 
@@ -1464,7 +1464,7 @@ class BotApi:
         return self.response(self.sendRequest("getChat", data), types.Chat)
 
     def getChatAdministrators(self, chat_id: Union[int, str, ]):
-        """Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned. [See Telegram API](https://core.telegram.org/bots/api#getchatadministrators)
+        """Use this method to get a list of administrators in a chat, which aren't bots. Returns an Array of ChatMember objects. [See Telegram API](https://core.telegram.org/bots/api#getchatadministrators)
 
         - - - - -
         **Args**:
@@ -1618,7 +1618,7 @@ class BotApi:
         return self.response(self.sendRequest("deleteMyCommands", data), bool)
 
     def getMyCommands(self, scope: types.BotCommandScope = None, language_code: str = None):
-        """Use this method to get the current list of the bot's commands for the given scope and user language. Returns Array of BotCommand on success. If commands aren't set, an empty list is returned. [See Telegram API](https://core.telegram.org/bots/api#getmycommands)
+        """Use this method to get the current list of the bot's commands for the given scope and user language. Returns an Array of BotCommand objects. If commands aren't set, an empty list is returned. [See Telegram API](https://core.telegram.org/bots/api#getmycommands)
 
         - - - - -
         **Args**:
@@ -1877,7 +1877,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -1914,6 +1914,23 @@ class BotApi:
         }
         return self.response(self.sendRequest("getStickerSet", data), types.StickerSet)
 
+    def getCustomEmojiStickers(self, custom_emoji_ids: list):
+        """Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects. [See Telegram API](https://core.telegram.org/bots/api#getcustomemojistickers)
+
+        - - - - -
+        **Args**:
+
+        - `custom_emoji_ids` :`list` List of custom emoji identifiers. At most 200 custom emoji identifiers can be specified.
+
+        **Returns:**
+
+        - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "custom_emoji_ids": custom_emoji_ids,
+        }
+        return self.response(self.sendRequest("getCustomEmojiStickers", data), list)
+
     def uploadStickerFile(self, user_id: int, png_sticker: types.InputFile):
         """Use this method to upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success. [See Telegram API](https://core.telegram.org/bots/api#uploadstickerfile)
 
@@ -1933,7 +1950,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("uploadStickerFile", data), types.File)
 
-    def createNewStickerSet(self, user_id: int, name: str, title: str, emojis: str, png_sticker: Union[types.InputFile, str, ] = None, tgs_sticker: types.InputFile = None, webm_sticker: types.InputFile = None, contains_masks: bool = None, mask_position: types.MaskPosition = None):
+    def createNewStickerSet(self, user_id: int, name: str, title: str, emojis: str, png_sticker: Union[types.InputFile, str, ] = None, tgs_sticker: types.InputFile = None, webm_sticker: types.InputFile = None, sticker_type: str = None, mask_position: types.MaskPosition = None):
         """Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#createnewstickerset)
 
         - - - - -
@@ -1946,7 +1963,7 @@ class BotApi:
         - `png_sticker` :`Union[types.InputFile,str,]` PNG image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `tgs_sticker` :`types.InputFile` TGS animation with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#animated-sticker-requirements for technical requirements
         - `webm_sticker` :`types.InputFile` WEBM video with the sticker, uploaded using multipart/form-data. See https://core.telegram.org/stickers#video-sticker-requirements for technical requirements
-        - `contains_masks` :`bool` Pass True, if a set of mask stickers should be created
+        - `sticker_type` :`str` Type of stickers in the set, pass “regular” or “mask”. Custom emoji sticker sets can't be created via the Bot API at the moment. By default, a regular sticker set is created.
         - `mask_position` :`types.MaskPosition` A JSON-serialized object for position where the mask should be placed on faces
 
         **Returns:**
@@ -1960,8 +1977,8 @@ class BotApi:
             "png_sticker": helper.toDict(png_sticker, True),
             "tgs_sticker": helper.toDict(tgs_sticker, True),
             "webm_sticker": helper.toDict(webm_sticker, True),
+            "sticker_type": sticker_type,
             "emojis": emojis,
-            "contains_masks": contains_masks,
             "mask_position": helper.toDict(mask_position, True),
         }
         return self.response(self.sendRequest("createNewStickerSet", data), bool)
@@ -2061,7 +2078,7 @@ class BotApi:
         - `inline_query_id` :`str` Unique identifier for the answered query
         - `results` :`list` A JSON-serialized array of results for the inline query
         - `cache_time` :`int` The maximum amount of time in seconds that the result of the inline query may be cached on the server. Defaults to 300.
-        - `is_personal` :`bool` Pass True, if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
+        - `is_personal` :`bool` Pass True if results may be cached on the server side only for the user that sent the query. By default, results may be returned to any user who sends the same query
         - `next_offset` :`str` Pass the offset that a client should send in the next query with the same text to receive more results. Pass an empty string if there are no more results or if you don't support pagination. Offset length can't exceed 64 bytes.
         - `switch_pm_text` :`str` If passed, clients will display a button with specified text that switches the user to a private chat with the bot and sends the bot a start message with the parameter switch_pm_parameter
         - `switch_pm_parameter` :`str` Deep-linking parameter for the /start message sent to the bot when user presses the switch button. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed.Example: An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly. To do this, it displays a 'Connect your YouTube account' button above the results, or even before showing any. The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a switch_inline button so that the user can easily return to the chat where they wanted to use the bot's inline capabilities.
@@ -2122,17 +2139,17 @@ class BotApi:
         - `photo_size` :`int` Photo size in bytes
         - `photo_width` :`int` Photo width
         - `photo_height` :`int` Photo height
-        - `need_name` :`bool` Pass True, if you require the user's full name to complete the order
-        - `need_phone_number` :`bool` Pass True, if you require the user's phone number to complete the order
-        - `need_email` :`bool` Pass True, if you require the user's email address to complete the order
-        - `need_shipping_address` :`bool` Pass True, if you require the user's shipping address to complete the order
-        - `send_phone_number_to_provider` :`bool` Pass True, if the user's phone number should be sent to provider
-        - `send_email_to_provider` :`bool` Pass True, if the user's email address should be sent to provider
-        - `is_flexible` :`bool` Pass True, if the final price depends on the shipping method
+        - `need_name` :`bool` Pass True if you require the user's full name to complete the order
+        - `need_phone_number` :`bool` Pass True if you require the user's phone number to complete the order
+        - `need_email` :`bool` Pass True if you require the user's email address to complete the order
+        - `need_shipping_address` :`bool` Pass True if you require the user's shipping address to complete the order
+        - `send_phone_number_to_provider` :`bool` Pass True if the user's phone number should be sent to provider
+        - `send_email_to_provider` :`bool` Pass True if the user's email address should be sent to provider
+        - `is_flexible` :`bool` Pass True if the final price depends on the shipping method
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -2191,13 +2208,13 @@ class BotApi:
         - `photo_size` :`int` Photo size in bytes
         - `photo_width` :`int` Photo width
         - `photo_height` :`int` Photo height
-        - `need_name` :`bool` Pass True, if you require the user's full name to complete the order
-        - `need_phone_number` :`bool` Pass True, if you require the user's phone number to complete the order
-        - `need_email` :`bool` Pass True, if you require the user's email address to complete the order
-        - `need_shipping_address` :`bool` Pass True, if you require the user's shipping address to complete the order
-        - `send_phone_number_to_provider` :`bool` Pass True, if the user's phone number should be sent to the provider
-        - `send_email_to_provider` :`bool` Pass True, if the user's email address should be sent to the provider
-        - `is_flexible` :`bool` Pass True, if the final price depends on the shipping method
+        - `need_name` :`bool` Pass True if you require the user's full name to complete the order
+        - `need_phone_number` :`bool` Pass True if you require the user's phone number to complete the order
+        - `need_email` :`bool` Pass True if you require the user's email address to complete the order
+        - `need_shipping_address` :`bool` Pass True if you require the user's shipping address to complete the order
+        - `send_phone_number_to_provider` :`bool` Pass True if the user's phone number should be sent to the provider
+        - `send_email_to_provider` :`bool` Pass True if the user's email address should be sent to the provider
+        - `is_flexible` :`bool` Pass True if the final price depends on the shipping method
 
         **Returns:**
 
@@ -2234,7 +2251,7 @@ class BotApi:
         **Args**:
 
         - `shipping_query_id` :`str` Unique identifier for the query to be answered
-        - `ok` :`bool` Specify True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
+        - `ok` :`bool` Pass True if delivery to the specified address is possible and False if there are any problems (for example, if delivery to the specified address is not possible)
         - `shipping_options` :`list` Required if ok is True. A JSON-serialized array of available shipping options.
         - `error_message` :`str` Required if ok is False. Error message in human readable form that explains why it is impossible to complete the order (e.g. "Sorry, delivery to your desired address is unavailable'). Telegram will display this message to the user.
 
@@ -2303,7 +2320,7 @@ class BotApi:
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
-        - `allow_sending_without_reply` :`bool` Pass True, if the message should be sent even if the specified replied-to message is not found
+        - `allow_sending_without_reply` :`bool` Pass True if the message should be sent even if the specified replied-to message is not found
 
         **Returns:**
 
@@ -2334,8 +2351,8 @@ class BotApi:
         - `chat_id` :`int` Required if inline_message_id is not specified. Unique identifier for the target chat
         - `message_id` :`int` Required if inline_message_id is not specified. Identifier of the sent message
         - `inline_message_id` :`str` Required if chat_id and message_id are not specified. Identifier of the inline message
-        - `force` :`bool` Pass True, if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters
-        - `disable_edit_message` :`bool` Pass True, if the game message should not be automatically edited to include the current scoreboard
+        - `force` :`bool` Pass True if the high score is allowed to decrease. This can be useful when fixing mistakes or banning cheaters
+        - `disable_edit_message` :`bool` Pass True if the game message should not be automatically edited to include the current scoreboard
 
         **Returns:**
 
@@ -2353,7 +2370,7 @@ class BotApi:
         return self.response(self.sendRequest("setGameScore", data), None)
 
     def getGameHighScores(self, user_id: int, chat_id: int = None, message_id: int = None, inline_message_id: str = None):
-        """Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an Array of GameHighScore objects. [See Telegram API](https://core.telegram.org/bots/api#getgamehighscores)
+        """Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. Returns an Array of GameHighScore objects. [See Telegram API](https://core.telegram.org/bots/api#getgamehighscores)
 
         - - - - -
         **Args**:
