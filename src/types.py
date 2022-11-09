@@ -1,5 +1,6 @@
 from silbot import helper, objects
 
+
 class Update:
     """This object represents an incoming update.At most one of the optional parameters can be present in any given update.[See on Telegram API](https://core.telegram.org/bots/api#update)
 
@@ -136,7 +137,10 @@ class Chat(objects.Chat):
     - `username`: `string` - Optional. Username, for private chats, supergroups and channels if available
     - `first_name`: `string` - Optional. First name of the other party in a private chat
     - `last_name`: `string` - Optional. Last name of the other party in a private chat
+    - `is_forum`: `bool` - Optional. True, if the supergroup chat is a forum (has topics enabled)
     - `photo`: `ChatPhoto` - Optional. Chat photo. Returned only in getChat.
+    - `active_usernames`: `list` - Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
+    - `emoji_status_custom_emoji_id`: `string` - Optional. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in getChat.
     - `bio`: `string` - Optional. Bio of the other party in a private chat. Returned only in getChat.
     - `has_private_forwards`: `bool` - Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
     - `has_restricted_voice_and_video_messages`: `bool` - Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
@@ -165,7 +169,10 @@ class Chat(objects.Chat):
         self.username = dictionary["username"] if "username" in dictionary else None
         self.first_name = dictionary["first_name"] if "first_name" in dictionary else None
         self.last_name = dictionary["last_name"] if "last_name" in dictionary else None
+        self.is_forum = dictionary["is_forum"] if "is_forum" in dictionary else None
         self.photo = ChatPhoto(dictionary["photo"]) if "photo" in dictionary else None
+        self.active_usernames = list(dictionary["active_usernames"]) if "active_usernames" in dictionary else None
+        self.emoji_status_custom_emoji_id = dictionary["emoji_status_custom_emoji_id"] if "emoji_status_custom_emoji_id" in dictionary else None
         self.bio = dictionary["bio"] if "bio" in dictionary else None
         self.has_private_forwards = dictionary["has_private_forwards"] if "has_private_forwards" in dictionary else None
         self.has_restricted_voice_and_video_messages = dictionary["has_restricted_voice_and_video_messages"] if "has_restricted_voice_and_video_messages" in dictionary else None
@@ -195,6 +202,7 @@ class Message:
     **Fields**:
 
     - `message_id`: `int` - Unique message identifier inside this chat
+    - `message_thread_id`: `int` - Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
     - `user`: `User` - Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
     - `sender_chat`: `Chat` - Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
     - `date`: `int` - Date the message was sent in Unix time
@@ -205,6 +213,7 @@ class Message:
     - `forward_signature`: `string` - Optional. For forwarded messages that were originally sent in channels or by an anonymous chat administrator, signature of the message sender if present
     - `forward_sender_name`: `string` - Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
     - `forward_date`: `int` - Optional. For forwarded messages, date the original message was sent in Unix time
+    - `is_topic_message`: `bool` - Optional. True, if the message is sent to a forum topic
     - `is_automatic_forward`: `bool` - Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
     - `reply_to_message`: `Message` - Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
     - `via_bot`: `User` - Optional. Bot through which the message was sent
@@ -247,6 +256,9 @@ class Message:
     - `connected_website`: `string` - Optional. The domain name of the website on which the user has logged in. More about Telegram Login »
     - `passport_data`: `PassportData` - Optional. Telegram Passport data
     - `proximity_alert_triggered`: `ProximityAlertTriggered` - Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+    - `forum_topic_created`: `ForumTopicCreated` - Optional. Service message: forum topic created
+    - `forum_topic_closed`: `ForumTopicClosed` - Optional. Service message: forum topic closed
+    - `forum_topic_reopened`: `ForumTopicReopened` - Optional. Service message: forum topic reopened
     - `video_chat_scheduled`: `VideoChatScheduled` - Optional. Service message: video chat scheduled
     - `video_chat_started`: `VideoChatStarted` - Optional. Service message: video chat started
     - `video_chat_ended`: `VideoChatEnded` - Optional. Service message: video chat ended
@@ -260,6 +272,7 @@ class Message:
             dictionary = {}
         self.dict = dictionary
         self.message_id = dictionary["message_id"] if "message_id" in dictionary else None
+        self.message_thread_id = dictionary["message_thread_id"] if "message_thread_id" in dictionary else None
         self.user = User(dictionary["from"]) if "from" in dictionary else None
         self.sender_chat = Chat(dictionary["sender_chat"]) if "sender_chat" in dictionary else None
         self.date = dictionary["date"] if "date" in dictionary else None
@@ -270,6 +283,7 @@ class Message:
         self.forward_signature = dictionary["forward_signature"] if "forward_signature" in dictionary else None
         self.forward_sender_name = dictionary["forward_sender_name"] if "forward_sender_name" in dictionary else None
         self.forward_date = dictionary["forward_date"] if "forward_date" in dictionary else None
+        self.is_topic_message = dictionary["is_topic_message"] if "is_topic_message" in dictionary else None
         self.is_automatic_forward = dictionary["is_automatic_forward"] if "is_automatic_forward" in dictionary else None
         self.reply_to_message = Message(dictionary["reply_to_message"]) if "reply_to_message" in dictionary else None
         self.via_bot = User(dictionary["via_bot"]) if "via_bot" in dictionary else None
@@ -312,6 +326,9 @@ class Message:
         self.connected_website = dictionary["connected_website"] if "connected_website" in dictionary else None
         self.passport_data = PassportData(dictionary["passport_data"]) if "passport_data" in dictionary else None
         self.proximity_alert_triggered = ProximityAlertTriggered(dictionary["proximity_alert_triggered"]) if "proximity_alert_triggered" in dictionary else None
+        self.forum_topic_created = ForumTopicCreated(dictionary["forum_topic_created"]) if "forum_topic_created" in dictionary else None
+        self.forum_topic_closed = ForumTopicClosed(dictionary["forum_topic_closed"]) if "forum_topic_closed" in dictionary else None
+        self.forum_topic_reopened = ForumTopicReopened(dictionary["forum_topic_reopened"]) if "forum_topic_reopened" in dictionary else None
         self.video_chat_scheduled = VideoChatScheduled(dictionary["video_chat_scheduled"]) if "video_chat_scheduled" in dictionary else None
         self.video_chat_started = VideoChatStarted(dictionary["video_chat_started"]) if "video_chat_started" in dictionary else None
         self.video_chat_ended = VideoChatEnded(dictionary["video_chat_ended"]) if "video_chat_ended" in dictionary else None
@@ -868,6 +885,66 @@ class MessageAutoDeleteTimerChanged:
                 setattr(self, index, helper.setBvar(value))
 
 
+class ForumTopicCreated:
+    """This object represents a service message about a new forum topic created in the chat.[See on Telegram API](https://core.telegram.org/bots/api#forumtopiccreated)
+
+    - - - - -
+    **Fields**:
+
+    - `name`: `string` - Name of the topic
+    - `icon_color`: `int` - Color of the topic icon in RGB format
+    - `icon_custom_emoji_id`: `string` - Optional. Unique identifier of the custom emoji shown as the topic icon
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.name = dictionary["name"] if "name" in dictionary else None
+        self.icon_color = dictionary["icon_color"] if "icon_color" in dictionary else None
+        self.icon_custom_emoji_id = dictionary["icon_custom_emoji_id"] if "icon_custom_emoji_id" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ForumTopicClosed:
+    """This object represents a service message about a forum topic closed in the chat. Currently holds no information.[See on Telegram API](https://core.telegram.org/bots/api#forumtopicclosed)
+
+    - - - - -
+    **Fields**:
+
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ForumTopicReopened:
+    """This object represents a service message about a forum topic reopened in the chat. Currently holds no information.[See on Telegram API](https://core.telegram.org/bots/api#forumtopicreopened)
+
+    - - - - -
+    **Fields**:
+
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
 class VideoChatScheduled:
     """This object represents a service message about a video chat scheduled in the chat.[See on Telegram API](https://core.telegram.org/bots/api#videochatscheduled)
 
@@ -1330,6 +1407,7 @@ class ChatAdministratorRights:
     - `can_post_messages`: `bool` - Optional. True, if the administrator can post in the channel; channels only
     - `can_edit_messages`: `bool` - Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
     - `can_pin_messages`: `bool` - Optional. True, if the user is allowed to pin messages; groups and supergroups only
+    - `can_manage_topics`: `bool` - Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
     """
 
     def __init__(self, dictionary=None):
@@ -1347,6 +1425,7 @@ class ChatAdministratorRights:
         self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
         self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
         self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+        self.can_manage_topics = dictionary["can_manage_topics"] if "can_manage_topics" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1417,6 +1496,7 @@ class ChatMemberAdministrator:
     - `can_post_messages`: `bool` - Optional. True, if the administrator can post in the channel; channels only
     - `can_edit_messages`: `bool` - Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
     - `can_pin_messages`: `bool` - Optional. True, if the user is allowed to pin messages; groups and supergroups only
+    - `can_manage_topics`: `bool` - Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
     - `custom_title`: `string` - Optional. Custom title for this user
     """
 
@@ -1438,6 +1518,7 @@ class ChatMemberAdministrator:
         self.can_post_messages = dictionary["can_post_messages"] if "can_post_messages" in dictionary else None
         self.can_edit_messages = dictionary["can_edit_messages"] if "can_edit_messages" in dictionary else None
         self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+        self.can_manage_topics = dictionary["can_manage_topics"] if "can_manage_topics" in dictionary else None
         self.custom_title = dictionary["custom_title"] if "custom_title" in dictionary else None
 
         for index, value in self.dict.items():
@@ -1479,6 +1560,7 @@ class ChatMemberRestricted:
     - `can_change_info`: `bool` - True, if the user is allowed to change the chat title, photo and other settings
     - `can_invite_users`: `bool` - True, if the user is allowed to invite new users to the chat
     - `can_pin_messages`: `bool` - True, if the user is allowed to pin messages
+    - `can_manage_topics`: `bool` - True, if the user is allowed to create forum topics
     - `can_send_messages`: `bool` - True, if the user is allowed to send text messages, contacts, locations and venues
     - `can_send_media_messages`: `bool` - True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
     - `can_send_polls`: `bool` - True, if the user is allowed to send polls
@@ -1497,6 +1579,7 @@ class ChatMemberRestricted:
         self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
         self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
         self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+        self.can_manage_topics = dictionary["can_manage_topics"] if "can_manage_topics" in dictionary else None
         self.can_send_messages = dictionary["can_send_messages"] if "can_send_messages" in dictionary else None
         self.can_send_media_messages = dictionary["can_send_media_messages"] if "can_send_media_messages" in dictionary else None
         self.can_send_polls = dictionary["can_send_polls"] if "can_send_polls" in dictionary else None
@@ -1627,6 +1710,7 @@ class ChatPermissions:
     - `can_change_info`: `bool` - Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
     - `can_invite_users`: `bool` - Optional. True, if the user is allowed to invite new users to the chat
     - `can_pin_messages`: `bool` - Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
+    - `can_manage_topics`: `bool` - Optional. True, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages
     """
 
     def __init__(self, dictionary=None):
@@ -1641,6 +1725,7 @@ class ChatPermissions:
         self.can_change_info = dictionary["can_change_info"] if "can_change_info" in dictionary else None
         self.can_invite_users = dictionary["can_invite_users"] if "can_invite_users" in dictionary else None
         self.can_pin_messages = dictionary["can_pin_messages"] if "can_pin_messages" in dictionary else None
+        self.can_manage_topics = dictionary["can_manage_topics"] if "can_manage_topics" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -1663,6 +1748,32 @@ class ChatLocation:
         self.dict = dictionary
         self.location = Location(dictionary["location"]) if "location" in dictionary else None
         self.address = dictionary["address"] if "address" in dictionary else None
+
+        for index, value in self.dict.items():
+            if not hasattr(self, index):
+                setattr(self, index, helper.setBvar(value))
+
+
+class ForumTopic:
+    """This object represents a forum topic.[See on Telegram API](https://core.telegram.org/bots/api#forumtopic)
+
+    - - - - -
+    **Fields**:
+
+    - `message_thread_id`: `int` - Unique identifier of the forum topic
+    - `name`: `string` - Name of the topic
+    - `icon_color`: `int` - Color of the topic icon in RGB format
+    - `icon_custom_emoji_id`: `string` - Optional. Unique identifier of the custom emoji shown as the topic icon
+    """
+
+    def __init__(self, dictionary=None):
+        if dictionary is None:
+            dictionary = {}
+        self.dict = dictionary
+        self.message_thread_id = dictionary["message_thread_id"] if "message_thread_id" in dictionary else None
+        self.name = dictionary["name"] if "name" in dictionary else None
+        self.icon_color = dictionary["icon_color"] if "icon_color" in dictionary else None
+        self.icon_custom_emoji_id = dictionary["icon_custom_emoji_id"] if "icon_custom_emoji_id" in dictionary else None
 
         for index, value in self.dict.items():
             if not hasattr(self, index):
@@ -3991,5 +4102,4 @@ class GameHighScore:
         for index, value in self.dict.items():
             if not hasattr(self, index):
                 setattr(self, index, helper.setBvar(value))
-
 
