@@ -195,7 +195,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("close", data), bool)
 
-    def sendMessage(self, chat_id: Union[int, str, ], text: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, entities: list = None, disable_web_page_preview: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendMessage(self, chat_id: Union[int, str, ], text: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, entities: list = None, disable_web_page_preview: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send text messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmessage)
 
         - - - - -
@@ -205,6 +205,7 @@ class BotApi:
         - `text` :`str` Text of the message to be sent, 1-4096 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the message text. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `entities` :`list` A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
         - `disable_web_page_preview` :`bool` Disables link previews for links in this message
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -227,6 +228,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "text": text,
             "parse_mode": parse_mode,
             "entities": entities,
@@ -239,7 +241,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendMessage", data), types.Message)
 
-    def forwardMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], disable_notification: bool = None, protect_content: bool = None):
+    def forwardMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], message_thread_id: int = None, disable_notification: bool = None, protect_content: bool = None):
         """Use this method to forward messages of any kind. Service messages can't be forwarded. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#forwardmessage)
 
         - - - - -
@@ -248,6 +250,7 @@ class BotApi:
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `message_id` :`int` Message identifier in the chat specified in from_chat_id
         - `from_chat_id` :`Union[int,str,]` Unique identifier for the chat where the original message was sent (or channel username in the format @channelusername)
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the forwarded message from forwarding and saving
 
@@ -260,6 +263,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "from_chat_id": from_chat_id,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -267,7 +271,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("forwardMessage", data), types.Message)
 
-    def copyMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def copyMessage(self, chat_id: Union[int, str, ], message_id: int, from_chat_id: Union[int, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to copy messages of any kind. Service messages and invoice messages can't be copied. A quiz poll can be copied only if the value of the field correct_option_id is known to the bot. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success. [See Telegram API](https://core.telegram.org/bots/api#copymessage)
 
         - - - - -
@@ -279,6 +283,7 @@ class BotApi:
         - `caption` :`str` New caption for media, 0-1024 characters after entities parsing. If not specified, the original caption is kept
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the new caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the new caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
@@ -297,6 +302,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "from_chat_id": from_chat_id,
             "message_id": message_id,
             "caption": caption,
@@ -310,7 +316,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("copyMessage", data), types.MessageId)
 
-    def sendPhoto(self, chat_id: Union[int, str, ], photo: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendPhoto(self, chat_id: Union[int, str, ], photo: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send photos. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendphoto)
 
         - - - - -
@@ -321,6 +327,7 @@ class BotApi:
         - `caption` :`str` Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the photo caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
@@ -339,6 +346,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "photo": helper.toDict(photo, True),
             "caption": caption,
             "parse_mode": parse_mode,
@@ -351,7 +359,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendPhoto", data), types.Message)
 
-    def sendAudio(self, chat_id: Union[int, str, ], audio: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, performer: str = None, title: str = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendAudio(self, chat_id: Union[int, str, ], audio: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, caption_entities: list = None, duration: int = None, performer: str = None, title: str = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
         For sending voice messages, use the sendVoice method instead. [See Telegram API](https://core.telegram.org/bots/api#sendaudio)
 
@@ -363,6 +371,7 @@ class BotApi:
         - `caption` :`str` Audio caption, 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the audio caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `duration` :`int` Duration of the audio in seconds
         - `performer` :`str` Performer
@@ -385,6 +394,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "audio": helper.toDict(audio, True),
             "caption": caption,
             "parse_mode": parse_mode,
@@ -401,7 +411,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendAudio", data), types.Message)
 
-    def sendDocument(self, chat_id: Union[int, str, ], document: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_content_type_detection: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendDocument(self, chat_id: Union[int, str, ], document: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_content_type_detection: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#senddocument)
 
         - - - - -
@@ -412,6 +422,7 @@ class BotApi:
         - `caption` :`str` Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the document caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `disable_content_type_detection` :`bool` Disables automatic server-side content type detection for files uploaded using multipart/form-data
@@ -432,6 +443,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "document": helper.toDict(document, True),
             "thumb": helper.toDict(thumb, True),
             "caption": caption,
@@ -446,7 +458,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendDocument", data), types.Message)
 
-    def sendVideo(self, chat_id: Union[int, str, ], video: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, supports_streaming: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVideo(self, chat_id: Union[int, str, ], video: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, supports_streaming: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvideo)
 
         - - - - -
@@ -457,6 +469,7 @@ class BotApi:
         - `caption` :`str` Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the video caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `duration` :`int` Duration of sent video in seconds
         - `width` :`int` Video width
         - `height` :`int` Video height
@@ -480,6 +493,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "video": helper.toDict(video, True),
             "duration": duration,
             "width": width,
@@ -497,7 +511,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendVideo", data), types.Message)
 
-    def sendAnimation(self, chat_id: Union[int, str, ], animation: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendAnimation(self, chat_id: Union[int, str, ], animation: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, duration: int = None, width: int = None, height: int = None, thumb: Union[types.InputFile, str, ] = None, caption_entities: list = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendanimation)
 
         - - - - -
@@ -508,6 +522,7 @@ class BotApi:
         - `caption` :`str` Animation caption (may also be used when resending animation by file_id), 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the animation caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `duration` :`int` Duration of sent animation in seconds
         - `width` :`int` Animation width
         - `height` :`int` Animation height
@@ -530,6 +545,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "animation": helper.toDict(animation, True),
             "duration": duration,
             "width": width,
@@ -546,7 +562,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendAnimation", data), types.Message)
 
-    def sendVoice(self, chat_id: Union[int, str, ], voice: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, caption_entities: list = None, duration: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVoice(self, chat_id: Union[int, str, ], voice: Union[types.InputFile, str, ], caption: str = None, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, parse_mode: str = None, message_thread_id: int = None, caption_entities: list = None, duration: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future. [See Telegram API](https://core.telegram.org/bots/api#sendvoice)
 
         - - - - -
@@ -557,6 +573,7 @@ class BotApi:
         - `caption` :`str` Voice message caption, 0-1024 characters after entities parsing
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
         - `parse_mode` :`str` Mode for parsing entities in the voice message caption. See formatting options for more details.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `caption_entities` :`list` A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode
         - `duration` :`int` Duration of the voice message in seconds
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -576,6 +593,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "voice": helper.toDict(voice, True),
             "caption": caption,
             "parse_mode": parse_mode,
@@ -589,7 +607,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendVoice", data), types.Message)
 
-    def sendVideoNote(self, chat_id: Union[int, str, ], video_note: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, duration: int = None, length: int = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVideoNote(self, chat_id: Union[int, str, ], video_note: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, duration: int = None, length: int = None, thumb: Union[types.InputFile, str, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvideonote)
 
         - - - - -
@@ -598,6 +616,7 @@ class BotApi:
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `video_note` :`Union[types.InputFile,str,]` Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending video notes by a URL is currently unsupported
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `duration` :`int` Duration of sent video in seconds
         - `length` :`int` Video width and height, i.e. diameter of the video message
         - `thumb` :`Union[types.InputFile,str,]` Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>. More information on Sending Files »
@@ -615,6 +634,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "video_note": helper.toDict(video_note, True),
             "duration": duration,
             "length": length,
@@ -627,7 +647,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendVideoNote", data), types.Message)
 
-    def sendMediaGroup(self, chat_id: Union[int, str, ], media: list, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendMediaGroup(self, chat_id: Union[int, str, ], media: list, message_thread_id: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned. [See Telegram API](https://core.telegram.org/bots/api#sendmediagroup)
 
         - - - - -
@@ -635,6 +655,7 @@ class BotApi:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `media` :`list` A JSON-serialized array describing messages to be sent, must include 2-10 items
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `disable_notification` :`bool` Sends messages silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent messages from forwarding and saving
         - `reply_to_message_id` :`int` If the messages are a reply, ID of the original message
@@ -649,6 +670,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "media": media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -657,7 +679,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendMediaGroup", data), list)
 
-    def sendLocation(self, chat_id: Union[int, str, ], latitude: float, longitude: float, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, horizontal_accuracy: float = None, live_period: int = None, heading: int = None, proximity_alert_radius: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendLocation(self, chat_id: Union[int, str, ], latitude: float, longitude: float, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, horizontal_accuracy: float = None, live_period: int = None, heading: int = None, proximity_alert_radius: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send point on the map. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendlocation)
 
         - - - - -
@@ -667,6 +689,7 @@ class BotApi:
         - `latitude` :`float` Latitude of the location
         - `longitude` :`float` Longitude of the location
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `horizontal_accuracy` :`float` The radius of uncertainty for the location, measured in meters; 0-1500
         - `live_period` :`int` Period in seconds for which the location will be updated (see Live Locations, should be between 60 and 86400.
         - `heading` :`int` For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.
@@ -685,6 +708,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "latitude": latitude,
             "longitude": longitude,
             "horizontal_accuracy": horizontal_accuracy,
@@ -755,7 +779,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("stopMessageLiveLocation", data), None)
 
-    def sendVenue(self, chat_id: Union[int, str, ], latitude: float, longitude: float, title: str, address: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, foursquare_id: str = None, foursquare_type: str = None, google_place_id: str = None, google_place_type: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendVenue(self, chat_id: Union[int, str, ], latitude: float, longitude: float, title: str, address: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, foursquare_id: str = None, foursquare_type: str = None, google_place_id: str = None, google_place_type: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send information about a venue. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendvenue)
 
         - - - - -
@@ -767,6 +791,7 @@ class BotApi:
         - `title` :`str` Name of the venue
         - `address` :`str` Address of the venue
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `foursquare_id` :`str` Foursquare identifier of the venue
         - `foursquare_type` :`str` Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)
         - `google_place_id` :`str` Google Places identifier of the venue
@@ -785,6 +810,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "latitude": latitude,
             "longitude": longitude,
             "title": title,
@@ -801,7 +827,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendVenue", data), types.Message)
 
-    def sendContact(self, chat_id: Union[int, str, ], phone_number: str, first_name: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, last_name: str = None, vcard: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendContact(self, chat_id: Union[int, str, ], phone_number: str, first_name: str, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, last_name: str = None, vcard: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send phone contacts. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendcontact)
 
         - - - - -
@@ -810,7 +836,8 @@ class BotApi:
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `phone_number` :`str` Contact's phone number
         - `first_name` :`str` Contact's first name
-        - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove keyboard or to force a reply from the user.
+        - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `last_name` :`str` Contact's last name
         - `vcard` :`str` Additional data about the contact in the form of a vCard, 0-2048 bytes
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
@@ -827,6 +854,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "phone_number": phone_number,
             "first_name": first_name,
             "last_name": last_name,
@@ -839,7 +867,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendContact", data), types.Message)
 
-    def sendPoll(self, chat_id: Union[int, str, ], question: str, options: list, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, is_anonymous: bool = None, type: str = None, allows_multiple_answers: bool = None, correct_option_id: int = None, explanation: str = None, explanation_parse_mode: str = None, explanation_entities: list = None, open_period: int = None, close_date: int = None, is_closed: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendPoll(self, chat_id: Union[int, str, ], question: str, options: list, reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, is_anonymous: bool = None, type: str = None, allows_multiple_answers: bool = None, correct_option_id: int = None, explanation: str = None, explanation_parse_mode: str = None, explanation_entities: list = None, open_period: int = None, close_date: int = None, is_closed: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send a native poll. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendpoll)
 
         - - - - -
@@ -849,6 +877,7 @@ class BotApi:
         - `question` :`str` Poll question, 1-300 characters
         - `options` :`list` A JSON-serialized list of answer options, 2-10 strings 1-100 characters each
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `is_anonymous` :`bool` True, if the poll needs to be anonymous, defaults to True
         - `type` :`str` Poll type, “quiz” or “regular”, defaults to “regular”
         - `allows_multiple_answers` :`bool` True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
@@ -873,6 +902,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "question": question,
             "options": options,
             "is_anonymous": is_anonymous,
@@ -893,7 +923,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("sendPoll", data), types.Message)
 
-    def sendDice(self, chat_id: Union[int, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, emoji: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendDice(self, chat_id: Union[int, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, emoji: str = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send an animated emoji that will display a random value. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#senddice)
 
         - - - - -
@@ -901,6 +931,7 @@ class BotApi:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `emoji` :`str` ____simple_html_dom__voku__html_wrapper____>Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲”
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding
@@ -916,6 +947,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "emoji": emoji,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -1050,7 +1082,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("restrictChatMember", data), bool)
 
-    def promoteChatMember(self, chat_id: Union[int, str, ], user_id: int, is_anonymous: bool = None, can_manage_chat: bool = None, can_post_messages: bool = None, can_edit_messages: bool = None, can_delete_messages: bool = None, can_manage_video_chats: bool = None, can_restrict_members: bool = None, can_promote_members: bool = None, can_change_info: bool = None, can_invite_users: bool = None, can_pin_messages: bool = None):
+    def promoteChatMember(self, chat_id: Union[int, str, ], user_id: int, is_anonymous: bool = None, can_manage_chat: bool = None, can_post_messages: bool = None, can_edit_messages: bool = None, can_delete_messages: bool = None, can_manage_video_chats: bool = None, can_restrict_members: bool = None, can_promote_members: bool = None, can_change_info: bool = None, can_invite_users: bool = None, can_pin_messages: bool = None, can_manage_topics: bool = None):
         """Use this method to promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass False for all boolean parameters to demote a user. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#promotechatmember)
 
         - - - - -
@@ -1069,6 +1101,7 @@ class BotApi:
         - `can_change_info` :`bool` Pass True if the administrator can change chat title, photo and other settings
         - `can_invite_users` :`bool` Pass True if the administrator can invite new users to the chat
         - `can_pin_messages` :`bool` Pass True if the administrator can pin messages, supergroups only
+        - `can_manage_topics` :`bool` Pass True if the user is allowed to create, rename, close, and reopen forum topics, supergroups only
 
         **Returns:**
 
@@ -1088,6 +1121,7 @@ class BotApi:
             "can_change_info": can_change_info,
             "can_invite_users": can_invite_users,
             "can_pin_messages": can_pin_messages,
+            "can_manage_topics": can_manage_topics,
         }
         return self.response(self.sendRequest("promoteChatMember", data), bool)
 
@@ -1338,7 +1372,7 @@ class BotApi:
         **Args**:
 
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-        - `title` :`str` New chat title, 1-255 characters
+        - `title` :`str` New chat title, 1-128 characters
 
         **Returns:**
 
@@ -1552,6 +1586,143 @@ class BotApi:
         }
         return self.response(self.sendRequest("deleteChatStickerSet", data), bool)
 
+    def getForumTopicIconStickers(self, ):
+        """Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects. [See Telegram API](https://core.telegram.org/bots/api#getforumtopiciconstickers)
+
+        - - - - -
+        **Args**:
+
+
+        **Returns:**
+
+        - A `tuple`, on success a `list` as first member and a botApiResponse object as second member
+        """
+        data = {
+        }
+        return self.response(self.sendRequest("getForumTopicIconStickers", data), list)
+
+    def createForumTopic(self, chat_id: Union[int, str, ], name: str, icon_color: int = None, icon_custom_emoji_id: str = None):
+        """Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object. [See Telegram API](https://core.telegram.org/bots/api#createforumtopic)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+        - `name` :`str` Topic name, 1-128 characters
+        - `icon_color` :`int` Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB, 0x8EEE98, 0xFF93B2, or 0xFB6F5F
+        - `icon_custom_emoji_id` :`str` Unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers.
+
+        **Returns:**
+
+        - A `tuple`, on success a `types.ForumTopic` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "name": name,
+            "icon_color": icon_color,
+            "icon_custom_emoji_id": icon_custom_emoji_id,
+        }
+        return self.response(self.sendRequest("createForumTopic", data), types.ForumTopic)
+
+    def editForumTopic(self, chat_id: Union[int, str, ], message_thread_id: int, name: str, icon_custom_emoji_id: str):
+        """Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#editforumtopic)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+        - `message_thread_id` :`int` Unique identifier for the target message thread of the forum topic
+        - `name` :`str` New topic name, 1-128 characters
+        - `icon_custom_emoji_id` :`str` New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "name": name,
+            "icon_custom_emoji_id": icon_custom_emoji_id,
+        }
+        return self.response(self.sendRequest("editForumTopic", data), bool)
+
+    def closeForumTopic(self, chat_id: Union[int, str, ], message_thread_id: int):
+        """Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#closeforumtopic)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+        - `message_thread_id` :`int` Unique identifier for the target message thread of the forum topic
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+        }
+        return self.response(self.sendRequest("closeForumTopic", data), bool)
+
+    def reopenForumTopic(self, chat_id: Union[int, str, ], message_thread_id: int):
+        """Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#reopenforumtopic)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+        - `message_thread_id` :`int` Unique identifier for the target message thread of the forum topic
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+        }
+        return self.response(self.sendRequest("reopenForumTopic", data), bool)
+
+    def deleteForumTopic(self, chat_id: Union[int, str, ], message_thread_id: int):
+        """Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deleteforumtopic)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+        - `message_thread_id` :`int` Unique identifier for the target message thread of the forum topic
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+        }
+        return self.response(self.sendRequest("deleteForumTopic", data), bool)
+
+    def unpinAllForumTopicMessages(self, chat_id: Union[int, str, ], message_thread_id: int):
+        """Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#unpinallforumtopicmessages)
+
+        - - - - -
+        **Args**:
+
+        - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
+        - `message_thread_id` :`int` Unique identifier for the target message thread of the forum topic
+
+        **Returns:**
+
+        - A `tuple`, on success a `bool` as first member and a botApiResponse object as second member
+        """
+        data = {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+        }
+        return self.response(self.sendRequest("unpinAllForumTopicMessages", data), bool)
+
     def answerCallbackQuery(self, callback_query_id: str, text: str = None, show_alert: bool = None, url: str = None, cache_time: int = None):
         """Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned. [See Telegram API](https://core.telegram.org/bots/api#answercallbackquery)
 
@@ -1578,7 +1749,7 @@ class BotApi:
         return self.response(self.sendRequest("answerCallbackQuery", data), bool)
 
     def setMyCommands(self, commands: list, scope: types.BotCommandScope = None, language_code: str = None):
-        """Use this method to change the list of the bot's commands. See https://core.telegram.org/bots#commands for more details about bot commands. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setmycommands)
+        """Use this method to change the list of the bot's commands. See this manual for more details about bot commands. Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#setmycommands)
 
         - - - - -
         **Args**:
@@ -1847,7 +2018,7 @@ class BotApi:
         return self.response(self.sendRequest("stopPoll", data), types.Poll)
 
     def deleteMessage(self, chat_id: Union[int, str, ], message_id: int):
-        """Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted can_post_messages permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletemessage)
+        """Use this method to delete a message, including service messages, with the following limitations:- A message can only be deleted if it was sent less than 48 hours ago.- Service messages about a supergroup, channel, or forum topic creation can't be deleted.- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.- Bots can delete outgoing messages in private chats, groups, and supergroups.- Bots can delete incoming messages in private chats.- Bots granted can_post_messages permissions can delete outgoing messages in channels.- If the bot is an administrator of a group, it can delete any message there.- If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.Returns True on success. [See Telegram API](https://core.telegram.org/bots/api#deletemessage)
 
         - - - - -
         **Args**:
@@ -1865,7 +2036,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("deleteMessage", data), bool)
 
-    def sendSticker(self, chat_id: Union[int, str, ], sticker: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendSticker(self, chat_id: Union[int, str, ], sticker: Union[types.InputFile, str, ], reply_markup: Union[types.InlineKeyboardMarkup, types.ReplyKeyboardMarkup, types.ReplyKeyboardRemove, types.ForceReply, ] = None, message_thread_id: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendsticker)
 
         - - - - -
@@ -1874,6 +2045,7 @@ class BotApi:
         - `chat_id` :`Union[int,str,]` Unique identifier for the target chat or username of the target channel (in the format @channelusername)
         - `sticker` :`Union[types.InputFile,str,]` Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. More information on Sending Files »
         - `reply_markup` :`Union[types.InlineKeyboardMarkup,types.ReplyKeyboardMarkup,types.ReplyKeyboardRemove,types.ForceReply,]` Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -1888,6 +2060,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "sticker": helper.toDict(sticker, True),
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -2117,7 +2290,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("answerWebAppQuery", data), types.SentWebAppMessage)
 
-    def sendInvoice(self, chat_id: Union[int, str, ], title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, max_tip_amount: int = None, suggested_tip_amounts: list = None, start_parameter: str = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendInvoice(self, chat_id: Union[int, str, ], title: str, description: str, payload: str, provider_token: str, currency: str, prices: list, reply_markup: types.InlineKeyboardMarkup = None, message_thread_id: int = None, max_tip_amount: int = None, suggested_tip_amounts: list = None, start_parameter: str = None, provider_data: str = None, photo_url: str = None, photo_size: int = None, photo_width: int = None, photo_height: int = None, need_name: bool = None, need_phone_number: bool = None, need_email: bool = None, need_shipping_address: bool = None, send_phone_number_to_provider: bool = None, send_email_to_provider: bool = None, is_flexible: bool = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send invoices. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendinvoice)
 
         - - - - -
@@ -2131,6 +2304,7 @@ class BotApi:
         - `currency` :`str` Three-letter ISO 4217 currency code, see more on currencies
         - `prices` :`list` Price breakdown, a JSON-serialized list of components (e.g. product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Pay total price' button will be shown. If not empty, the first button must be a Pay button.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `max_tip_amount` :`int` The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0
         - `suggested_tip_amounts` :`list` A JSON-serialized array of suggested amounts of tips in the smallest units of the currency (integer, not float/double). At most 4 suggested tip amounts can be specified. The suggested tip amounts must be positive, passed in a strictly increased order and must not exceed max_tip_amount.
         - `start_parameter` :`str` Unique deep-linking parameter. If left empty, forwarded copies of the sent message will have a Pay button, allowing multiple users to pay directly from the forwarded message, using the same invoice. If non-empty, forwarded copies of the sent message will have a URL button with a deep link to the bot (instead of a Pay button), with the value used as the start parameter
@@ -2160,6 +2334,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "title": title,
             "description": description,
             "payload": payload,
@@ -2308,7 +2483,7 @@ class BotApi:
         }
         return self.response(self.sendRequest("setPassportDataErrors", data), bool)
 
-    def sendGame(self, chat_id: int, game_short_name: str, reply_markup: types.InlineKeyboardMarkup = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
+    def sendGame(self, chat_id: int, game_short_name: str, reply_markup: types.InlineKeyboardMarkup = None, message_thread_id: int = None, disable_notification: bool = None, protect_content: bool = None, reply_to_message_id: int = None, allow_sending_without_reply: bool = None):
         """Use this method to send a game. On success, the sent Message is returned. [See Telegram API](https://core.telegram.org/bots/api#sendgame)
 
         - - - - -
@@ -2317,6 +2492,7 @@ class BotApi:
         - `chat_id` :`int` Unique identifier for the target chat
         - `game_short_name` :`str` Short name of the game, serves as the unique identifier for the game. Set up your games via @BotFather.
         - `reply_markup` :`types.InlineKeyboardMarkup` A JSON-serialized object for an inline keyboard. If empty, one 'Play game_title' button will be shown. If not empty, the first button must launch the game.
+        - `message_thread_id` :`int` Unique identifier for the target message thread (topic) of the forum; for forum supergroups only
         - `disable_notification` :`bool` Sends the message silently. Users will receive a notification with no sound.
         - `protect_content` :`bool` Protects the contents of the sent message from forwarding and saving
         - `reply_to_message_id` :`int` If the message is a reply, ID of the original message
@@ -2331,6 +2507,7 @@ class BotApi:
 
         data = {
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
             "game_short_name": game_short_name,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -2391,4 +2568,3 @@ class BotApi:
             "inline_message_id": inline_message_id,
         }
         return self.response(self.sendRequest("getGameHighScores", data), list)
-
